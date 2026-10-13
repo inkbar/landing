@@ -21,6 +21,7 @@
     padding-top: clamp(40px, 7vw, 88px);
   }
   h1 {
+    isolation: isolate;
     max-width: 940px;
     font-size: clamp(42px, 6.6vw, 88px);
     line-height: 0.98;
@@ -30,6 +31,8 @@
     padding: 0 0.12em;
     border-radius: 6px;
     background: var(--highlighter);
+    position: relative;
+    z-index: -1;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
   }

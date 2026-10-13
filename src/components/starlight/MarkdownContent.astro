@@ -1,0 +1,12 @@
+---
+import '@astrojs/starlight/style/markdown.css'
+
+// A table that scrolls sideways must be reachable from the keyboard, so every table in the
+// docs takes focus, the same way every code block does (see src/shiki/focusable-code.ts).
+const html = (await Astro.slots.render('default')).replace(
+  /<table(?![^>]*\btabindex=)/g,
+  '<table tabindex="0"'
+)
+---
+
+<div class="sl-markdown-content" set:html={html} />

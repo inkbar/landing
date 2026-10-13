@@ -44,7 +44,7 @@
         <p>
           The theme's rules have zero specificity and sit in one cascade layer, so your CSS
           overrides them without <code>!important</code>. If your page defines tokens such as
-          --primary and --radius, the theme uses them.
+          <span class="token">--primary</span> and <span class="token">--radius</span>, the theme uses them.
         </p>
         <div class="stage" aria-hidden="true">
           <div class="bar bar-pill">
@@ -234,6 +234,9 @@
     background: var(--ink);
     color: #ffffff;
   }
+  .token {
+    white-space: nowrap;
+  }
   pre {
     margin: 0;
     margin-top: auto;
@@ -241,13 +244,13 @@
     border-radius: 10px;
     background: var(--ink);
     color: #ffffff;
+    --focus-ring: #ffffff;
     font-family: var(--font-mono);
     font-size: 13px;
     line-height: 1.65;
     overflow-x: auto;
   }
   pre:focus-visible {
-    outline: 3px solid #ffffff;
     outline-offset: -5px;
   }
 </style>

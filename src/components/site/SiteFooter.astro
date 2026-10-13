@@ -67,6 +67,9 @@ const full = variant === 'full'
     background: var(--ink);
     color: var(--on-ink);
   }
+  .foot[data-variant='full'] {
+    --focus-ring: #ffffff;
+  }
   .foot[data-variant='compact'] {
     background: transparent;
     color: var(--caption);
@@ -107,7 +110,7 @@ const full = variant === 'full'
   nav {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 0;
     font-size: 15px;
   }
   h2 {
@@ -118,7 +121,7 @@ const full = variant === 'full'
     color: #ffffff;
   }
   nav a {
-    min-height: 36px;
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     color: var(--on-ink);

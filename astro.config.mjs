@@ -14,6 +14,7 @@ export default defineConfig({
       favicon: '/favicon.svg',
       components: {
         Header: './src/components/starlight/Header.astro',
+        MarkdownContent: './src/components/starlight/MarkdownContent.astro',
         Footer: './src/components/starlight/Footer.astro',
         ThemeSelect: './src/components/starlight/ThemeSelect.astro',
         ThemeProvider: './src/components/starlight/ThemeProvider.astro',
