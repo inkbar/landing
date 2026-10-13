@@ -1,0 +1,22 @@
+---
+title: Introduction
+description: What Inkbar is, which packages it ships and where to start.
+---
+
+Inkbar is a PDF viewer and editor that runs in the browser. It is written in TypeScript, built on PDF.js and released under the MIT licence.
+
+## Packages
+
+| Package          | Purpose                                                                         |
+| ---------------- | ------------------------------------------------------------------------------- |
+| `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency. |
+| `@inkbar/vue`    | Vue 3 components, composables and a default toolbar.                            |
+| `@inkbar/react`  | React 19 components, hooks and a default toolbar.                               |
+| `@inkbar/svelte` | Svelte components and a default toolbar. In development.                        |
+| `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.       |
+
+The packages are released together and share one version number. `@inkbar/vue` and `@inkbar/react` depend on the exact `@inkbar/core` version they were built against.
+
+## Where to start
+
+Follow the [Quickstart](/docs/quickstart/) to put a document on screen with the default toolbar.

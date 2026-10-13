@@ -5,4 +5,5 @@ playwright-report
 test-results
 *.log
 .DS_Store
+!docs
 src/content/docs/docs/reference/api
