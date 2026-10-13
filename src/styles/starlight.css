@@ -1,0 +1,26 @@
+:root,
+:root[data-theme='light'] {
+  --sl-color-white: var(--ink);
+  --sl-color-gray-1: #1b1f38;
+  --sl-color-gray-2: var(--body);
+  --sl-color-gray-3: var(--caption);
+  --sl-color-gray-4: #8b90a8;
+  --sl-color-gray-5: var(--line);
+  --sl-color-gray-6: var(--paper);
+  --sl-color-gray-7: #f8f9fb;
+  --sl-color-black: var(--sheet);
+  --sl-color-accent-low: #eef0ff;
+  --sl-color-accent: var(--ballpoint);
+  --sl-color-accent-high: var(--ink);
+  --sl-font: var(--font-body);
+  --sl-font-mono: var(--font-mono);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
