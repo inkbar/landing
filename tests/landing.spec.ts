@@ -123,10 +123,7 @@ test('every internal link on the landing page resolves', async ({ page, request 
     .locator('a[href^="/"]')
     .evaluateAll((links) => links.map((link) => link.getAttribute('href') as string))
   const paths = [...new Set(hrefs.map((href) => href.split('#')[0] ?? '/'))]
-  // /docs/quickstart/ arrives with the docs pages; until then it is the one known gap.
-  const known = new Set(['/docs/quickstart/'])
   for (const path of paths) {
-    if (known.has(path)) continue
     const response = await request.get(path)
     expect(response.status(), path).toBe(200)
   }
