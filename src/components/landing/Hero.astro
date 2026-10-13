@@ -1,0 +1,66 @@
+<section class="container hero" data-section="hero">
+  <h1>
+    A full PDF editor for your web app. <span class="mark">No licence fee.</span>
+  </h1>
+  <p class="lede">
+    Inkbar renders, annotates and edits PDFs in the browser. It's written in TypeScript, with bindings
+    for Vue, React and Svelte, and it's free under the MIT licence.
+  </p>
+  <div class="actions">
+    <code class="install"><span class="prompt" aria-hidden="true">$</span>pnpm add @inkbar/core</code>
+    <a class="text-link" href="/docs/quickstart/">Read the quickstart</a>
+    <a class="text-link" href="https://github.com/inkbar/inkbar">View on GitHub</a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding-top: clamp(40px, 7vw, 88px);
+  }
+  h1 {
+    max-width: 940px;
+    font-size: clamp(42px, 6.6vw, 88px);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+  }
+  .mark {
+    padding: 0 0.12em;
+    border-radius: 6px;
+    background: var(--highlighter);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .lede {
+    max-width: 680px;
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.5;
+    color: var(--body);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+  }
+  .install {
+    display: inline-flex;
+    align-items: center;
+    min-height: 52px;
+    max-width: 100%;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-control);
+    background: var(--sheet);
+    overflow-x: auto;
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  .prompt {
+    margin-right: 10px;
+    color: var(--caption);
+  }
+</style>
