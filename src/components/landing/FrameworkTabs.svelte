@@ -75,10 +75,6 @@
     background: var(--highlighter);
     color: var(--ink);
   }
-  button:focus-visible {
-    outline: 3px solid #ffffff;
-    outline-offset: 2px;
-  }
   .file {
     padding-right: 8px;
     font-family: var(--font-mono);
@@ -93,7 +89,6 @@
     line-height: 1.7;
   }
   .code:focus-visible {
-    outline: 3px solid #ffffff;
     outline-offset: -5px;
   }
   .code :global(pre) {

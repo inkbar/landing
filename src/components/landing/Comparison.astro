@@ -85,6 +85,7 @@ const rows = [
     gap: 24px;
   }
   h2 {
+    isolation: isolate;
     font-size: clamp(34px, 4.2vw, 56px);
     line-height: 1.02;
     letter-spacing: -0.025em;
@@ -98,6 +99,8 @@ const rows = [
     padding: 0 0.12em;
     border-radius: 6px;
     background: var(--highlighter);
+    position: relative;
+    z-index: -1;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
   }

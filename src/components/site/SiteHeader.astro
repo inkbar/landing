@@ -105,4 +105,11 @@ const links = [
       gap: 4px 20px;
     }
   }
+  /* At 320px the four docs links need to share one row, or the header outgrows its bar. */
+  @media (max-width: 22rem) {
+    .site-header[data-variant='docs'] nav {
+      gap: 4px 8px;
+      font-size: 13.5px;
+    }
+  }
 </style>

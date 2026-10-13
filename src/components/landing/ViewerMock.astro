@@ -1,4 +1,4 @@
-<div class="container" data-section="viewer">
+<div class="container" data-section="viewer" role="group" aria-label="Example: the Inkbar viewer">
   <div class="viewer">
     <div class="toolbar" role="toolbar" aria-label="PDF tools">
       <div class="zoom">
@@ -152,6 +152,9 @@
     height: 19px;
   }
   @media (max-width: 600px) {
+    .divider {
+      display: none;
+    }
     .tool {
       width: 44px;
       height: 44px;

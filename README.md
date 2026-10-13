@@ -11,9 +11,31 @@ pnpm install
 pnpm dev
 ```
 
+## Build and preview
+
+```sh
+pnpm build
+pnpm preview
+```
+
+The build writes the site to `dist/`. The preview serves it at http://localhost:4321.
+
+## Tests
+
+The browser tests run against the built site. Build first, then install the browser once.
+
+```sh
+pnpm exec playwright install chromium
+pnpm build
+pnpm test:browser
+```
+
+Playwright starts the preview server for you.
+
 ## Checks
 
 ```sh
 pnpm lint
 pnpm format:check
+pnpm typecheck
 ```

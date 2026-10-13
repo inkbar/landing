@@ -1,5 +1,6 @@
 :root,
 :root[data-theme='light'] {
+  color-scheme: light;
   --sl-color-white: var(--ink);
   --sl-color-gray-1: #1b1f38;
   --sl-color-gray-2: var(--body);
@@ -62,9 +63,19 @@ nav.sidebar a[aria-current='page']:focus {
 }
 
 /* Code blocks take keyboard focus so a block that scrolls sideways can be read. */
+.expressive-code pre {
+  --focus-ring: #ffffff;
+}
+
 .expressive-code pre:focus-visible {
-  outline: 3px solid var(--ballpoint);
+  outline: 3px solid var(--focus-ring);
   outline-offset: -3px;
+}
+
+/* Tables can scroll sideways, so they take keyboard focus too. */
+.sl-markdown-content table:focus-visible {
+  outline: 3px solid var(--ballpoint);
+  outline-offset: 2px;
 }
 
 /* The site header has two rows on a phone, so the page starts lower. */
