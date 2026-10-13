@@ -39,6 +39,4 @@ Colour tokens must hold complete CSS colour values. Tokens written as bare HSL c
 
 The root and viewport fill their parent as a column, and the scroll area takes the remaining height. Give the parent a height and the document scrolls inside it.
 
-Licence: MIT.
-
 The annotation colours have their own variables. [Theme tokens](/docs/reference/theme-tokens/) lists them.

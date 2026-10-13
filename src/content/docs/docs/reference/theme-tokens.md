@@ -3,19 +3,25 @@ title: Theme tokens
 description: The shadcn-compatible tokens and the annotation colour variables that Inkbar's stylesheet reads.
 ---
 
-The stylesheet is compatible with shadcn token names. It reads these when your page defines them, and uses its own values when it does not.
+The stylesheet is compatible with shadcn token names. It reads these when your page defines them, and uses its own values when it does not:
 
-| Token                  | What it colours                        |
-| ---------------------- | -------------------------------------- |
-| `--background`         | Backgrounds                            |
-| `--foreground`         | Text                                   |
-| `--muted`              | The toolbar and panel surface          |
-| `--muted-foreground`   | Secondary text                         |
-| `--border`             | Borders                                |
-| `--primary`            | The active control                     |
-| `--primary-foreground` | Text on the active control             |
-| `--ring`               | Focus rings                            |
-| `--radius`             | Corner radius (a length, not a colour) |
+- `--background`
+- `--foreground`
+- `--muted`
+- `--muted-foreground`
+- `--border`
+- `--primary`
+- `--primary-foreground`
+- `--ring`
+- `--radius`
+
+Dark values apply under `prefers-color-scheme: dark` or inside a `.dark` ancestor. Add `.light` to the root or an ancestor to keep the light values, including inside a `.dark` ancestor.
+
+Colour tokens must hold complete CSS colour values. Tokens written as bare HSL channels (`--muted: 210 40% 96%`) do not work. Write the full colour instead:
+
+```css
+--muted: hsl(210 40% 96%);
+```
 
 ## Annotation colours
 
