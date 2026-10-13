@@ -1,0 +1,47 @@
+---
+title: Quickstart
+description: Install Inkbar, add the Vite plugin and put a PDF on screen with the default toolbar.
+---
+
+import { Aside } from '@astrojs/starlight/components'
+import FrameworkSnippet from '../../../components/docs/FrameworkSnippet.astro'
+
+Put a PDF on screen with the default toolbar. This page assumes a Vite project.
+
+## 1. Install the packages
+
+You need the core, the theme and the package for your framework. The packages share one version number.
+
+<FrameworkSnippet show="install" />
+
+## 2. Add the Vite plugin
+
+PDF.js loads a worker, fonts and decoders at runtime. The plugin serves those files in development and copies them into your build.
+
+```ts title="vite.config.ts"
+import { inkbar } from '@inkbar/core/vite'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [inkbar()],
+})
+```
+
+<Aside>
+  On another bundler, pass your own asset URLs to the root. [Loading
+  assets](/docs/loading-assets/) lists the files.
+</Aside>
+
+## 3. Mount the viewer
+
+Wrap the viewport in a root, then add the default toolbar and the note popover.
+
+<FrameworkSnippet />
+
+Inkbar keeps the annotations itself here, with undo and redo. To hold them in your own state, read [Controlled mode](/docs/guides/controlled-mode/).
+
+## Next
+
+- [Restyle the default UI](/docs/guides/theming/) with your own tokens and CSS.
+- [Work with annotations](/docs/guides/annotations/) and save them as JSON.
+- Read the page for your framework: [Vue](/docs/frameworks/vue/), [React](/docs/frameworks/react/) or [Plain DOM](/docs/frameworks/plain-dom/).

@@ -24,3 +24,52 @@ h4 {
   font-weight: 700;
   letter-spacing: -0.025em;
 }
+
+/* The current page in the sidebar is marked with the highlighter. */
+nav.sidebar a[aria-current='page'],
+nav.sidebar a[aria-current='page']:hover,
+nav.sidebar a[aria-current='page']:focus {
+  background: var(--highlighter);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Asides sit on paper with a small highlighter bar, not a coloured border. */
+.starlight-aside {
+  border: 0;
+  border-radius: 12px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.starlight-aside__title {
+  color: var(--ink);
+}
+
+.starlight-aside__title::before {
+  content: '';
+  display: inline-block;
+  width: 22px;
+  height: 8px;
+  margin-right: 10px;
+  border: 1px solid var(--ink);
+  border-radius: 2px;
+  background: var(--highlighter);
+}
+
+.starlight-aside__icon {
+  display: none;
+}
+
+/* Code blocks take keyboard focus so a block that scrolls sideways can be read. */
+.expressive-code pre:focus-visible {
+  outline: 3px solid var(--ballpoint);
+  outline-offset: -3px;
+}
+
+/* The site header has two rows on a phone, so the page starts lower. */
+@media (max-width: 49.99rem) {
+  :root {
+    --sl-nav-height: 7.25rem;
+  }
+}

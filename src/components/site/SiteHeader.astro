@@ -94,4 +94,15 @@ const links = [
     text-decoration-thickness: 4px;
     text-underline-offset: 6px;
   }
+  /* On a phone the logo and search share the first row and the site links take the second. */
+  @media (max-width: 49.99rem) {
+    .site-header[data-variant='docs'] .search {
+      flex: 0 0 auto;
+      max-width: none;
+    }
+    .site-header[data-variant='docs'] nav {
+      flex: 1 0 100%;
+      gap: 4px 20px;
+    }
+  }
 </style>

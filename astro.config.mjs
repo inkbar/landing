@@ -1,8 +1,7 @@
 import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
 import { defineConfig } from 'astro/config'
-
-import inkbarInk from './src/shiki/inkbar-ink.json' with { type: 'json' }
+import starlightLinksValidator from 'starlight-links-validator'
 
 export default defineConfig({
   site: 'https://inkbar.dev',
@@ -11,7 +10,6 @@ export default defineConfig({
       title: 'Inkbar',
       description:
         'Documentation for Inkbar, the open-source PDF viewer and editor for the web.',
-      expressiveCode: { themes: [inkbarInk], styleOverrides: { borderRadius: '12px' } },
       disable404Route: true,
       favicon: '/favicon.svg',
       components: {
@@ -28,10 +26,35 @@ export default defineConfig({
         './src/styles/starlight.css',
       ],
       editLink: { baseUrl: 'https://github.com/inkbar/landing/edit/main/' },
+      plugins: [starlightLinksValidator()],
       sidebar: [
         {
           label: 'Getting started',
-          items: [{ label: 'Introduction', slug: 'docs' }],
+          items: [
+            { label: 'Introduction', slug: 'docs' },
+            { label: 'Quickstart', slug: 'docs/quickstart' },
+            { label: 'Loading assets', slug: 'docs/loading-assets' },
+          ],
+        },
+        {
+          label: 'Guides',
+          items: [
+            { label: 'Annotations', slug: 'docs/guides/annotations' },
+            { label: 'Controlled mode', slug: 'docs/guides/controlled-mode' },
+            { label: 'Theming', slug: 'docs/guides/theming' },
+          ],
+        },
+        {
+          label: 'Frameworks',
+          items: [
+            { label: 'Vue', slug: 'docs/frameworks/vue' },
+            { label: 'React', slug: 'docs/frameworks/react' },
+            { label: 'Plain DOM', slug: 'docs/frameworks/plain-dom' },
+          ],
+        },
+        {
+          label: 'Reference',
+          items: [{ label: 'Theme tokens', slug: 'docs/reference/theme-tokens' }],
         },
       ],
     }),

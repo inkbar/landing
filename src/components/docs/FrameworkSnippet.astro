@@ -1,0 +1,25 @@
+---
+import { Code, TabItem, Tabs } from '@astrojs/starlight/components'
+
+import { frameworks } from '../../data/snippets'
+
+interface Props {
+  show?: 'code' | 'install'
+}
+
+const { show = 'code' } = Astro.props
+---
+
+<Tabs syncKey="framework">
+  {
+    frameworks.map((framework) => (
+      <TabItem label={framework.label}>
+        {show === 'install' ? (
+          <Code code={framework.install} lang="sh" />
+        ) : (
+          <Code code={framework.code} lang={framework.lang} title={framework.file} />
+        )}
+      </TabItem>
+    ))
+  }
+</Tabs>
