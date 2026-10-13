@@ -1,0 +1,19 @@
+src/content/docs/docs/reference/theme-tokens.md
+  s_b26adb18fa98f3::t_f83318438ba688 6,8-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "075e0469db823df4baf2638692713ba84669148b",
+  "prompts": {},
+  "sessions": {
+    "s_b26adb18fa98f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a541682a-38ad-47b7-babd-2fd1aa79b2a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
