@@ -1,0 +1,34 @@
+src/components/landing/Install.astro
+  s_b26adb18fa98f3::t_92b1aeac865eb1 71
+  s_b26adb18fa98f3::t_81607ee7c35e01 1-70,72-89
+src/components/landing/Theming.astro
+  s_b26adb18fa98f3::t_c944c99b82d196 46
+  s_b26adb18fa98f3::t_81607ee7c35e01 1-45,47-249
+tests/landing.spec.ts
+  s_b26adb18fa98f3::t_81607ee7c35e01 83-85,88-90,106-108,113-115,149-150
+  s_b26adb18fa98f3::t_5e6c45408a0231 3-4,56-82,86-87,91-105,109-112,116-148,151-166
+src/components/landing/Comparison.astro
+  s_b26adb18fa98f3::t_81607ee7c35e01 1-194
+src/components/landing/FrameworkTabs.svelte
+  s_b26adb18fa98f3::t_92b1aeac865eb1 100
+src/components/landing/Features.astro
+  s_b26adb18fa98f3::t_81607ee7c35e01 1-98
+src/pages/index.astro
+  s_b26adb18fa98f3::t_81607ee7c35e01 2,4,6-7,21-24
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "520fd2c14c482f2348828a07ccc21bd80289ad0a",
+  "prompts": {},
+  "sessions": {
+    "s_b26adb18fa98f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a541682a-38ad-47b7-babd-2fd1aa79b2a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
