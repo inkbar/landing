@@ -18,6 +18,13 @@ export default defineConfig({
         ThemeSelect: './src/components/starlight/ThemeSelect.astro',
         ThemeProvider: './src/components/starlight/ThemeProvider.astro',
       },
+      head: [
+        {
+          tag: 'meta',
+          attrs: { property: 'og:image', content: 'https://inkbar.dev/og.png' },
+        },
+        { tag: 'meta', attrs: { name: 'twitter:card', content: 'summary_large_image' } },
+      ],
       customCss: [
         '@fontsource-variable/urbanist/index.css',
         '@fontsource-variable/open-sans/index.css',

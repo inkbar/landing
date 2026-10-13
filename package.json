@@ -16,6 +16,7 @@
     "lint": "eslint . --no-error-on-unmatched-pattern",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "og": "node scripts/make-og.mjs",
     "prepare": "husky"
   },
   "lint-staged": {
