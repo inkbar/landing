@@ -9,6 +9,14 @@ export default defineConfig({
       title: 'Inkbar',
       description:
         'Documentation for Inkbar, the open-source PDF viewer and editor for the web.',
+      disable404Route: true,
+      favicon: '/favicon.svg',
+      components: {
+        Header: './src/components/starlight/Header.astro',
+        Footer: './src/components/starlight/Footer.astro',
+        ThemeSelect: './src/components/starlight/ThemeSelect.astro',
+        ThemeProvider: './src/components/starlight/ThemeProvider.astro',
+      },
       customCss: [
         '@fontsource-variable/urbanist/index.css',
         '@fontsource-variable/open-sans/index.css',
