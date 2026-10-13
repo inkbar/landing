@@ -1,0 +1,23 @@
+tests/meta.spec.ts
+  s_b26adb18fa98f3::t_85570b469e749c 62-67
+.github/workflows/site.yml
+  s_b26adb18fa98f3::t_85570b469e749c 13
+scripts/make-og.mjs
+  s_b26adb18fa98f3::t_85570b469e749c 22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "01b817754a613fd9f7e2a2b3dea17cb2d7b69d0f",
+  "prompts": {},
+  "sessions": {
+    "s_b26adb18fa98f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a541682a-38ad-47b7-babd-2fd1aa79b2a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
