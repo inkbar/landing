@@ -19,7 +19,7 @@ const html = `<!doctype html>
 body { margin: 0; width: 1200px; height: 630px; background: #F3F4F8; color: #0D1026; font-family: 'Urbanist';
   display: flex; flex-direction: column; justify-content: space-between; padding: 72px; box-sizing: border-box; }
 .logo { display: flex; align-items: center; gap: 20px; font-weight: 700; font-size: 64px; letter-spacing: -0.03em; }
-h1 { margin: 0; font-weight: 700; font-size: 84px; line-height: 1; letter-spacing: -0.03em; max-width: 980px; }
+h1 { margin: 0; font-weight: 700; font-size: 84px; line-height: 1.12; letter-spacing: -0.03em; max-width: 980px; }
 mark { background: #E4FF4A; color: inherit; padding: 0 0.12em; border-radius: 8px; }
 </style></head><body>
 <div class="logo">

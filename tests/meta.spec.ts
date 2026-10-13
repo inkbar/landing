@@ -59,3 +59,9 @@ test('the sitemap lists the landing page and the Quickstart', async ({ request }
   expect(sitemap).toContain('<loc>https://inkbar.dev/</loc>')
   expect(sitemap).toContain('<loc>https://inkbar.dev/docs/quickstart/</loc>')
 })
+
+test('the 404 page is kept out of the index', async ({ page }) => {
+  await page.goto('/no-such-page/')
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex')
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0)
+})
