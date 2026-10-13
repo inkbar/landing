@@ -1,0 +1,194 @@
+---
+const rows = [
+  ['Price', 'Free', 'Annual contract, quoted by sales'],
+  ['Price grows with', 'Nothing', 'Seats, domains or documents'],
+  ['Licence', 'MIT', 'Proprietary'],
+  ['Source code', 'Public on GitHub', 'Closed'],
+  ['Trying it out', 'Install from npm', 'Timed trial, often watermarked'],
+  ['Viewing and annotation', 'Included', 'Included, some tools as add-ons'],
+  ['Custom UI', 'CSS, or your own components', "Whatever the vendor's config allows"],
+]
+---
+
+<section id="why">
+  <div class="container row">
+    <div class="copy">
+      <h2>A line item you get to <span class="strike">renew</span>{' '}<span class="mark">delete.</span></h2>
+      <p class="lede">
+        Most PDF SDK vendors sell an annual contract and name the price after a sales call. Inkbar
+        is MIT licensed, so your team installs it from npm and starts building.
+      </p>
+      <div class="points">
+        <div class="point">
+          <span class="tick" aria-hidden="true"></span>
+          <p><strong>Free for commercial use.</strong> Use it and change it inside a product you sell.</p>
+        </div>
+        <div class="point">
+          <span class="tick" aria-hidden="true"></span>
+          <p><strong>Nothing to procure.</strong> You sign no contract and manage no licence keys.</p>
+        </div>
+        <div class="point">
+          <span class="tick" aria-hidden="true"></span>
+          <p>
+            <strong>No lock-in.</strong> The source is public, and Inkbar renders documents in the browser
+            without sending them to us.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="table-wrap"
+      tabindex="0"
+      role="region"
+      aria-label="Comparison with a typical commercial SDK"
+    >
+      <table>
+        <thead>
+          <tr>
+            <th scope="col" class="corner"><span class="visually-hidden">Comparison</span></th>
+            <th scope="col" class="us">inkbar</th>
+            <th scope="col" class="them">Typical commercial SDK</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            rows.map(([label, ours, theirs], index) => (
+              <tr class={index === rows.length - 1 ? 'last' : undefined}>
+                <th scope="row">{label}</th>
+                <td class={index === 0 ? 'ours free' : 'ours'}>{ours}</td>
+                <td class="theirs">{theirs}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    background: var(--sheet);
+  }
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 48px 64px;
+    padding-block: clamp(56px, 8vw, 112px);
+  }
+  .copy {
+    flex: 1 1 340px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  h2 {
+    font-size: clamp(34px, 4.2vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+  .strike {
+    text-decoration: line-through;
+    text-decoration-color: var(--strike);
+    text-decoration-thickness: 0.08em;
+  }
+  .mark {
+    padding: 0 0.12em;
+    border-radius: 6px;
+    background: var(--highlighter);
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+  }
+  .lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--body);
+  }
+  .points {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 4px;
+  }
+  .point {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .point p {
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  .tick {
+    flex: none;
+    width: 22px;
+    height: 8px;
+    margin-top: 9px;
+    border: 1px solid var(--ink);
+    border-radius: 2px;
+    background: var(--highlighter);
+  }
+  .table-wrap {
+    flex: 999 1 480px;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    font-size: 15.5px;
+    line-height: 1.45;
+    text-align: left;
+  }
+  th,
+  td {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  thead th {
+    padding-block: 20px;
+  }
+  .corner {
+    width: 30%;
+    font-weight: 500;
+    color: var(--caption);
+  }
+  .us {
+    border-bottom: 0;
+    background: var(--ink);
+    color: #ffffff;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .them {
+    font-weight: 600;
+    color: var(--body);
+  }
+  tbody th {
+    font-weight: 500;
+    color: var(--caption);
+  }
+  .ours {
+    border-bottom-color: var(--ink-line);
+    background: var(--ink);
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .ours.free {
+    color: var(--highlighter);
+  }
+  .theirs {
+    color: var(--body);
+  }
+  .last th,
+  .last td {
+    border-bottom: 0;
+  }
+</style>

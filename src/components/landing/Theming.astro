@@ -1,0 +1,249 @@
+<section id="theming">
+  <div class="container inner">
+    <div class="intro">
+      <h2>It should look like your product, not ours.</h2>
+      <p class="lede">
+        You can ship the default UI as it is. If you'd rather not, restyle it with CSS or replace
+        it with your own components.
+      </p>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <h3>Use the default</h3>
+        <p>Import the theme and you get a toolbar, popovers, and light and dark modes.</p>
+        <div class="stage" aria-hidden="true">
+          <div class="bar bar-default">
+            <span class="cell cell-default"
+              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 6z"></path></svg></span
+            >
+            <span class="cell cell-default on"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path></svg
+              ></span
+            >
+            <span class="cell cell-default"
+              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 5h14v10H10l-5 4z"></path></svg></span
+            >
+            <span class="cell cell-default"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path></svg
+              ></span
+            >
+            <span class="cell cell-default"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg
+              ></span
+            >
+          </div>
+        </div>
+        <pre>import '@inkbar/theme/theme.css'</pre>
+      </article>
+
+      <article class="card">
+        <h3>Restyle it with CSS</h3>
+        <p>
+          The theme's rules have zero specificity and sit in one cascade layer, so your CSS
+          overrides them without <code>!important</code>. If your page defines tokens such as
+          --primary and --radius, the theme uses them.
+        </p>
+        <div class="stage" aria-hidden="true">
+          <div class="bar bar-pill">
+            <span class="cell cell-pill"
+              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 6z"></path></svg></span
+            >
+            <span class="cell cell-pill on"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path></svg
+              ></span
+            >
+            <span class="cell cell-pill"
+              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 5h14v10H10l-5 4z"></path></svg></span
+            >
+            <span class="cell cell-pill"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path></svg
+              ></span
+            >
+            <span class="cell cell-pill"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg
+              ></span
+            >
+          </div>
+        </div>
+        <pre>@layer inkbar, utilities;
+
+:root &#123;
+  --primary: #0d1026;
+  --radius: 999px;
+  --ink-highlight: #e4ff4a;
+&#125;</pre>
+      </article>
+
+      <article class="card">
+        <h3>Rebuild it in your design system</h3>
+        <p>Leave out the default toolbar and wire your own buttons to the state it uses.</p>
+        <div class="stage" aria-hidden="true">
+          <div class="bar bar-square">
+            <span class="cell cell-square"
+              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 6z"></path></svg></span
+            >
+            <span class="cell cell-square on"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path></svg
+              ></span
+            >
+            <span class="cell cell-square"
+              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 5h14v10H10l-5 4z"></path></svg></span
+            >
+            <span class="cell cell-square"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path></svg
+              ></span
+            >
+            <span class="cell cell-square last"
+              ><svg class="icon" viewBox="0 0 24 24"
+                ><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg
+              ></span
+            >
+          </div>
+        </div>
+        <pre>&lt;InkRoot src=&#123;src&#125; assets=&#123;assets&#125;&gt;
+  &lt;YourToolbar /&gt;
+  &lt;InkViewport /&gt;
+&lt;/InkRoot&gt;</pre>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    background: var(--sheet);
+  }
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding-block: clamp(56px, 8vw, 112px);
+  }
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 760px;
+  }
+  h2 {
+    font-size: clamp(34px, 4.2vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+  .lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--body);
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 24px;
+  }
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    min-width: 0;
+    padding: 28px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+  }
+  .card h3 {
+    font-size: 26px;
+    letter-spacing: -0.02em;
+  }
+  .card p {
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--body);
+  }
+  .card code {
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  .stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 12px;
+    border-radius: 12px;
+    background: var(--paper);
+  }
+  .bar {
+    display: flex;
+  }
+  .bar-default {
+    gap: 4px;
+    padding: 6px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--sheet);
+  }
+  .bar-pill {
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #ffffff;
+  }
+  .bar-square {
+    border: 2px solid var(--ink);
+    background: var(--sheet);
+  }
+  .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .cell-default,
+  .cell-pill {
+    width: 38px;
+    height: 38px;
+  }
+  .cell-default {
+    border-radius: 6px;
+  }
+  .cell-pill {
+    border-radius: 999px;
+  }
+  .cell-square {
+    width: 42px;
+    height: 42px;
+    border-right: 2px solid var(--ink);
+  }
+  .cell-square.last {
+    border-right: 0;
+  }
+  .cell-default.on {
+    background: var(--viewer-ground);
+  }
+  .cell-pill.on {
+    background: var(--highlighter);
+    color: var(--ink);
+  }
+  .cell-square.on {
+    background: var(--ink);
+    color: #ffffff;
+  }
+  pre {
+    margin: 0;
+    margin-top: auto;
+    padding: 16px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: #ffffff;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.65;
+    overflow-x: auto;
+  }
+</style>

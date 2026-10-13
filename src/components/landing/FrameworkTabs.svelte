@@ -97,8 +97,7 @@
   .install {
     padding: 14px 24px;
     border-top: 1px solid var(--ink-line);
-    overflow-x: auto;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
     font-family: var(--font-mono);
     font-size: 13.5px;
     color: #ffffff;
