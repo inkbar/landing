@@ -1,0 +1,5 @@
+pnpm-lock.yaml
+dist
+.astro
+src/content/docs/docs/reference/api
+.superpowers
