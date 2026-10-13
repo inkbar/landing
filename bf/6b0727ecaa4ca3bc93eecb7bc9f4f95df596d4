@@ -1,0 +1,29 @@
+tests/landing.spec.ts
+  s_b26adb18fa98f3::t_790db342f0e0f7 13-15,30-39
+  s_b26adb18fa98f3::t_cb6a1b4cc5eaa6 1-12,16-29,40-53
+src/components/landing/ViewerMock.astro
+  s_b26adb18fa98f3::t_790db342f0e0f7 1-36,39-309
+  s_b26adb18fa98f3::t_76d1a529dc29e8 37-38
+src/components/landing/WorksWith.astro
+  s_b26adb18fa98f3::t_790db342f0e0f7 1-29
+src/components/landing/Hero.astro
+  s_b26adb18fa98f3::t_790db342f0e0f7 1-66
+src/pages/index.astro
+  s_b26adb18fa98f3::t_790db342f0e0f7 3-5,13-15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "bf6b0727ecaa4ca3bc93eecb7bc9f4f95df596d4",
+  "prompts": {},
+  "sessions": {
+    "s_b26adb18fa98f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a541682a-38ad-47b7-babd-2fd1aa79b2a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
