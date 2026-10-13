@@ -1,0 +1,98 @@
+<section id="features">
+  <div class="container inner">
+    <div class="intro">
+      <h2>What the paid SDKs do, in the free one.</h2>
+    </div>
+    <div class="grid">
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h9l4 4v14H6zM15 3v4h4"></path></svg>
+        <h3>Viewing</h3>
+        <p>Rendering built on PDF.js, with zoom, page navigation, text selection and search.</p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path></svg>
+        <h3>Text markup</h3>
+        <p>Highlight, underline, strikeout and squiggly, anchored to the text they mark.</p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H10l-5 4z"></path></svg>
+        <h3>Notes and threads</h3>
+        <p>Pin a note to the page and reply to it, so the review happens on the document.</p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path></svg>
+        <h3>Drawing and shapes</h3>
+        <p>Freehand ink, rectangles, ellipses, lines, arrows and text boxes.</p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect></svg>
+        <h3>Redaction</h3>
+        <p>Mark text and regions for redaction, then review each mark before you apply it.</p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="16" height="12" rx="2"></rect><path d="M8 12h5"></path></svg>
+        <h3>Forms</h3>
+        <p>Read and fill form fields in the viewer.</p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6L3 11l5 5M3 11h11a5 5 0 010 10h-2"></path></svg>
+        <h3>Undo and redo</h3>
+        <p>Built-in history, whether Inkbar holds the annotations or your app does.</p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="1.6"></circle><path d="M5 9h14M12 9v5M8 21l4-7 4 7"></path></svg>
+        <h3>Accessible by default</h3>
+        <p>Keyboard access and screen-reader labels across the default UI.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  section {
+    background: var(--paper);
+  }
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+    padding-block: clamp(56px, 8vw, 112px);
+  }
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 760px;
+  }
+  h2 {
+    font-size: clamp(34px, 4.2vw, 56px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--line);
+    overflow: hidden;
+  }
+  .cell {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 28px;
+    background: var(--sheet);
+  }
+  h3 {
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 600;
+  }
+  p {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--body);
+  }
+</style>
