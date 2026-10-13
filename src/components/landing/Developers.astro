@@ -52,7 +52,7 @@ const panels = await Promise.all(
       </div>
     </div>
     <div class="tabs">
-      <FrameworkTabs client:load panels={panels} initial={defaultFramework} />
+      <FrameworkTabs client:visible panels={panels} initial={defaultFramework} />
     </div>
   </div>
 </section>

@@ -1,4 +1,11 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+
+// The island hydrates when it scrolls into view. Astro removes the `ssr`
+// attribute from <astro-island> once hydration has finished.
+async function waitForHydration(page: Page) {
+  await page.locator('#developers').scrollIntoViewIfNeeded()
+  await page.locator('#developers astro-island:not([ssr])').waitFor({ state: 'attached' })
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto('/')
@@ -24,6 +31,7 @@ for (const framework of [
     page,
   }) => {
     const section = page.locator('#developers')
+    await waitForHydration(page)
     await section.getByRole('button', { name: framework.name }).click()
     await expect(section.getByRole('button', { name: framework.name })).toHaveAttribute(
       'aria-pressed',
@@ -39,6 +47,7 @@ for (const framework of [
 
 test('the tabs work from the keyboard and show a focus ring', async ({ page }) => {
   const vue = page.locator('#developers').getByRole('button', { name: 'Vue' })
+  await waitForHydration(page)
   await vue.focus()
   await page.keyboard.press('Space')
   await expect(vue).toHaveAttribute('aria-pressed', 'true')
