@@ -1,0 +1,44 @@
+.husky/commit-msg
+  s_b26adb18fa98f3::t_7e6967660d921d 1
+.prettierignore
+  s_b26adb18fa98f3::t_7e6967660d921d 1-5
+commitlint.config.mjs
+  s_b26adb18fa98f3::t_7e6967660d921d 1-7
+pnpm-workspace.yaml
+  s_b26adb18fa98f3::t_9c84df83124e2a 4
+  s_b26adb18fa98f3::t_7e6967660d921d 1-3
+.nvmrc
+  s_b26adb18fa98f3::t_7e6967660d921d 1
+eslint.config.js
+  s_b26adb18fa98f3::t_7e6967660d921d 1-16,18-34
+  s_b26adb18fa98f3::t_7ece69ea17bf7e 17
+package.json
+  s_b26adb18fa98f3::t_7ece69ea17bf7e 35
+  s_b26adb18fa98f3::t_7e6967660d921d 1-34,36-38
+.gitignore
+  s_b26adb18fa98f3::t_7e6967660d921d 1-8
+.husky/pre-commit
+  s_b26adb18fa98f3::t_7e6967660d921d 1
+README.md
+  s_b26adb18fa98f3::t_7e6967660d921d 1-19
+.prettierrc.mjs
+  s_b26adb18fa98f3::t_7e6967660d921d 1
+pnpm-lock.yaml
+  s_b26adb18fa98f3::t_8d95003337911c 1-2698
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d78b212845b9ed91559d223520c940429a9b5421",
+  "prompts": {},
+  "sessions": {
+    "s_b26adb18fa98f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a541682a-38ad-47b7-babd-2fd1aa79b2a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
