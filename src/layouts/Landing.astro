@@ -11,9 +11,12 @@ import SiteHeader from '../components/site/SiteHeader.astro'
 interface Props {
   title: string
   description: string
+  indexable?: boolean
 }
 
-const { title, description } = Astro.props
+const { title, description, indexable = true } = Astro.props
+const canonical = new URL(Astro.url.pathname, Astro.site).href
+const image = new URL('/og.png', Astro.site).href
 ---
 
 <!doctype html>
@@ -24,6 +27,15 @@ const { title, description } = Astro.props
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {indexable ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Inkbar" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    {indexable && <meta property="og:url" content={canonical} />}
+    <meta property="og:image" content={image} />
+    <meta name="twitter:card" content="summary_large_image" />
     <slot name="head" />
   </head>
   <body>

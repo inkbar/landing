@@ -2,7 +2,11 @@
 import Landing from '../layouts/Landing.astro'
 ---
 
-<Landing title="Page not found · Inkbar" description="This page does not exist.">
+<Landing
+  title="Page not found · Inkbar"
+  description="This page does not exist."
+  indexable={false}
+>
   <section class="container not-found">
     <h1>Page not found</h1>
     <p>
