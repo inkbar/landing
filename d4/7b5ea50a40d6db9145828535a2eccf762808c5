@@ -1,0 +1,54 @@
+src/layouts/Landing.astro
+  s_b26adb18fa98f3::t_1f531716107204 30-34,46-54
+src/components/docs/FrameworkSnippet.astro
+  s_b26adb18fa98f3::t_1f531716107204 14-22
+src/components/landing/FrameworkTabs.svelte
+  s_b26adb18fa98f3::t_1f531716107204 40-42
+package.json
+  s_b26adb18fa98f3::t_006d6e3c82fb2f 28,45-46
+src/components/landing/Hero.astro
+  s_b26adb18fa98f3::t_1f531716107204 6-7,10-21
+src/components/landing/ViewerMock.astro
+  s_b26adb18fa98f3::t_1f531716107204 1-6,10-14,16-20,26-65,69-89,98-101,104-106,109-114,118-131,139-142,144-148,150-153,156-160
+src/components/landing/Developers.astro
+  s_b26adb18fa98f3::t_1f531716107204 27-28,34-35,41-42,48-49
+src/components/site/SiteFooter.astro
+  s_b26adb18fa98f3::t_1f531716107204 14-18,20-53,57-61
+src/components/site/Logo.astro
+  s_b26adb18fa98f3::t_1f531716107204 25-26
+src/components/landing/Install.astro
+  s_b26adb18fa98f3::t_1f531716107204 4-5,13-14,18-23,25-30
+src/components/landing/Comparison.astro
+  s_b26adb18fa98f3::t_1f531716107204 16-19,21-23,28-31,35-38,43-44,58-66,70-76
+src/components/landing/Theming.astro
+  s_b26adb18fa98f3::t_1f531716107204 6-7,16-40,43-47,53-57,61-85,88-92,103-105,108-132,135-139
+src/components/starlight/Footer.astro
+  s_b26adb18fa98f3::t_1f531716107204 7-9
+.prettierrc.mjs
+  s_b26adb18fa98f3::t_f85bff2ffbdbb3 1-2,6-7,9-14
+  s_b26adb18fa98f3::t_0cf5aaac3450e2 3-5,8
+src/pages/404.astro
+  s_b26adb18fa98f3::t_1f531716107204 13-21
+src/components/landing/Features.astro
+  s_b26adb18fa98f3::t_1f531716107204 8-10,12-15,18-20,22-24,27-29,31-33,36-38,43-45,47-49,52-55,60-62,67-70
+src/components/site/SiteHeader.astro
+  s_b26adb18fa98f3::t_1f531716107204 22-27,29-37
+pnpm-lock.yaml
+  s_b26adb18fa98f3::t_7803e38a5155bf 196,211,230-235,255-260,267-272,279-284,291-297,305-311,319-325,333-339,347-351,357-362,369-374,381-384,389-392,1039-1041,2757-2769,2927-2933,3026-3028,3508,3510,3520-3522,3526-3528,3532-3534,3538-3540,3544-3546,3550-3552,3556-3558,3562-3569,3577-3579,3583-3585,3589-3604,3618-3624,3640,3661,3993,3996,4370-4371,6223,6225-6226,6228-6243,6339-6344,6486-6489
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d47b5ea50a40d6db9145828535a2eccf762808c5",
+  "prompts": {},
+  "sessions": {
+    "s_b26adb18fa98f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a541682a-38ad-47b7-babd-2fd1aa79b2a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
