@@ -1,5 +1,8 @@
 ---
 import Developers from '../components/landing/Developers.astro'
+import Hero from '../components/landing/Hero.astro'
+import ViewerMock from '../components/landing/ViewerMock.astro'
+import WorksWith from '../components/landing/WorksWith.astro'
 import Landing from '../layouts/Landing.astro'
 ---
 
@@ -7,8 +10,8 @@ import Landing from '../layouts/Landing.astro'
   title="Inkbar: open-source PDF viewer and editor for the web"
   description="Inkbar renders, annotates and edits PDFs in the browser. Written in TypeScript, with bindings for Vue, React and Svelte, and free under the MIT licence."
 >
-  <section class="container">
-    <h1>A full PDF editor for your web app. No licence fee.</h1>
-  </section>
+  <Hero />
+  <ViewerMock />
+  <WorksWith />
   <Developers />
 </Landing>
