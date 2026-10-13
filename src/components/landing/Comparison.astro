@@ -13,25 +13,35 @@ const rows = [
 <section id="why">
   <div class="container row">
     <div class="copy">
-      <h2>A line item you get to <span class="strike">renew</span>{' '}<span class="mark">delete.</span></h2>
+      <h2>
+        A line item you get to <span class="strike">renew</span>{' '}
+        <span class="mark">delete.</span>
+      </h2>
       <p class="lede">
-        Most PDF SDK vendors sell an annual contract and name the price after a sales call. Inkbar
-        is MIT licensed, so your team installs it from npm and starts building.
+        Most PDF SDK vendors sell an annual contract and name the price after a sales
+        call. Inkbar is MIT licensed, so your team installs it from npm and starts
+        building.
       </p>
       <div class="points">
         <div class="point">
           <span class="tick" aria-hidden="true"></span>
-          <p><strong>Free for commercial use.</strong> Use it and change it inside a product you sell.</p>
-        </div>
-        <div class="point">
-          <span class="tick" aria-hidden="true"></span>
-          <p><strong>Nothing to procure.</strong> You sign no contract and manage no licence keys.</p>
+          <p>
+            <strong>Free for commercial use.</strong> Use it and change it inside a
+            product you sell.
+          </p>
         </div>
         <div class="point">
           <span class="tick" aria-hidden="true"></span>
           <p>
-            <strong>No lock-in.</strong> The source is public, and Inkbar renders documents in the browser
-            without sending them to us.
+            <strong>Nothing to procure.</strong> You sign no contract and manage no
+            licence keys.
+          </p>
+        </div>
+        <div class="point">
+          <span class="tick" aria-hidden="true"></span>
+          <p>
+            <strong>No lock-in.</strong> The source is public, and Inkbar renders
+            documents in the browser without sending them to us.
           </p>
         </div>
       </div>
@@ -45,21 +55,25 @@ const rows = [
       <table>
         <thead>
           <tr>
-            <th scope="col" class="corner"><span class="visually-hidden">Comparison</span></th>
-            <th scope="col" class="us">inkbar</th>
-            <th scope="col" class="them">Typical commercial SDK</th>
+            <th scope="col" class="corner">
+              <span class="visually-hidden">Comparison</span>
+            </th>
+            <th scope="col" class="us">
+              inkbar
+            </th>
+            <th scope="col" class="them">
+              Typical commercial SDK
+            </th>
           </tr>
         </thead>
         <tbody>
-          {
-            rows.map(([label, ours, theirs], index) => (
-              <tr class={index === rows.length - 1 ? 'last' : undefined}>
-                <th scope="row">{label}</th>
-                <td class={index === 0 ? 'ours free' : 'ours'}>{ours}</td>
-                <td class="theirs">{theirs}</td>
-              </tr>
-            ))
-          }
+          {rows.map(([label, ours, theirs], index) => (
+            <tr class={index === rows.length - 1 ? 'last' : undefined}>
+              <th scope="row">{label}</th>
+              <td class={index === 0 ? 'ours free' : 'ours'}>{ours}</td>
+              <td class="theirs">{theirs}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

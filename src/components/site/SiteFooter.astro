@@ -11,52 +11,54 @@ const full = variant === 'full'
 
 <footer class="foot" data-variant={variant}>
   <div class="inner">
-    {
-      full && (
-        <div class="columns">
-          <div class="brand">
-            <Logo tone="dark" />
-            <p>The open-source PDF viewer and editor for the web.</p>
-          </div>
-          <nav aria-label="Product">
-            <h2>Product</h2>
-            <a href="/#features">Features</a>
-            <a href="/#theming">Theming</a>
-            <a href="/#why">Why Inkbar</a>
-            <a href="/docs/">Documentation</a>
-          </nav>
-          <nav aria-label="Packages">
-            <h2>Packages</h2>
-            <a class="mono" href="https://www.npmjs.com/package/@inkbar/core">
-              @inkbar/core
-            </a>
-            <a class="mono" href="https://www.npmjs.com/package/@inkbar/vue">
-              @inkbar/vue
-            </a>
-            <a class="mono" href="https://www.npmjs.com/package/@inkbar/react">
-              @inkbar/react
-            </a>
-            <a class="mono" href="https://www.npmjs.com/package/@inkbar/svelte">
-              @inkbar/svelte
-            </a>
-            <a class="mono" href="https://www.npmjs.com/package/@inkbar/theme">
-              @inkbar/theme
-            </a>
-          </nav>
-          <nav aria-label="Project">
-            <h2>Project</h2>
-            <a href="https://github.com/inkbar/inkbar">GitHub</a>
-            <a href="https://github.com/inkbar/inkbar/releases">Releases</a>
-            <a href="https://github.com/inkbar/inkbar/issues">Issues</a>
-            <a href="https://github.com/inkbar/inkbar/blob/main/LICENSE">MIT licence</a>
-          </nav>
+    {full && (
+      <div class="columns">
+        <div class="brand">
+          <Logo tone="dark" />
+          <p>The open-source PDF viewer and editor for the web.</p>
         </div>
-      )
-    }
+        <nav aria-label="Product">
+          <h2>Product</h2>
+          <a href="/#features">Features</a>
+          <a href="/#theming">Theming</a>
+          <a href="/#why">Why Inkbar</a>
+          <a href="/docs/">Documentation</a>
+        </nav>
+        <nav aria-label="Packages">
+          <h2>Packages</h2>
+          <a class="mono" href="https://www.npmjs.com/package/@inkbar/core">
+            @inkbar/core
+          </a>
+          <a class="mono" href="https://www.npmjs.com/package/@inkbar/vue">
+            @inkbar/vue
+          </a>
+          <a class="mono" href="https://www.npmjs.com/package/@inkbar/react">
+            @inkbar/react
+          </a>
+          <a class="mono" href="https://www.npmjs.com/package/@inkbar/svelte">
+            @inkbar/svelte
+          </a>
+          <a class="mono" href="https://www.npmjs.com/package/@inkbar/theme">
+            @inkbar/theme
+          </a>
+        </nav>
+        <nav aria-label="Project">
+          <h2>Project</h2>
+          <a href="https://github.com/inkbar/inkbar">GitHub</a>
+          <a href="https://github.com/inkbar/inkbar/releases">Releases</a>
+          <a href="https://github.com/inkbar/inkbar/issues">Issues</a>
+          <a href="https://github.com/inkbar/inkbar/blob/main/LICENSE">MIT licence</a>
+        </nav>
+      </div>
+    )}
     <div class="bottom">
       <span>© 2026 Inkbar. Released under the MIT licence.</span>
       <span>
-        From the team behind <a class="credit" href="https://redactr.io">Redactr</a>.
+        From the team behind{' '}
+        <a class="credit" href="https://redactr.io">
+          Redactr
+        </a>
+        .
       </span>
     </div>
   </div>
