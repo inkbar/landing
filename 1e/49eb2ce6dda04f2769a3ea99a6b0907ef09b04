@@ -1,0 +1,49 @@
+src/layouts/Landing.astro
+  s_b26adb18fa98f3::t_704c9b8ff1ade4 42,48-64,66-67
+  s_b26adb18fa98f3::t_3fd3fc90a2a2ee 65
+src/components/site/SiteFooter.astro
+  s_b26adb18fa98f3::t_466b8288382f7d 70-72,113,124
+src/components/landing/Theming.astro
+  s_b26adb18fa98f3::t_466b8288382f7d 247
+  s_b26adb18fa98f3::t_704c9b8ff1ade4 47,237-238
+  s_b26adb18fa98f3::t_907f99d9a5e205 239
+src/components/site/SiteHeader.astro
+  s_b26adb18fa98f3::t_91f6752201b89c 108-110,113-114
+  s_b26adb18fa98f3::t_10a6451e7e439b 111-112
+src/components/landing/ViewerMock.astro
+  s_b26adb18fa98f3::t_704c9b8ff1ade4 1,155-157
+src/components/starlight/MarkdownContent.astro
+  s_b26adb18fa98f3::t_831c4403b4ebe3 1-12
+src/components/landing/Comparison.astro
+  s_b26adb18fa98f3::t_91f6752201b89c 102-103
+  s_b26adb18fa98f3::t_704c9b8ff1ade4 88
+src/styles/starlight.css
+  s_b26adb18fa98f3::t_466b8288382f7d 3,66-69,71,75-79
+  s_b26adb18fa98f3::t_b50d7823d36cf1 80
+src/components/landing/Hero.astro
+  s_b26adb18fa98f3::t_91f6752201b89c 34-35
+  s_b26adb18fa98f3::t_704c9b8ff1ade4 24
+src/components/landing/Developers.astro
+  s_b26adb18fa98f3::t_466b8288382f7d 64
+astro.config.mjs
+  s_b26adb18fa98f3::t_831c4403b4ebe3 17
+src/styles/base.css
+  s_b26adb18fa98f3::t_466b8288382f7d 11-14,51
+  s_b26adb18fa98f3::t_df335561b554bb 9-10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1e49eb2ce6dda04f2769a3ea99a6b0907ef09b04",
+  "prompts": {},
+  "sessions": {
+    "s_b26adb18fa98f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a541682a-38ad-47b7-babd-2fd1aa79b2a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
