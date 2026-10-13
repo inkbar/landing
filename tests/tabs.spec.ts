@@ -46,13 +46,41 @@ for (const framework of [
 }
 
 test('the tabs work from the keyboard and show a focus ring', async ({ page }) => {
-  const vue = page.locator('#developers').getByRole('button', { name: 'Vue' })
+  const section = page.locator('#developers')
   await waitForHydration(page)
-  await vue.focus()
+  await page.evaluate(() => window.scrollTo(0, 0))
+
+  // Reach each tab with the Tab key, then activate it: Space for Vue, Enter for Svelte.
+  async function tabTo(name: string) {
+    await section.getByRole('button', { name }).evaluate((el) => {
+      el.setAttribute('data-tab-target', '')
+    })
+    for (let i = 0; i < 120; i += 1) {
+      await page.keyboard.press('Tab')
+      const reached = await page.evaluate(
+        () => document.activeElement?.hasAttribute('data-tab-target') ?? false
+      )
+      if (reached) {
+        await section.getByRole('button', { name }).evaluate((el) => {
+          el.removeAttribute('data-tab-target')
+        })
+        return
+      }
+    }
+    throw new Error(`Tab never reached ${name}`)
+  }
+
+  await tabTo('Vue')
+  const vue = section.getByRole('button', { name: 'Vue' })
+  expect(await vue.evaluate((el) => getComputedStyle(el).outlineStyle)).not.toBe('none')
   await page.keyboard.press('Space')
   await expect(vue).toHaveAttribute('aria-pressed', 'true')
-  const outline = await vue.evaluate((el) => getComputedStyle(el).outlineStyle)
-  expect(outline).not.toBe('none')
+
+  await tabTo('Svelte')
+  const svelte = section.getByRole('button', { name: 'Svelte' })
+  await page.keyboard.press('Enter')
+  await expect(svelte).toHaveAttribute('aria-pressed', 'true')
+  await expect(vue).toHaveAttribute('aria-pressed', 'false')
 })
 
 test.describe('with JavaScript disabled', () => {

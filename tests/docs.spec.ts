@@ -58,9 +58,20 @@ test('choosing a framework on the Quickstart changes both tab sets', async ({ pa
   await expect(page.locator('main')).toContainText("from '@inkbar/svelte'")
 })
 
-test('the Quickstart has no accessibility violations', async ({ page }) => {
-  await page.goto('/docs/quickstart/')
-  await expectNoAxeViolations(page)
+for (const { path } of pages) {
+  test(`${path} has no accessibility violations`, async ({ page }) => {
+    await page.goto(path)
+    await expectNoAxeViolations(page)
+  })
+}
+
+test('tables in the docs take keyboard focus', async ({ page }) => {
+  await page.goto('/docs/guides/annotations/')
+  const tables = page.locator('main table')
+  expect(await tables.count()).toBeGreaterThan(0)
+  for (const table of await tables.all()) {
+    await expect(table).toHaveAttribute('tabindex', '0')
+  }
 })
 
 test('the docs never mention the Pro tier', async ({ page }) => {

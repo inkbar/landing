@@ -10,10 +10,17 @@ export default defineConfig({
     {
       name: 'desktop',
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
+      testIgnore: /narrow\.spec/,
     },
     {
       name: 'phone',
       use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 } },
+      testIgnore: /narrow\.spec/,
+    },
+    {
+      name: 'narrow',
+      use: { ...devices['Desktop Chrome'], viewport: { width: 320, height: 640 } },
+      testMatch: /narrow\.spec/,
     },
   ],
   webServer: {

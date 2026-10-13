@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+import { expectNoAxeViolations } from './helpers'
+
 test('the landing header links to the docs and the page sections', async ({ page }) => {
   await page.goto('/')
   const nav = page.getByRole('navigation', { name: 'Site' })
@@ -27,6 +29,8 @@ test('the footer credits Redactr once and never mentions Pro', async ({ page }) 
     'https://redactr.io'
   )
   await expect(page.locator('body')).not.toContainText(/\bPro\b/)
+  const text = (await page.locator('body').textContent()) ?? ''
+  expect(text.match(/Redactr/g) ?? []).toHaveLength(1)
 })
 
 test('the docs use the site header with search and mark Docs as current', async ({
@@ -73,4 +77,5 @@ test('an unknown URL shows the 404 page with the site header', async ({ page }) 
     'href',
     '/docs/quickstart/'
   )
+  await expectNoAxeViolations(page)
 })
