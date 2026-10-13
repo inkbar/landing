@@ -2,6 +2,8 @@ import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
 import { defineConfig } from 'astro/config'
 
+import inkbarInk from './src/shiki/inkbar-ink.json' with { type: 'json' }
+
 export default defineConfig({
   site: 'https://inkbar.dev',
   integrations: [
@@ -9,6 +11,7 @@ export default defineConfig({
       title: 'Inkbar',
       description:
         'Documentation for Inkbar, the open-source PDF viewer and editor for the web.',
+      expressiveCode: { themes: [inkbarInk], styleOverrides: { borderRadius: '12px' } },
       disable404Route: true,
       favicon: '/favicon.svg',
       components: {
