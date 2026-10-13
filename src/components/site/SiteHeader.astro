@@ -19,20 +19,22 @@ const links = [
 ---
 
 <div class="site-header" data-variant={variant}>
-  <a class="home" href="/" aria-label="Inkbar home"><Logo /></a>
-  <div class="search"><slot name="search" /></div>
+  <a class="home" href="/" aria-label="Inkbar home">
+    <Logo />
+  </a>
+  <div class="search">
+    <slot name="search" />
+  </div>
   <nav aria-label="Site">
-    {
-      links.map((link) => (
-        <a
-          href={link.href}
-          aria-current={variant === 'docs' && link.label === 'Docs' ? 'page' : undefined}
-          class:list={{ strong: link.label === 'Get started' }}
-        >
-          {link.label}
-        </a>
-      ))
-    }
+    {links.map((link) => (
+      <a
+        href={link.href}
+        aria-current={variant === 'docs' && link.label === 'Docs' ? 'page' : undefined}
+        class:list={{ strong: link.label === 'Get started' }}
+      >
+        {link.label}
+      </a>
+    ))}
   </nav>
 </div>
 

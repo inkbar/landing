@@ -3,8 +3,8 @@
     <div class="intro">
       <h2>It should look like your product, not ours.</h2>
       <p class="lede">
-        You can ship the default UI as it is. If you'd rather not, restyle it with CSS or replace
-        it with your own components.
+        You can ship the default UI as it is. If you'd rather not, restyle it with CSS or
+        replace it with your own components.
       </p>
     </div>
     <div class="cards">
@@ -13,65 +13,82 @@
         <p>Import the theme and you get a toolbar, popovers, and light and dark modes.</p>
         <div class="stage" aria-hidden="true">
           <div class="bar bar-default">
-            <span class="cell cell-default"
-              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 6z"></path></svg></span
-            >
-            <span class="cell cell-default on"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path></svg
-              ></span
-            >
-            <span class="cell cell-default"
-              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 5h14v10H10l-5 4z"></path></svg></span
-            >
-            <span class="cell cell-default"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path></svg
-              ></span
-            >
-            <span class="cell cell-default"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg
-              ></span
-            >
+            <span class="cell cell-default">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M5 3l14 8-6 2-2 6z"></path>
+              </svg>
+            </span>
+            <span class="cell cell-default on">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path>
+              </svg>
+            </span>
+            <span class="cell cell-default">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M5 5h14v10H10l-5 4z"></path>
+              </svg>
+            </span>
+            <span class="cell cell-default">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path>
+              </svg>
+            </span>
+            <span class="cell cell-default">
+              <svg class="icon" viewBox="0 0 24 24">
+                <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+              </svg>
+            </span>
           </div>
         </div>
-        <pre tabindex="0" role="region" aria-label="Code sample: Default theme import">import '@inkbar/theme/theme.css'</pre>
+        <pre
+          tabindex="0"
+          role="region"
+          aria-label="Code sample: Default theme import"
+        >import '@inkbar/theme/theme.css'</pre>
       </article>
 
       <article class="card">
         <h3>Restyle it with CSS</h3>
         <p>
-          The theme's rules have zero specificity and sit in one cascade layer, so your CSS
-          overrides them without <code>!important</code>. If your page defines tokens such as
-          <span class="token">--primary</span> and <span class="token">--radius</span>, the theme uses them.
+          The theme's rules have zero specificity and sit in one cascade layer, so your
+          CSS overrides them without <code>!important</code>. If your page defines tokens
+          such as <span class="token">--primary</span> and{' '}
+          <span class="token">--radius</span>, the theme uses them.
         </p>
         <div class="stage" aria-hidden="true">
           <div class="bar bar-pill">
-            <span class="cell cell-pill"
-              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 6z"></path></svg></span
-            >
-            <span class="cell cell-pill on"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path></svg
-              ></span
-            >
-            <span class="cell cell-pill"
-              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 5h14v10H10l-5 4z"></path></svg></span
-            >
-            <span class="cell cell-pill"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path></svg
-              ></span
-            >
-            <span class="cell cell-pill"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg
-              ></span
-            >
+            <span class="cell cell-pill">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M5 3l14 8-6 2-2 6z"></path>
+              </svg>
+            </span>
+            <span class="cell cell-pill on">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path>
+              </svg>
+            </span>
+            <span class="cell cell-pill">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M5 5h14v10H10l-5 4z"></path>
+              </svg>
+            </span>
+            <span class="cell cell-pill">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path>
+              </svg>
+            </span>
+            <span class="cell cell-pill">
+              <svg class="icon" viewBox="0 0 24 24">
+                <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+              </svg>
+            </span>
           </div>
         </div>
-        <pre tabindex="0" role="region" aria-label="Code sample: CSS override example">@layer inkbar, utilities;
+        <pre
+          tabindex="0"
+          role="region"
+          aria-label="Code sample: CSS override example"
+        >@layer inkbar, utilities;
 
 :root &#123;
   --primary: #0d1026;
@@ -82,33 +99,43 @@
 
       <article class="card">
         <h3>Rebuild it in your design system</h3>
-        <p>Leave out the default toolbar and wire your own buttons to the state it uses.</p>
+        <p>
+          Leave out the default toolbar and wire your own buttons to the state it uses.
+        </p>
         <div class="stage" aria-hidden="true">
           <div class="bar bar-square">
-            <span class="cell cell-square"
-              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 3l14 8-6 2-2 6z"></path></svg></span
-            >
-            <span class="cell cell-square on"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path></svg
-              ></span
-            >
-            <span class="cell cell-square"
-              ><svg class="icon" viewBox="0 0 24 24"><path d="M5 5h14v10H10l-5 4z"></path></svg></span
-            >
-            <span class="cell cell-square"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path></svg
-              ></span
-            >
-            <span class="cell cell-square last"
-              ><svg class="icon" viewBox="0 0 24 24"
-                ><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg
-              ></span
-            >
+            <span class="cell cell-square">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M5 3l14 8-6 2-2 6z"></path>
+              </svg>
+            </span>
+            <span class="cell cell-square on">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path>
+              </svg>
+            </span>
+            <span class="cell cell-square">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M5 5h14v10H10l-5 4z"></path>
+              </svg>
+            </span>
+            <span class="cell cell-square">
+              <svg class="icon" viewBox="0 0 24 24">
+                <path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path>
+              </svg>
+            </span>
+            <span class="cell cell-square last">
+              <svg class="icon" viewBox="0 0 24 24">
+                <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+              </svg>
+            </span>
           </div>
         </div>
-        <pre tabindex="0" role="region" aria-label="Code sample: Custom toolbar example">&lt;InkRoot src=&#123;src&#125; assets=&#123;assets&#125;&gt;
+        <pre
+          tabindex="0"
+          role="region"
+          aria-label="Code sample: Custom toolbar example"
+        >&lt;InkRoot src=&#123;src&#125; assets=&#123;assets&#125;&gt;
   &lt;YourToolbar /&gt;
   &lt;InkViewport /&gt;
 &lt;/InkRoot&gt;</pre>

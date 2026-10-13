@@ -27,7 +27,11 @@ const image = new URL('/og.png', Astro.site).href
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    {indexable ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex" />}
+    {indexable ? (
+      <link rel="canonical" href={canonical} />
+    ) : (
+      <meta name="robots" content="noindex" />
+    )}
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Inkbar" />
@@ -39,9 +43,15 @@ const image = new URL('/og.png', Astro.site).href
     <slot name="head" />
   </head>
   <body>
-    <a class="skip" href="#top">Skip to content</a>
-    <header><SiteHeader variant="landing" /></header>
-    <main id="top"><slot /></main>
+    <a class="skip" href="#top">
+      Skip to content
+    </a>
+    <header>
+      <SiteHeader variant="landing" />
+    </header>
+    <main id="top">
+      <slot />
+    </main>
     <SiteFooter variant="full" />
   </body>
 </html>

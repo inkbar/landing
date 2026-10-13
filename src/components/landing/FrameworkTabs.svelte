@@ -37,7 +37,9 @@
     <div class="code" tabindex="0" role="region" aria-label="{active.label} code sample">
       {@html active.html}
     </div>
-    <div class="install"><span class="prompt" aria-hidden="true">$</span>{active.install}</div>
+    <div class="install">
+      <span class="prompt" aria-hidden="true">$</span>{active.install}
+    </div>
   {/if}
 </div>
 

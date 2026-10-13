@@ -1,30 +1,92 @@
-<div class="container" data-section="viewer" role="group" aria-label="Example: the Inkbar viewer">
+<div
+  class="container"
+  data-section="viewer"
+  role="group"
+  aria-label="Example: the Inkbar viewer"
+>
   <div class="viewer">
     <div class="toolbar" role="toolbar" aria-label="PDF tools">
       <div class="zoom">
-        <button type="button" class="tool" aria-label="Zoom out"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12"></path></svg></button>
+        <button type="button" class="tool" aria-label="Zoom out">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 12h12"></path>
+          </svg>
+        </button>
         <span class="zoom-level">110%</span>
-        <button type="button" class="tool" aria-label="Zoom in"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 12h12M12 6v12"></path></svg></button>
+        <button type="button" class="tool" aria-label="Zoom in">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M6 12h12M12 6v12"></path>
+          </svg>
+        </button>
         <span class="page-box">3</span>
         <span class="page-of">of 24</span>
       </div>
       <span class="divider" aria-hidden="true"></span>
       <div class="group">
-        <button type="button" class="tool" aria-label="Select"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3l14 8-6 2-2 6z"></path></svg></button>
-        <button type="button" class="tool" aria-label="Highlight" aria-pressed="true"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path></svg></button>
-        <button type="button" class="tool" aria-label="Underline"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v7a5 5 0 0010 0V4M5 20h14"></path></svg></button>
-        <button type="button" class="tool" aria-label="Strikeout"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16M16 7.5C16 5.5 14.4 4.5 12 4.5S8 5.6 8 7.6M8 16.5c0 2 1.6 3 4 3s4-1.1 4-3.1"></path></svg></button>
-        <button type="button" class="tool" aria-label="Note"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14v10H10l-5 4z"></path></svg></button>
-        <button type="button" class="tool" aria-label="Draw"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path></svg></button>
-        <button type="button" class="tool" aria-label="Shape"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"></rect></svg></button>
-        <button type="button" class="tool" aria-label="Redact"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect></svg></button>
+        <button type="button" class="tool" aria-label="Select">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 3l14 8-6 2-2 6z"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Highlight" aria-pressed="true">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Underline">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M7 4v7a5 5 0 0010 0V4M5 20h14"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Strikeout">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 12h16M16 7.5C16 5.5 14.4 4.5 12 4.5S8 5.6 8 7.6M8 16.5c0 2 1.6 3 4 3s4-1.1 4-3.1"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Note">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 5h14v10H10l-5 4z"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Draw">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Shape">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Redact">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect>
+          </svg>
+        </button>
       </div>
       <span class="divider" aria-hidden="true"></span>
       <div class="group end">
-        <button type="button" class="tool" aria-label="Undo"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6L3 11l5 5M3 11h11a5 5 0 010 10h-2"></path></svg></button>
-        <button type="button" class="tool" aria-label="Redo"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 6l5 5-5 5M21 11H10a5 5 0 000 10h2"></path></svg></button>
-        <button type="button" class="tool" aria-label="Search"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6"></circle><path d="M16 16l4 4"></path></svg></button>
-        <button type="button" class="tool" aria-label="Download"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path></svg></button>
+        <button type="button" class="tool" aria-label="Undo">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M8 6L3 11l5 5M3 11h11a5 5 0 010 10h-2"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Redo">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M16 6l5 5-5 5M21 11H10a5 5 0 000 10h2"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Search">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6"></circle>
+            <path d="M16 16l4 4"></path>
+          </svg>
+        </button>
+        <button type="button" class="tool" aria-label="Download">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 4v11M7 11l5 5 5-5M5 20h14"></path>
+          </svg>
+        </button>
       </div>
     </div>
     <div class="body">
@@ -33,25 +95,40 @@
           <div class="doc-meta">SUPPLIER AGREEMENT · PAGE 3 OF 24</div>
           <div class="doc-title">4. Data handling</div>
           <p>
-            4.1 The Supplier shall process Customer Data only on documented instructions from the
-            Customer, and <span class="hl">shall delete all Customer Data within thirty (30) days</span
-            >{' '}of termination.
+            4.1 The Supplier shall process Customer Data only on documented instructions
+            from the Customer, and{' '}
+            <span class="hl">shall delete all Customer Data within thirty (30) days</span>{' '}
+            of termination.
           </p>
           <p>
-            4.2 Each party shall keep the other's Confidential Information secret and <span
-              class="ul">shall not disclose it to any third party</span
-            > without prior written consent.
+            4.2 Each party shall keep the other's Confidential Information secret and{' '}
+            <span class="ul">shall not disclose it to any third party</span> without prior
+            written consent.
           </p>
           <p>
-            4.3 Notices under this clause go to <span class="redacted" aria-hidden="true"
-              >Jordan Avery, Legal</span
-            ><span class="visually-hidden">redacted</span> at the address in <span class="strike"
-              >Schedule 2</span
-            > Schedule 3.
+            4.3 Notices under this clause go to{' '}
+            <span class="redacted" aria-hidden="true">
+              Jordan Avery, Legal
+            </span>
+            <span class="visually-hidden">redacted</span> at the address in{' '}
+            <span class="strike">Schedule 2</span> Schedule 3.
           </p>
           <div class="sign-row">
             <div class="sign">
-              <svg viewBox="0 0 240 70" role="img" aria-label="Handwritten signature drawn with the freehand tool"><path d="M8 48c14-30 24-38 28-28s-14 34-6 34 18-36 28-34-4 30 6 28 14-22 24-22-2 20 8 18 16-18 28-18 4 14 16 12 30-14 78-20" fill="none" stroke="var(--ballpoint)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <svg
+                viewBox="0 0 240 70"
+                role="img"
+                aria-label="Handwritten signature drawn with the freehand tool"
+              >
+                <path
+                  d="M8 48c14-30 24-38 28-28s-14 34-6 34 18-36 28-34-4 30 6 28 14-22 24-22-2 20 8 18 16-18 28-18 4 14 16 12 30-14 78-20"
+                  fill="none"
+                  stroke="var(--ballpoint)"
+                  stroke-width="2.6"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                ></path>
+              </svg>
               <div class="sign-line">Signed for the Customer</div>
             </div>
             <div class="date-line">Date</div>
@@ -59,14 +136,28 @@
         </div>
       </div>
       <aside class="comments" aria-label="Comments">
-        <div class="comments-head"><span>Comments</span><span class="count">2</span></div>
-        <div class="thread">
-          <div class="who"><span class="swatch swatch-highlight"></span><span class="name">Priya S.</span><span class="where">Highlight · 4.1</span></div>
-          <div>Is thirty days enough to cover the backups too?</div>
-          <div class="reply"><span class="name">Marcus L.</span><span>Backups are in 4.4. Leaving this as is.</span></div>
+        <div class="comments-head">
+          <span>Comments</span>
+          <span class="count">2</span>
         </div>
         <div class="thread">
-          <div class="who"><span class="swatch swatch-redact"></span><span class="name">You</span><span class="where">Redaction · 4.3</span></div>
+          <div class="who">
+            <span class="swatch swatch-highlight"></span>
+            <span class="name">Priya S.</span>
+            <span class="where">Highlight · 4.1</span>
+          </div>
+          <div>Is thirty days enough to cover the backups too?</div>
+          <div class="reply">
+            <span class="name">Marcus L.</span>
+            <span>Backups are in 4.4. Leaving this as is.</span>
+          </div>
+        </div>
+        <div class="thread">
+          <div class="who">
+            <span class="swatch swatch-redact"></span>
+            <span class="name">You</span>
+            <span class="where">Redaction · 4.3</span>
+          </div>
           <div>Contact name marked for redaction before this goes to the supplier.</div>
         </div>
       </aside>
