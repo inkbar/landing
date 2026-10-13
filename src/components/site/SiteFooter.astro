@@ -1,0 +1,157 @@
+---
+import Logo from './Logo.astro'
+
+interface Props {
+  variant?: 'full' | 'compact'
+}
+
+const { variant = 'full' } = Astro.props
+const full = variant === 'full'
+---
+
+<footer class="foot" data-variant={variant}>
+  <div class="inner">
+    {
+      full && (
+        <div class="columns">
+          <div class="brand">
+            <Logo tone="dark" />
+            <p>The open-source PDF viewer and editor for the web.</p>
+          </div>
+          <nav aria-label="Product">
+            <h2>Product</h2>
+            <a href="/#features">Features</a>
+            <a href="/#theming">Theming</a>
+            <a href="/#why">Why Inkbar</a>
+            <a href="/docs/">Documentation</a>
+          </nav>
+          <nav aria-label="Packages">
+            <h2>Packages</h2>
+            <a class="mono" href="https://www.npmjs.com/package/@inkbar/core">
+              @inkbar/core
+            </a>
+            <a class="mono" href="https://www.npmjs.com/package/@inkbar/vue">
+              @inkbar/vue
+            </a>
+            <a class="mono" href="https://www.npmjs.com/package/@inkbar/react">
+              @inkbar/react
+            </a>
+            <a class="mono" href="https://www.npmjs.com/package/@inkbar/svelte">
+              @inkbar/svelte
+            </a>
+            <a class="mono" href="https://www.npmjs.com/package/@inkbar/theme">
+              @inkbar/theme
+            </a>
+          </nav>
+          <nav aria-label="Project">
+            <h2>Project</h2>
+            <a href="https://github.com/inkbar/inkbar">GitHub</a>
+            <a href="https://github.com/inkbar/inkbar/releases">Releases</a>
+            <a href="https://github.com/inkbar/inkbar/issues">Issues</a>
+            <a href="https://github.com/inkbar/inkbar/blob/main/LICENSE">MIT licence</a>
+          </nav>
+        </div>
+      )
+    }
+    <div class="bottom">
+      <span>© 2026 Inkbar. Released under the MIT licence.</span>
+      <span>
+        From the team behind <a class="credit" href="https://redactr.io">Redactr</a>.
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+  .foot[data-variant='compact'] {
+    background: transparent;
+    color: var(--caption);
+    border-top: 1px solid var(--line);
+  }
+  .inner {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+  }
+  .foot[data-variant='full'] .inner {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 64px var(--gutter) 32px;
+  }
+  .foot[data-variant='compact'] .inner {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 24px clamp(20px, 4vw, 40px);
+  }
+  .columns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 40px 64px;
+  }
+  .brand {
+    flex: 1 1 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .brand p {
+    max-width: 300px;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 15px;
+  }
+  h2 {
+    margin-bottom: 8px;
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+  }
+  nav a {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    color: var(--on-ink);
+    text-decoration: none;
+  }
+  nav a:hover {
+    color: var(--highlighter);
+  }
+  nav a.mono {
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 32px;
+    font-size: 13.5px;
+    color: var(--on-ink-muted);
+  }
+  .foot[data-variant='full'] .bottom {
+    padding-top: 24px;
+    border-top: 1px solid var(--ink-line);
+  }
+  .foot[data-variant='compact'] .bottom {
+    color: var(--caption);
+  }
+  .credit {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .foot[data-variant='full'] .credit:hover {
+    color: var(--highlighter);
+  }
+</style>

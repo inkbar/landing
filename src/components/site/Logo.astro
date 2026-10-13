@@ -1,0 +1,46 @@
+---
+interface Props {
+  tone?: 'light' | 'dark'
+  size?: number
+}
+
+const { tone = 'light', size = 32 } = Astro.props
+const tile = tone === 'light' ? '#0D1026' : '#FFFFFF'
+const glyph = tone === 'light' ? '#FFFFFF' : '#0D1026'
+---
+
+<span class="logo" data-tone={tone}>
+  <svg viewBox="0 0 32 32" width={size} height={size} aria-hidden="true">
+    <rect width="32" height="32" rx="8" fill={tile}></rect>
+    <circle cx="16" cy="8.2" r="2.4" fill={glyph}></circle>
+    <rect x="13.8" y="12" width="4.4" height="7.5" fill={glyph}></rect>
+    <rect
+      x="6"
+      y="21"
+      width="20"
+      height="5"
+      rx="1.5"
+      fill="#E4FF4A"
+      stroke={tone === 'dark' ? '#0D1026' : 'none'}
+      stroke-width="1"></rect>
+  </svg>
+  <span class="wordmark">inkbar</span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .wordmark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+  }
+  .logo[data-tone='dark'] .wordmark {
+    color: #ffffff;
+  }
+</style>

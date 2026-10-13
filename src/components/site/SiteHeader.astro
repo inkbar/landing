@@ -1,0 +1,97 @@
+---
+import Logo from './Logo.astro'
+
+interface Props {
+  variant?: 'landing' | 'docs'
+}
+
+const { variant = 'landing' } = Astro.props
+
+const links = [
+  { label: 'Docs', href: '/docs/', on: ['landing', 'docs'] },
+  { label: 'Developers', href: '/#developers', on: ['landing'] },
+  { label: 'Theming', href: '/#theming', on: ['landing'] },
+  { label: 'Features', href: '/#features', on: ['landing', 'docs'] },
+  { label: 'Why Inkbar', href: '/#why', on: ['landing', 'docs'] },
+  { label: 'GitHub', href: 'https://github.com/inkbar/inkbar', on: ['landing', 'docs'] },
+  { label: 'Get started', href: '/#start', on: ['landing'] },
+].filter((link) => link.on.includes(variant))
+---
+
+<div class="site-header" data-variant={variant}>
+  <a class="home" href="/" aria-label="Inkbar home"><Logo /></a>
+  <div class="search"><slot name="search" /></div>
+  <nav aria-label="Site">
+    {
+      links.map((link) => (
+        <a
+          href={link.href}
+          aria-current={variant === 'docs' && link.label === 'Docs' ? 'page' : undefined}
+          class:list={{ strong: link.label === 'Get started' }}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+</div>
+
+<style>
+  .site-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px 32px;
+    width: 100%;
+  }
+  .site-header[data-variant='landing'] {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    padding: 20px var(--gutter);
+  }
+  .home {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .search {
+    flex: 1 1 240px;
+    max-width: 420px;
+  }
+  .site-header[data-variant='landing'] .search {
+    display: none;
+  }
+  nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 28px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  nav a:hover {
+    color: var(--ballpoint);
+  }
+  nav a.strong {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+  }
+  nav a[aria-current='page'] {
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: var(--highlighter);
+    text-decoration-thickness: 4px;
+    text-underline-offset: 6px;
+  }
+</style>
