@@ -1,0 +1,21 @@
+.gitignore
+  s_b26adb18fa98f3::t_d45b0b0cb84bea 8
+src/content/docs/docs/index.mdx
+  s_b26adb18fa98f3::t_5882337c76a967 1-22
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "df1cbe35328d8f29f3c67cfd88a6c51c63e2798b",
+  "prompts": {},
+  "sessions": {
+    "s_b26adb18fa98f3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "a541682a-38ad-47b7-babd-2fd1aa79b2a7",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
