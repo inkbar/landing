@@ -36,7 +36,7 @@
             >
           </div>
         </div>
-        <pre>import '@inkbar/theme/theme.css'</pre>
+        <pre tabindex="0" role="region" aria-label="Code sample: Default theme import">import '@inkbar/theme/theme.css'</pre>
       </article>
 
       <article class="card">
@@ -71,7 +71,7 @@
             >
           </div>
         </div>
-        <pre>@layer inkbar, utilities;
+        <pre tabindex="0" role="region" aria-label="Code sample: CSS override example">@layer inkbar, utilities;
 
 :root &#123;
   --primary: #0d1026;
@@ -108,7 +108,7 @@
             >
           </div>
         </div>
-        <pre>&lt;InkRoot src=&#123;src&#125; assets=&#123;assets&#125;&gt;
+        <pre tabindex="0" role="region" aria-label="Code sample: Custom toolbar example">&lt;InkRoot src=&#123;src&#125; assets=&#123;assets&#125;&gt;
   &lt;YourToolbar /&gt;
   &lt;InkViewport /&gt;
 &lt;/InkRoot&gt;</pre>
@@ -245,5 +245,9 @@
     font-size: 13px;
     line-height: 1.65;
     overflow-x: auto;
+  }
+  pre:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: -5px;
   }
 </style>

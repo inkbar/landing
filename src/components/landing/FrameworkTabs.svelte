@@ -33,7 +33,10 @@
     {#if active}<span class="file">{active.file}</span>{/if}
   </div>
   {#if active}
-    <div class="code">{@html active.html}</div>
+    <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+    <div class="code" tabindex="0" role="region" aria-label="{active.label} code sample">
+      {@html active.html}
+    </div>
     <div class="install"><span class="prompt" aria-hidden="true">$</span>{active.install}</div>
   {/if}
 </div>
@@ -88,6 +91,10 @@
     overflow-x: auto;
     font-size: 13.5px;
     line-height: 1.7;
+  }
+  .code:focus-visible {
+    outline: 3px solid #ffffff;
+    outline-offset: -5px;
   }
   .code :global(pre) {
     margin: 0;
