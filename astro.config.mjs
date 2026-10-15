@@ -17,7 +17,7 @@ export default defineConfig({
     starlight({
       title: 'Inkbar',
       description:
-        'Documentation for Inkbar, the open-source PDF viewer and editor for the web.',
+        'Documentation for Inkbar, the open-source PDF viewer and markup toolkit for the web.',
       disable404Route: true,
       favicon: '/favicon.svg',
       components: {
@@ -55,7 +55,9 @@ export default defineConfig({
         {
           label: 'Guides',
           items: [
+            { label: 'Toolbars', slug: 'docs/guides/toolbars' },
             { label: 'Annotations', slug: 'docs/guides/annotations' },
+            { label: 'Redaction', slug: 'docs/guides/redaction' },
             { label: 'Controlled mode', slug: 'docs/guides/controlled-mode' },
             { label: 'Theming', slug: 'docs/guides/theming' },
           ],
@@ -65,6 +67,7 @@ export default defineConfig({
           items: [
             { label: 'Vue', slug: 'docs/frameworks/vue' },
             { label: 'React', slug: 'docs/frameworks/react' },
+            { label: 'Svelte', slug: 'docs/frameworks/svelte' },
             { label: 'Plain DOM', slug: 'docs/frameworks/plain-dom' },
           ],
         },

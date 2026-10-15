@@ -24,22 +24,24 @@ const panels = await Promise.all(
     <div class="copy">
       <h2>A few components and one stylesheet.</h2>
       <p class="lede">
-        Wrap a viewport in a root, drop in the default toolbar, and you have a working
-        editor. Take the toolbar out again when you want your own.
+        Wrap a viewport in a root and build the toolbar from the controls you want: tools,
+        undo and redo, pages and zoom. Each is its own component, so move it, drop it or
+        put your own buttons beside it.
       </p>
       <div class="points">
         <div class="point">
           <h3>Typed end to end</h3>
           <p>
-            Annotations are plain typed objects. Keep them in your own state, or let
-            Inkbar hold them with undo and redo.
+            Annotations are plain typed objects with a published JSON Schema. Keep them in
+            your own state and backend, or let Inkbar hold them with undo and redo.
           </p>
         </div>
         <div class="point">
           <h3>Headless underneath</h3>
           <p>
             The components are unstyled primitives on a framework-free core, which the
-            Vue, React and Svelte packages share.
+            Vue, React and Svelte packages share. With no framework, one call to
+            <code>createViewer</code> mounts the whole viewer.
           </p>
         </div>
         <div class="point">
@@ -108,6 +110,11 @@ const panels = await Promise.all(
     font-family: var(--font-body);
     font-size: 17px;
     font-weight: 600;
+  }
+  .point code {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: #ffffff;
   }
   .point p {
     font-size: 15.5px;

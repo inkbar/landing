@@ -16,7 +16,16 @@ import { useState } from 'react'
 import {
   InkRoot,
   InkViewport,
-  DefaultToolbar,
+  InkToolbar,
+  InkToolButton,
+  InkToolbarSeparator,
+  InkUndo,
+  InkRedo,
+  InkPrevPage,
+  InkPageInput,
+  InkPageCount,
+  InkNextPage,
+  InkZoomSelect,
   InkNotePopover,
   InkSuggestionCard,
 } from '@inkbar/react'
@@ -39,14 +48,31 @@ export function Review({
       annotations={annotations}
       onAnnotationsChange={setAnnotations}
     >
-      <DefaultToolbar />
+      <InkToolbar>
+        <InkToolButton tool="select" />
+        <InkToolButton tool="highlight" />
+        <InkToolButton tool="redact-area" />
+        <InkToolButton tool="note" />
+        <InkToolbarSeparator />
+        <InkUndo />
+        <InkRedo />
+      </InkToolbar>
       <InkViewport />
+      <InkToolbar label="Page and zoom">
+        <InkPrevPage />
+        <InkPageInput />
+        <InkPageCount />
+        <InkNextPage />
+        <InkZoomSelect />
+      </InkToolbar>
       <InkNotePopover />
       <InkSuggestionCard />
     </InkRoot>
   )
 }
 ```
+
+Each control is a separate component, so put them in any order or leave some out. Buttons show icons from `@inkbar/icons`. Pass your own as `children` to replace one, and use `InkIcon` to put the same icons on your own buttons. [Toolbars](/docs/guides/toolbars/) lists every control.
 
 `annotations` with `onAnnotationsChange` makes your list the source of truth. Leave them off and Inkbar keeps the state itself, with undo and redo.
 
@@ -66,8 +92,8 @@ The scroll element takes focus. With the highlight or redact tool active, `Enter
 
 ## Styling
 
-Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. `InkRoot`, `InkViewport`, `DefaultToolbar` and the toolbar controls accept `className`.
+Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. `InkRoot`, `InkViewport`, `InkToolbar` and the toolbar controls accept `className`.
 
 ## Hooks
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory` and `useEmbedded` read the state of the nearest `InkRoot`. Build your own toolbar or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory` and `useEmbedded` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.

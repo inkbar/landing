@@ -3,14 +3,17 @@
     <div class="intro">
       <h2>It should look like your product, not ours.</h2>
       <p class="lede">
-        You can ship the default UI as it is. If you'd rather not, restyle it with CSS or
-        replace it with your own components.
+        You can ship the default theme as it is. If you'd rather not, restyle it with CSS
+        or render the controls as your own components.
       </p>
     </div>
     <div class="cards">
       <article class="card">
         <h3>Use the default</h3>
-        <p>Import the theme and you get a toolbar, popovers, and light and dark modes.</p>
+        <p>
+          Import the theme and the toolbars, popovers and pages get a finished look, in
+          light and dark modes.
+        </p>
         <div class="stage" aria-hidden="true">
           <div class="bar bar-default">
             <span class="cell cell-default">
@@ -30,12 +33,13 @@
             </span>
             <span class="cell cell-default">
               <svg class="icon" viewBox="0 0 24 24">
-                <path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path>
+                <rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect>
               </svg>
             </span>
             <span class="cell cell-default">
               <svg class="icon" viewBox="0 0 24 24">
-                <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+                <circle cx="11" cy="11" r="6"></circle>
+                <path d="M16 16l4 4M8.5 11h5M11 8.5v5"></path>
               </svg>
             </span>
           </div>
@@ -53,7 +57,8 @@
           The theme's rules have zero specificity and sit in one cascade layer, so your
           CSS overrides them without <code>!important</code>. If your page defines tokens
           such as <span class="token">--primary</span> and{' '}
-          <span class="token">--radius</span>, the theme uses them.
+          <span class="token">--radius</span>, the theme uses them. Annotation colours
+          have their own variables.
         </p>
         <div class="stage" aria-hidden="true">
           <div class="bar bar-pill">
@@ -74,12 +79,13 @@
             </span>
             <span class="cell cell-pill">
               <svg class="icon" viewBox="0 0 24 24">
-                <path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path>
+                <rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect>
               </svg>
             </span>
             <span class="cell cell-pill">
               <svg class="icon" viewBox="0 0 24 24">
-                <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+                <circle cx="11" cy="11" r="6"></circle>
+                <path d="M16 16l4 4M8.5 11h5M11 8.5v5"></path>
               </svg>
             </span>
           </div>
@@ -93,6 +99,9 @@
 :root &#123;
   --primary: #0d1026;
   --radius: 999px;
+&#125;
+
+[data-ink-root] &#123;
   --ink-highlight: #e4ff4a;
 &#125;</pre>
       </article>
@@ -100,7 +109,8 @@
       <article class="card">
         <h3>Rebuild it in your design system</h3>
         <p>
-          Leave out the default toolbar and wire your own buttons to the state it uses.
+          Render any control as your own button with <code>asChild</code>, or wire your
+          own to the hooks for tools, zoom, pages and history.
         </p>
         <div class="stage" aria-hidden="true">
           <div class="bar bar-square">
@@ -121,12 +131,13 @@
             </span>
             <span class="cell cell-square">
               <svg class="icon" viewBox="0 0 24 24">
-                <path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path>
+                <rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect>
               </svg>
             </span>
             <span class="cell cell-square last">
               <svg class="icon" viewBox="0 0 24 24">
-                <rect x="5" y="5" width="14" height="14" rx="2"></rect>
+                <circle cx="11" cy="11" r="6"></circle>
+                <path d="M16 16l4 4M8.5 11h5M11 8.5v5"></path>
               </svg>
             </span>
           </div>
@@ -135,10 +146,11 @@
           tabindex="0"
           role="region"
           aria-label="Code sample: Custom toolbar example"
-        >&lt;InkRoot src=&#123;src&#125; assets=&#123;assets&#125;&gt;
-  &lt;YourToolbar /&gt;
-  &lt;InkViewport /&gt;
-&lt;/InkRoot&gt;</pre>
+        >&lt;InkToolbar&gt;
+  &lt;InkUndo asChild&gt;
+    &lt;YourButton icon="undo" /&gt;
+  &lt;/InkUndo&gt;
+&lt;/InkToolbar&gt;</pre>
       </article>
     </div>
   </div>

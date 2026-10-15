@@ -13,8 +13,18 @@ const vue = `<script setup lang="ts">
 import {
   InkRoot,
   InkViewport,
-  DefaultToolbar,
+  InkToolbar,
+  InkToolButton,
+  InkToolbarSeparator,
+  InkUndo,
+  InkRedo,
+  InkPrevPage,
+  InkPageInput,
+  InkPageCount,
+  InkNextPage,
+  InkZoomSelect,
   InkNotePopover,
+  InkSuggestionCard,
 } from '@inkbar/vue'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -24,17 +34,43 @@ defineProps<{ url: string; id: string }>()
 
 <template>
   <InkRoot :src="{ url, key: id }" :assets="assets">
-    <DefaultToolbar />
+    <InkToolbar>
+      <InkToolButton tool="select" />
+      <InkToolButton tool="highlight" />
+      <InkToolButton tool="redact-area" />
+      <InkToolButton tool="note" />
+      <InkToolbarSeparator />
+      <InkUndo />
+      <InkRedo />
+    </InkToolbar>
     <InkViewport />
+    <InkToolbar label="Page and zoom">
+      <InkPrevPage />
+      <InkPageInput />
+      <InkPageCount />
+      <InkNextPage />
+      <InkZoomSelect />
+    </InkToolbar>
     <InkNotePopover />
+    <InkSuggestionCard />
   </InkRoot>
 </template>`
 
 const react = `import {
   InkRoot,
   InkViewport,
-  DefaultToolbar,
+  InkToolbar,
+  InkToolButton,
+  InkToolbarSeparator,
+  InkUndo,
+  InkRedo,
+  InkPrevPage,
+  InkPageInput,
+  InkPageCount,
+  InkNextPage,
+  InkZoomSelect,
   InkNotePopover,
+  InkSuggestionCard,
 } from '@inkbar/react'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -42,20 +78,45 @@ import '@inkbar/theme/theme.css'
 export function Review({ url, id }: { url: string; id: string }) {
   return (
     <InkRoot src={{ url, key: id }} assets={assets}>
-      <DefaultToolbar />
+      <InkToolbar>
+        <InkToolButton tool="select" />
+        <InkToolButton tool="highlight" />
+        <InkToolButton tool="redact-area" />
+        <InkToolButton tool="note" />
+        <InkToolbarSeparator />
+        <InkUndo />
+        <InkRedo />
+      </InkToolbar>
       <InkViewport />
+      <InkToolbar label="Page and zoom">
+        <InkPrevPage />
+        <InkPageInput />
+        <InkPageCount />
+        <InkNextPage />
+        <InkZoomSelect />
+      </InkToolbar>
       <InkNotePopover />
+      <InkSuggestionCard />
     </InkRoot>
   )
 }`
 
-// Written by analogy with the Vue and React packages until @inkbar/svelte lands in the repo.
 const svelte = `<script lang="ts">
   import {
     InkRoot,
     InkViewport,
-    DefaultToolbar,
+    InkToolbar,
+    InkToolButton,
+    InkToolbarSeparator,
+    InkUndo,
+    InkRedo,
+    InkPrevPage,
+    InkPageInput,
+    InkPageCount,
+    InkNextPage,
+    InkZoomSelect,
     InkNotePopover,
+    InkSuggestionCard,
   } from '@inkbar/svelte'
   import { assets } from 'virtual:inkbar-assets'
   import '@inkbar/theme/theme.css'
@@ -64,9 +125,25 @@ const svelte = `<script lang="ts">
 </script>
 
 <InkRoot src={{ url, key: id }} {assets}>
-  <DefaultToolbar />
+  <InkToolbar>
+    <InkToolButton tool="select" />
+    <InkToolButton tool="highlight" />
+    <InkToolButton tool="redact-area" />
+    <InkToolButton tool="note" />
+    <InkToolbarSeparator />
+    <InkUndo />
+    <InkRedo />
+  </InkToolbar>
   <InkViewport />
+  <InkToolbar label="Page and zoom">
+    <InkPrevPage />
+    <InkPageInput />
+    <InkPageCount />
+    <InkNextPage />
+    <InkZoomSelect />
+  </InkToolbar>
   <InkNotePopover />
+  <InkSuggestionCard />
 </InkRoot>`
 
 export const frameworks: readonly FrameworkSnippet[] = [

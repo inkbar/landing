@@ -1,0 +1,127 @@
+---
+title: Toolbars
+description: Build toolbars from Inkbar's controls, place them where they fit your app, and swap in your own icons and labels.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, fill it with the controls you need, and add your own buttons beside them. You can have as many toolbars as you like: the [Quickstart](/docs/quickstart/) puts the tools above the document and the page and zoom controls below it.
+
+## Controls
+
+| Component                    | What it does                                                                      |
+| ---------------------------- | --------------------------------------------------------------------------------- |
+| `InkToolbar`                 | Groups controls into one Tab stop, with arrow keys between them. `label` names it |
+| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                  |
+| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                           |
+| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                     |
+| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                       |
+| `InkPageInput`               | The current page number, which the user can type into                             |
+| `InkPageCount`               | "of N", the page count                                                            |
+| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                             |
+| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                             |
+| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                          |
+
+`tool` is one of `view`, `select`, `highlight`, `redact-area` and `note`. Their accessible names are View, Select, Highlight, Mark for redaction and Add note. Pass `label` to change one.
+
+Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history, which is on by default and in controlled mode needs `history` turned on.
+
+## Icons and labels
+
+Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. The accessible name stays the same either way.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { Check } from '@inkbar/icons'
+import { InkIcon, InkToolbar, InkToolButton, InkUndo } from '@inkbar/vue'
+import { Eraser } from 'your-icon-library'
+</script>
+
+<template>
+  <InkToolbar label="Review">
+    <InkToolButton tool="redact-area" label="Redact">
+      <Eraser />
+    </InkToolButton>
+    <InkUndo />
+    <button type="button" aria-label="Finish review" @click="finish">
+      <InkIcon :icon="Check" />
+    </button>
+  </InkToolbar>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { Check } from '@inkbar/icons'
+import { InkIcon, InkToolbar, InkToolButton, InkUndo } from '@inkbar/react'
+import { Eraser } from 'your-icon-library'
+
+export function ReviewBar({ finish }: { finish: () => void }) {
+  return (
+    <InkToolbar label="Review">
+      <InkToolButton tool="redact-area" label="Redact">
+        <Eraser />
+      </InkToolButton>
+      <InkUndo />
+      <button type="button" aria-label="Finish review" onClick={finish}>
+        <InkIcon icon={Check} />
+      </button>
+    </InkToolbar>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { Check } from '@inkbar/icons'
+  import { InkIcon, InkToolbar, InkToolButton, InkUndo } from '@inkbar/svelte'
+  import { Eraser } from 'your-icon-library'
+
+  let { finish }: { finish: () => void } = $props()
+</script>
+
+<InkToolbar label="Review">
+  <InkToolButton tool="redact-area" label="Redact">
+    <Eraser />
+  </InkToolButton>
+  <InkUndo />
+  <button type="button" aria-label="Finish review" onclick={finish}>
+    <InkIcon icon={Check} />
+  </button>
+</InkToolbar>
+```
+
+  </TabItem>
+</Tabs>
+
+You only need to install `@inkbar/icons` to use its icons on your own buttons. The controls bring them along.
+
+## Rendering your own element
+
+`InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+
+## Without a framework
+
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect` and `createIcon`.
+
+## Styling
+
+The theme gives a toolbar a background and padding, and styles the controls in it. You decide where the toolbar sits and what separates it from the document. Set `--ink-control-size` on a toolbar to change the height of its buttons, fields and zoom select (default `2.25rem`), and `--ink-icon-size` to change the size of their icons (default `1.125rem`):
+
+```css
+.my-page-bar {
+  --ink-control-size: 2rem;
+  --ink-icon-size: 1rem;
+  border-top: 1px solid var(--border);
+}
+```
+
+A tool button carries `data-tool` and `data-state="on|off"`, so `[data-tool="highlight"][data-state="on"]` targets the active highlight tool.

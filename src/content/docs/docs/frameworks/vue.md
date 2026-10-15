@@ -17,7 +17,16 @@ import { ref } from 'vue'
 import {
   InkRoot,
   InkViewport,
-  DefaultToolbar,
+  InkToolbar,
+  InkToolButton,
+  InkToolbarSeparator,
+  InkUndo,
+  InkRedo,
+  InkPrevPage,
+  InkPageInput,
+  InkPageCount,
+  InkNextPage,
+  InkZoomSelect,
   InkNotePopover,
   InkSuggestionCard,
 } from '@inkbar/vue'
@@ -36,13 +45,30 @@ const annotations = ref<Annotation[]>([])
     :assets="assets"
     v-model:annotations="annotations"
   >
-    <DefaultToolbar />
+    <InkToolbar>
+      <InkToolButton tool="select" />
+      <InkToolButton tool="highlight" />
+      <InkToolButton tool="redact-area" />
+      <InkToolButton tool="note" />
+      <InkToolbarSeparator />
+      <InkUndo />
+      <InkRedo />
+    </InkToolbar>
     <InkViewport />
+    <InkToolbar label="Page and zoom">
+      <InkPrevPage />
+      <InkPageInput />
+      <InkPageCount />
+      <InkNextPage />
+      <InkZoomSelect />
+    </InkToolbar>
     <InkNotePopover />
     <InkSuggestionCard />
   </InkRoot>
 </template>
 ```
+
+Each control is a separate component, so put them in any order or leave some out. Buttons show icons from `@inkbar/icons`. Put your own in a button's default slot to replace one, and use `InkIcon` to put the same icons on your own buttons. [Toolbars](/docs/guides/toolbars/) lists every control.
 
 `v-model:annotations` makes your list the source of truth. Leave it off and Inkbar keeps the state itself, with undo and redo.
 
@@ -62,4 +88,4 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 ## Composables
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory` and `useEmbedded` read the state of the nearest `InkRoot`. Build your own toolbar or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory` and `useEmbedded` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.

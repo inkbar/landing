@@ -1,7 +1,11 @@
 <section id="features">
   <div class="container inner">
     <div class="intro">
-      <h2>What the paid SDKs do, in the free one.</h2>
+      <h2>What it does today.</h2>
+      <p class="lede">
+        Inkbar covers reading, review and redaction marking. Everything below works in
+        every framework package and with no framework.
+      </p>
     </div>
     <div class="grid">
       <div class="cell">
@@ -10,67 +14,89 @@
         </svg>
         <h3>Viewing</h3>
         <p>
-          Rendering built on PDF.js, with zoom, page navigation, text selection and
-          search.
+          Pages render on PDF.js with a selectable text layer. Fit to width or page, zoom
+          from 50% to 400%, and scroll continuously or a page at a time. Only pages near
+          the viewport are mounted.
         </p>
       </div>
       <div class="cell">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path>
         </svg>
-        <h3>Text markup</h3>
+        <h3>Highlights</h3>
         <p>
-          Highlight, underline, strikeout and squiggly, anchored to the text they mark.
+          Select text and highlight it with a click or the Enter key. The mark follows the
+          text lines it covers.
         </p>
       </div>
       <div class="cell">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M5 5h14v10H10l-5 4z"></path>
         </svg>
-        <h3>Notes and threads</h3>
-        <p>
-          Pin a note to the page and reply to it, so the review happens on the document.
-        </p>
-      </div>
-      <div class="cell">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 18c3-8 5 4 8-4s4 2 8-6"></path>
-        </svg>
-        <h3>Drawing and shapes</h3>
-        <p>Freehand ink, rectangles, ellipses, lines, arrows and text boxes.</p>
+        <h3>Note threads</h3>
+        <p>Pin a note to the page, then reply, edit and delete in a thread beside it.</p>
       </div>
       <div class="cell">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect>
         </svg>
-        <h3>Redaction</h3>
+        <h3>Redaction marks</h3>
         <p>
-          Mark text and regions for redaction, then review each mark before you apply it.
+          Mark selected text, or drag a box over any area. A mark records what to remove.
+          Removing it from the file comes with saving into the PDF.
         </p>
       </div>
       <div class="cell">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="4" y="6" width="16" height="12" rx="2"></rect>
-          <path d="M8 12h5"></path>
+          <path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"></path>
         </svg>
-        <h3>Forms</h3>
-        <p>Read and fill form fields in the viewer.</p>
+        <h3>Suggested redactions</h3>
+        <p>
+          Pass in matches from your own detector. Each one shows its reason and
+          confidence, and nothing counts until someone accepts it.
+        </p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M8 4H6v16h2M16 4h2v16h-2M10 9h4M10 13h4"></path>
+        </svg>
+        <h3>Annotations as data</h3>
+        <p>
+          Export and import JSON with a published schema. Underline, strikeout, ink,
+          shapes and lines from imported data display too, and the PDF's own annotations
+          show as locked.
+        </p>
       </div>
       <div class="cell">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M8 6L3 11l5 5M3 11h11a5 5 0 010 10h-2"></path>
         </svg>
         <h3>Undo and redo</h3>
-        <p>Built-in history, whether Inkbar holds the annotations or your app does.</p>
+        <p>
+          History with grouped steps, whether Inkbar holds the annotations or your app
+          does. Put the undo and redo buttons wherever your toolbar has room.
+        </p>
       </div>
       <div class="cell">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <circle cx="12" cy="5" r="1.6"></circle>
           <path d="M5 9h14M12 9v5M8 21l4-7 4 7"></path>
         </svg>
-        <h3>Accessible by default</h3>
-        <p>Keyboard access and screen-reader labels across the default UI.</p>
+        <h3>Keyboard and screen readers</h3>
+        <p>
+          Highlight, add notes, and move, resize or delete marks from the keyboard, with
+          labelled controls throughout. Drawing an area mark still needs a pointer.
+        </p>
       </div>
+    </div>
+    <div class="next">
+      <h3>On the way</h3>
+      <ul>
+        <li>Search across the document</li>
+        <li>Drawing tools for ink, shapes, lines and text boxes</li>
+        <li>Filling form fields</li>
+        <li>Saving annotations and applied redactions into the PDF</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -96,6 +122,11 @@
     line-height: 1.02;
     letter-spacing: -0.025em;
   }
+  .lede {
+    font-size: 18px;
+    line-height: 1.55;
+    color: var(--body);
+  }
   .grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -120,6 +151,27 @@
   p {
     font-size: 15px;
     line-height: 1.55;
+    color: var(--body);
+  }
+  .next {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 12px 32px;
+  }
+  .next ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .next li {
+    padding: 6px 14px;
+    border: 1px dashed var(--caption);
+    border-radius: 999px;
+    font-size: 15px;
     color: var(--body);
   }
 </style>
