@@ -59,6 +59,10 @@ jobs:
           branch: gh-pages
           clean-exclude: pr-preview/
 
+      # public/CNAME lands in every build, and the deploy actions never delete a CNAME, so a
+      # preview's copy would outlive the preview.
+      - if: github.event_name == 'pull_request' && github.event.action != 'closed'
+        run: rm dist/CNAME
       - if: github.event_name == 'pull_request'
         uses: rossjrw/pr-preview-action@v1
         with:
