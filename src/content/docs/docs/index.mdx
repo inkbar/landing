@@ -1,22 +1,52 @@
 ---
 title: Introduction
-description: What Inkbar is, which packages it ships and where to start.
+description: What Inkbar does today, what comes next, which packages it ships and where to start.
 ---
 
-Inkbar is a PDF viewer and editor that runs in the browser. It is written in TypeScript, built on PDF.js and released under the MIT licence.
+Inkbar is a PDF viewer and editor for the browser, with annotations and redaction review. It is written in TypeScript, built on PDF.js and released under the MIT licence.
+
+To see it before you install anything, open the [sandbox](https://sandbox.inkbar.dev). It runs the Vue, React, Svelte and plain DOM viewers on a sample document, and you can drop in your own PDF. The file stays in your browser.
+
+## What it does today
+
+| Area        | Available now                                                                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Viewing     | Canvas rendering with a selectable text layer, zoom, fit to width or page, continuous or single-page layout, page navigation                      |
+| Markup      | Highlights from a text selection                                                                                                                  |
+| Notes       | Notes with reply threads                                                                                                                          |
+| Redaction   | Text and area redaction marks, and suggested redactions with a confidence level that someone accepts or dismisses                                 |
+| Annotations | JSON export and import. Underline, strikeout, squiggly, ink, shapes, lines and text boxes display from imported data and from the PDF             |
+| History     | Undo and redo with grouped steps, whether Inkbar or your app holds the annotations                                                                |
+| Toolbars    | Composable controls for tools, undo and redo, pages and zoom, with icons you can swap for your own                                                |
+| Keyboard    | Zoom, page and annotation shortcuts, and `Enter` to apply the active tool. See [Tools and keyboard](/docs/guides/annotations/#tools-and-keyboard) |
+
+You build the toolbars from Inkbar's controls and place them where they fit your app. There are buttons for the five tools (View, Select, Highlight, Mark for redaction and Add note), undo and redo, and previous and next page, plus a page number field, the page count and zoom controls. [Toolbars](/docs/guides/toolbars/) lists them all.
+
+## Not there yet
+
+- **Saving into the PDF.** `save()` rejects with `EngineUnavailable`. Store `exportAnnotations('json')` in your own backend and import it on the next open.
+- **Applying redactions.** A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. Inkbar will remove content once saving into the PDF ships.
+- **Search.** You cannot find text in the viewer yet. `doc.text(page)` gives you each page's text if you need it now.
+- **Drawing tools.** Ink, shapes, lines and text boxes display, but the toolbar cannot create them. You can add them through the API.
+- **Forms.** Form fields render as part of the page but cannot be filled.
+- **Thumbnails, outline, print and download.** Not built.
+- **Touch gestures.** Pinch zoom and long press are not handled.
+- **Translations.** The controls and popovers are in English. Pass `label` to a tool button, or `aria-label` and `title` to the other buttons, to rename them. `InkPageCount` always reads "of N". Render the popovers with your own components to translate them.
+- **Password prompt.** Pass `password` yourself. Without it, a protected file fails with `PasswordRequired`.
 
 ## Packages
 
 | Package          | Purpose                                                                         |
 | ---------------- | ------------------------------------------------------------------------------- |
 | `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency. |
-| `@inkbar/vue`    | Vue 3 components, composables and a default toolbar.                            |
-| `@inkbar/react`  | React 19 components, hooks and a default toolbar.                               |
-| `@inkbar/svelte` | Svelte components and a default toolbar. In development.                        |
+| `@inkbar/vue`    | Vue 3 components and composables to build your viewer.                          |
+| `@inkbar/react`  | React 19 components and hooks to build your viewer.                             |
+| `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                             |
 | `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.       |
+| `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.      |
 
-The packages are released together and share one version number. `@inkbar/vue` and `@inkbar/react` depend on the exact `@inkbar/core` version they were built against.
+The packages are released together and share one version number. The framework packages take `@inkbar/core` as a peer dependency, so your app installs one copy of it.
 
 ## Where to start
 
-Follow the [Quickstart](/docs/quickstart/) to put a document on screen with the default toolbar.
+Follow the [Quickstart](/docs/quickstart/) to put a document on screen with a toolbar.

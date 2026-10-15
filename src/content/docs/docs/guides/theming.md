@@ -3,7 +3,7 @@ title: Theming
 description: Import the default stylesheet and restyle it with your own tokens and CSS.
 ---
 
-Default styles for the Inkbar components. The package is one stylesheet with no JavaScript.
+`@inkbar/theme` holds the default styles for the Inkbar components: one stylesheet, no JavaScript.
 
 Install it as the [Quickstart](/docs/quickstart/) shows.
 
@@ -39,4 +39,26 @@ Colour tokens must hold complete CSS colour values. Tokens written as bare HSL c
 
 The root and viewport fill their parent as a column, and the scroll area takes the remaining height. Give the parent a height and the document scrolls inside it.
 
-The annotation colours have their own variables. [Theme tokens](/docs/reference/theme-tokens/) lists them.
+## Toolbars
+
+The theme gives each toolbar a background and padding and styles the controls in it. You decide where the toolbar sits and what separates it from the document. `--ink-control-size` and `--ink-icon-size` set the size of a toolbar's controls and icons:
+
+```css
+.my-page-bar {
+  --ink-control-size: 2rem;
+  --ink-icon-size: 1rem;
+  border-top: 1px solid var(--border);
+}
+```
+
+## Annotation colours
+
+The annotation colours have their own variables, such as `--ink-highlight` and `--ink-redact`. The theme declares them on the root element, so set yours there too:
+
+```css
+[data-ink-root] {
+  --ink-highlight: #e4ff4a;
+}
+```
+
+[Theme tokens](/docs/reference/theme-tokens/) lists them all, along with the interface tokens.

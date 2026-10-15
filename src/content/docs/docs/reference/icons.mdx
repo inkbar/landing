@@ -1,0 +1,101 @@
+---
+title: Icons
+description: The 13 icons the toolbar controls show, which control shows each one, and how to use them on your own buttons.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+import IconGrid from '../../../../components/docs/IconGrid.astro'
+
+The toolbar controls show icons from `@inkbar/icons`: 13 icons from [Lucide](https://lucide.dev), stored as plain data so the package has no dependencies.
+
+<IconGrid />
+
+The core `createZoomSelect` is a native `<select>`. Inside a toolbar, the theme draws the `ChevronDown` shape on it in CSS, and it has no `Check`.
+
+## Using an icon on your own button
+
+The controls bring their icons with them. Install `@inkbar/icons` only when you want the same icons on your own buttons, so they match the rest of the toolbar:
+
+```sh
+pnpm add @inkbar/icons
+```
+
+Each framework package has an `InkIcon` component that draws one. Without a framework, `createIcon` from `@inkbar/core/dom` returns the `<svg>` element.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { Check } from '@inkbar/icons'
+import { InkIcon } from '@inkbar/vue'
+</script>
+
+<template>
+  <button type="button" aria-label="Finish review">
+    <InkIcon :icon="Check" />
+  </button>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { Check } from '@inkbar/icons'
+import { InkIcon } from '@inkbar/react'
+
+export function FinishButton() {
+  return (
+    <button type="button" aria-label="Finish review">
+      <InkIcon icon={Check} />
+    </button>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { Check } from '@inkbar/icons'
+  import { InkIcon } from '@inkbar/svelte'
+</script>
+
+<button type="button" aria-label="Finish review">
+  <InkIcon icon={Check} />
+</button>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { Check } from '@inkbar/icons'
+import { createIcon } from '@inkbar/core/dom'
+
+const finish = document.createElement('button')
+finish.type = 'button'
+finish.setAttribute('aria-label', 'Finish review')
+finish.append(createIcon(Check))
+```
+
+  </TabItem>
+</Tabs>
+
+The icon is hidden from screen readers, so give the button its own name, as `aria-label` does here. `InkIcon` sets its width and height from `size`, which defaults to 18. With the theme loaded, CSS sizes every icon to `--ink-icon-size` (default `1.125rem`) instead, so set that variable on the button or an ancestor to change the size.
+
+## Replacing a control's icon
+
+Give a control your own content and it shows that instead of its icon. Its accessible name stays the same. In Vue, use the default slot; in React and Svelte, pass `children`. A control from `@inkbar/core/dom` is an ordinary element, so replace its children: `undo.replaceChildren(yourSvg)`.
+
+[Toolbars](/docs/guides/toolbars/#icons-and-labels) has an example in each framework.
+
+## Drawing an icon yourself
+
+Each icon is an array of `[tag, attributes]` pairs. To draw one without `InkIcon` or `createIcon`, create each element inside an `<svg>` that has the attributes in `ICON_ATTRIBUTES`, plus a `width` and `height`.
+
+## Licence
+
+The icons come from Lucide under the ISC licence, and some of them derive from Feather under the MIT licence. The `@inkbar/icons` package carries both notices in its `LICENSE` file.

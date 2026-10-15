@@ -15,7 +15,9 @@ test('the hero states the offer and the install command', async ({ page }) => {
     'A full PDF editor for your web app. No licence fee.'
   )
   await expect(page.getByText('free under the MIT licence')).toBeVisible()
-  await expect(page.locator('main code').first()).toContainText('pnpm add @inkbar/core')
+  await expect(page.locator('main code').first()).toContainText(
+    'pnpm add @inkbar/react @inkbar/core @inkbar/theme'
+  )
   await expect(
     page.getByRole('link', { name: 'Read the quickstart' }).first()
   ).toHaveAttribute('href', '/docs/quickstart/')
@@ -34,14 +36,15 @@ test('the viewer mock exposes a labelled toolbar', async ({ page }) => {
   const toolbar = page.getByRole('toolbar', { name: 'PDF tools' })
   await expect(toolbar).toBeVisible()
   for (const name of [
+    'View',
     'Select',
     'Highlight',
-    'Underline',
-    'Note',
-    'Draw',
-    'Redact',
+    'Mark for redaction',
+    'Add note',
     'Undo',
     'Redo',
+    'Previous page',
+    'Next page',
   ]) {
     await expect(toolbar.getByRole('button', { name, exact: true })).toBeVisible()
   }
@@ -63,7 +66,7 @@ test('every section heading from the canvas is present, in order', async ({ page
   expect(headings.map((text) => text.replace(/\s+/g, ' ').trim())).toEqual([
     'A few components and one stylesheet.',
     'It should look like your product, not ours.',
-    'What the paid SDKs do, in the free one.',
+    'What it does today.',
     'A line item you get to renew delete.',
     'Install it and see.',
   ])
@@ -88,25 +91,22 @@ test('the theming section shows three routes', async ({ page }) => {
   await expect(cards).toHaveCount(3)
   await expect(cards.nth(0).getByRole('heading')).toHaveText('Use the default')
   await expect(cards.nth(1).getByRole('heading')).toHaveText('Restyle it with CSS')
-  await expect(cards.nth(2).getByRole('heading')).toHaveText(
-    'Rebuild it in your design system'
-  )
+  await expect(cards.nth(2).getByRole('heading')).toHaveText('Use your own components')
 })
 
-test('the features grid lists eight features, forms and redaction among them', async ({
-  page,
-}) => {
-  const titles = await page.locator('#features h3').allTextContents()
-  expect(titles).toEqual([
+test('the features grid lists what ships, then what is on the way', async ({ page }) => {
+  const titles = await page.locator('#features .cell h3').allTextContents()
+  expect(titles.map((text) => text.trim())).toEqual([
     'Viewing',
-    'Text markup',
-    'Notes and threads',
-    'Drawing and shapes',
-    'Redaction',
-    'Forms',
+    'Highlights',
+    'Note threads',
+    'Redaction marks',
+    'Suggested redactions',
+    'Annotations as data',
     'Undo and redo',
-    'Accessible by default',
+    'Keyboard and screen readers',
   ])
+  await expect(page.locator('#features .next li')).toHaveCount(4)
 })
 
 test('the comparison is a real table that names no competitor', async ({ page }) => {

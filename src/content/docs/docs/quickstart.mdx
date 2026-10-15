@@ -1,12 +1,12 @@
 ---
 title: Quickstart
-description: Install Inkbar, add the Vite plugin and put a PDF on screen with the default toolbar.
+description: Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar.
 ---
 
 import { Aside } from '@astrojs/starlight/components'
 import FrameworkSnippet from '../../../components/docs/FrameworkSnippet.astro'
 
-Put a PDF on screen with the default toolbar. This page assumes a Vite project.
+Put a PDF on screen with tools above it and page and zoom controls below. This page assumes a Vite project.
 
 ## 1. Install the packages
 
@@ -16,7 +16,7 @@ You need the core, the theme and the package for your framework. The packages sh
 
 ## 2. Add the Vite plugin
 
-PDF.js loads a worker, fonts and decoders at runtime. The plugin serves those files in development and copies them into your build.
+PDF.js loads a worker, fonts and decoders at runtime. The plugin serves those files in development and copies them into your build. It works with Vite 6 or later.
 
 ```ts title="vite.config.ts"
 import { inkbar } from '@inkbar/core/vite'
@@ -34,14 +34,18 @@ export default defineConfig({
 
 ## 3. Mount the viewer
 
-Wrap the viewport in a root, then add the default toolbar and the note popover.
+Wrap the viewport in a root. Put a toolbar of tools, undo and redo above it and a page and zoom bar below, then add the popovers for notes and suggested redactions.
 
 <FrameworkSnippet />
 
-Inkbar keeps the annotations itself here, with undo and redo. To hold them in your own state, read [Controlled mode](/docs/guides/controlled-mode/).
+The viewer fills its parent, so give the parent a height. Without one, the document has no room to scroll. Each control is its own component: drop the ones you don't need, move them, or add your own buttons. [Toolbars](/docs/guides/toolbars/) covers them.
+
+Inkbar keeps the annotations itself here, with undo and redo. To hold them in your own state, read [Controlled mode](/docs/guides/controlled-mode/). Annotations live in memory until you save them: [Annotations](/docs/guides/annotations/#saving-annotations) shows how to store them as JSON.
 
 ## Next
 
-- [Restyle the default UI](/docs/guides/theming/) with your own tokens and CSS.
+- [Restyle the controls](/docs/guides/theming/) with your own tokens and CSS.
 - [Work with annotations](/docs/guides/annotations/) and save them as JSON.
-- Read the page for your framework: [Vue](/docs/frameworks/vue/), [React](/docs/frameworks/react/) or [Plain DOM](/docs/frameworks/plain-dom/).
+- [Review redactions](/docs/guides/redaction/), including suggestions from your own detector.
+- Read the page for your framework: [Vue](/docs/frameworks/vue/), [React](/docs/frameworks/react/), [Svelte](/docs/frameworks/svelte/) or [Plain DOM](/docs/frameworks/plain-dom/).
+- Compare with the [sandbox](https://sandbox.inkbar.dev), which runs the same setup in each framework.

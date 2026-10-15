@@ -6,13 +6,17 @@ const pages = [
   { path: '/docs/', title: 'Introduction' },
   { path: '/docs/quickstart/', title: 'Quickstart' },
   { path: '/docs/loading-assets/', title: 'Loading assets' },
+  { path: '/docs/guides/toolbars/', title: 'Toolbars' },
   { path: '/docs/guides/annotations/', title: 'Annotations' },
+  { path: '/docs/guides/redaction/', title: 'Redaction' },
   { path: '/docs/guides/controlled-mode/', title: 'Controlled mode' },
   { path: '/docs/guides/theming/', title: 'Theming' },
   { path: '/docs/frameworks/vue/', title: 'Vue' },
   { path: '/docs/frameworks/react/', title: 'React' },
+  { path: '/docs/frameworks/svelte/', title: 'Svelte' },
   { path: '/docs/frameworks/plain-dom/', title: 'Plain DOM' },
   { path: '/docs/reference/theme-tokens/', title: 'Theme tokens' },
+  { path: '/docs/reference/icons/', title: 'Icons' },
 ]
 
 for (const { path, title } of pages) {

@@ -3,7 +3,7 @@ title: Loading assets
 description: Serve the PDF.js worker, fonts and decoders with the Vite plugin or from your own server.
 ---
 
-PDF.js needs a worker script plus directories of CMaps, standard fonts, wasm decoders and ICC profiles. Inkbar loads them from URLs you pass as the `assets` option. The option has no default, because the right URLs depend on how you deploy your app.
+PDF.js needs a worker script plus directories of CMaps, standard fonts, WebAssembly decoders and ICC profiles. Inkbar loads them from URLs you pass as the `assets` option. The option has no default, because the right URLs depend on how you deploy your app.
 
 ## With Vite
 

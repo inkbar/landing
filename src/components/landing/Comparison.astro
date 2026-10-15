@@ -5,23 +5,60 @@ const rows = [
   ['Licence', 'MIT', 'Proprietary'],
   ['Source code', 'Public on GitHub', 'Closed'],
   ['Trying it out', 'Install from npm', 'Timed trial, often watermarked'],
-  ['Viewing and annotation', 'Included', 'Included, some tools as add-ons'],
+  [
+    'Features today',
+    'Viewing, highlights, note threads, redaction review',
+    'Also search, forms, signatures and saving',
+  ],
   ['Custom UI', 'CSS, or your own components', "Whatever the vendor's config allows"],
 ]
 ---
 
 <section id="why">
-  <div class="container row">
-    <div class="copy">
-      <h2>
+  <div class="container inner">
+    <div class="intro">
+      <h2 aria-label="A line item you get to delete, not renew.">
         A line item you get to <span class="strike">renew</span>{' '}
         <span class="mark">delete.</span>
       </h2>
       <p class="lede">
-        Most PDF SDK vendors sell an annual contract and name the price after a sales
-        call. Inkbar is MIT licensed, so your team installs it from npm and starts
-        building.
+        Most PDF SDK vendors sell an annual contract, priced after a sales call. Inkbar is
+        MIT licensed, so your team installs it from npm and starts building. The paid SDKs
+        still do more, such as forms and saving into the file.
       </p>
+    </div>
+    <div class="body">
+      <div
+        class="table-wrap"
+        tabindex="0"
+        role="region"
+        aria-label="Comparison with a typical commercial SDK"
+      >
+        <table>
+          <thead>
+            <tr>
+              <th scope="col" class="corner">
+                <span class="visually-hidden">Comparison</span>
+              </th>
+              <th scope="col" class="us">
+                inkbar
+              </th>
+              <th scope="col" class="them">
+                Typical commercial SDK
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(([label, ours, theirs], index) => (
+              <tr class={index === rows.length - 1 ? 'last' : undefined}>
+                <th scope="row">{label}</th>
+                <td class={index === 0 ? 'ours free' : 'ours'}>{ours}</td>
+                <td class="theirs">{theirs}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <div class="points">
         <div class="point">
           <span class="tick" aria-hidden="true"></span>
@@ -46,37 +83,6 @@ const rows = [
         </div>
       </div>
     </div>
-    <div
-      class="table-wrap"
-      tabindex="0"
-      role="region"
-      aria-label="Comparison with a typical commercial SDK"
-    >
-      <table>
-        <thead>
-          <tr>
-            <th scope="col" class="corner">
-              <span class="visually-hidden">Comparison</span>
-            </th>
-            <th scope="col" class="us">
-              inkbar
-            </th>
-            <th scope="col" class="them">
-              Typical commercial SDK
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map(([label, ours, theirs], index) => (
-            <tr class={index === rows.length - 1 ? 'last' : undefined}>
-              <th scope="row">{label}</th>
-              <td class={index === 0 ? 'ours free' : 'ours'}>{ours}</td>
-              <td class="theirs">{theirs}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   </div>
 </section>
 
@@ -84,19 +90,22 @@ const rows = [
   section {
     background: var(--sheet);
   }
-  .row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    gap: 48px 64px;
-    padding-block: clamp(56px, 8vw, 112px);
-  }
-  .copy {
-    flex: 1 1 340px;
-    min-width: 0;
+  .inner {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 48px;
+    padding-block: clamp(56px, 8vw, 112px);
+  }
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  /* The table leads at full width; the three points sit in a row beneath it. */
+  .body {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
   }
   h2 {
     isolation: isolate;
@@ -119,15 +128,15 @@ const rows = [
     box-decoration-break: clone;
   }
   .lede {
+    max-width: 760px;
     font-size: 18px;
     line-height: 1.55;
     color: var(--body);
   }
   .points {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    margin-top: 4px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 22px 40px;
   }
   .point {
     display: flex;
@@ -148,7 +157,6 @@ const rows = [
     background: var(--highlighter);
   }
   .table-wrap {
-    flex: 999 1 480px;
     min-width: 0;
     border: 1px solid var(--line);
     border-radius: 16px;

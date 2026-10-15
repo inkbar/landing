@@ -55,7 +55,9 @@ export default defineConfig({
         {
           label: 'Guides',
           items: [
+            { label: 'Toolbars', slug: 'docs/guides/toolbars' },
             { label: 'Annotations', slug: 'docs/guides/annotations' },
+            { label: 'Redaction', slug: 'docs/guides/redaction' },
             { label: 'Controlled mode', slug: 'docs/guides/controlled-mode' },
             { label: 'Theming', slug: 'docs/guides/theming' },
           ],
@@ -65,12 +67,16 @@ export default defineConfig({
           items: [
             { label: 'Vue', slug: 'docs/frameworks/vue' },
             { label: 'React', slug: 'docs/frameworks/react' },
+            { label: 'Svelte', slug: 'docs/frameworks/svelte' },
             { label: 'Plain DOM', slug: 'docs/frameworks/plain-dom' },
           ],
         },
         {
           label: 'Reference',
-          items: [{ label: 'Theme tokens', slug: 'docs/reference/theme-tokens' }],
+          items: [
+            { label: 'Theme tokens', slug: 'docs/reference/theme-tokens' },
+            { label: 'Icons', slug: 'docs/reference/icons' },
+          ],
         },
       ],
     }),

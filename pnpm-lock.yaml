@@ -181,6 +181,9 @@ importers:
       '@fontsource-variable/urbanist':
         specifier: ^5.3.0
         version: 5.3.0
+      '@inkbar/icons':
+        specifier: ^0.2.0
+        version: 0.2.0
       astro:
         specifier: ^7.3.8
         version: 7.3.8(@types/node@24.19.2)(jiti@2.7.0)(yaml@2.9.1)
@@ -937,6 +940,9 @@ packages:
     engines: {node: '>=20.9.0'}
     cpu: [x64]
     os: [win32]
+
+  '@inkbar/icons@0.2.0':
+    resolution: {integrity: sha512-TbpxvUg5YbKMmucnJy3Ixo6q7F5/oRVOKAAm1wVV5Jt+pYG1v6q4Ke5cwxICnxKw2tqT/iLy0+qOi1xfa2kNSg==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -4273,6 +4279,8 @@ snapshots:
 
   '@img/sharp-win32-x64@0.35.5':
     optional: true
+
+  '@inkbar/icons@0.2.0': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
