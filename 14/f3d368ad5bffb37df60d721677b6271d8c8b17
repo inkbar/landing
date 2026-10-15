@@ -1,0 +1,78 @@
+src/components/landing/Comparison.astro
+  s_27e09a3b38aa58::t_40258bf2ed7a2f 10,20
+  s_27e09a3b38aa58::t_f75478c6c757db 25-26
+src/components/landing/Features.astro
+  s_27e09a3b38aa58::t_40258bf2ed7a2f 46
+  s_27e09a3b38aa58::t_f75478c6c757db 12-13,24,32-33,65-67
+src/pages/404.astro
+  s_27e09a3b38aa58::t_40258bf2ed7a2f 18,20
+src/content/docs/docs/loading-assets.md
+  s_27e09a3b38aa58::t_e187a960d3f7ac 6
+src/content/docs/docs/guides/theming.md
+  s_27e09a3b38aa58::t_e187a960d3f7ac 6
+src/components/landing/Theming.astro
+  s_27e09a3b38aa58::t_40258bf2ed7a2f 71
+  s_27e09a3b38aa58::t_f75478c6c757db 109-110
+src/components/site/SiteFooter.astro
+  s_27e09a3b38aa58::t_40258bf2ed7a2f 46-48
+src/data/snippets.ts
+  s_27e09a3b38aa58::t_88058b7cad9c00 41,86,134
+src/content/docs/docs/guides/annotations.md
+  s_27e09a3b38aa58::t_9208e1d1834f96 10,22,36,52-53,79,81
+src/content/docs/docs/reference/theme-tokens.md
+  s_27e09a3b38aa58::t_e187a960d3f7ac 44
+  s_27e09a3b38aa58::t_f75478c6c757db 63
+src/content/docs/docs/frameworks/plain-dom.md
+  s_27e09a3b38aa58::t_e187a960d3f7ac 72
+  s_27e09a3b38aa58::t_88058b7cad9c00 39
+  s_27e09a3b38aa58::t_f815e03e8c0e44 66,68-70
+  s_27e09a3b38aa58::t_3eabb3ff6cccda 71
+tests/landing.spec.ts
+  s_27e09a3b38aa58::t_2c4b5fd2f3a693 18-20
+src/content/docs/docs/index.mdx
+  s_27e09a3b38aa58::t_f75478c6c757db 12-20
+  s_27e09a3b38aa58::t_b5f0377f759625 6,8,21,23,34
+src/content/docs/docs/frameworks/vue.md
+  s_27e09a3b38aa58::t_88058b7cad9c00 49
+  s_27e09a3b38aa58::t_6422748a40d3f6 82-87,90-103
+src/content/docs/docs/frameworks/svelte.md
+  s_27e09a3b38aa58::t_88058b7cad9c00 43
+  s_27e09a3b38aa58::t_6422748a40d3f6 81,93-106
+src/content/docs/docs/guides/toolbars.mdx
+  s_27e09a3b38aa58::t_0794c618dc96a2 14,25-27,45,67,92,105,109
+  s_27e09a3b38aa58::t_f75478c6c757db 12-13,15-23
+  s_27e09a3b38aa58::t_31ed648aaa498c 24
+src/components/landing/Hero.astro
+  s_27e09a3b38aa58::t_2c4b5fd2f3a693 2,4-6,23
+src/content/docs/docs/guides/redaction.md
+  s_27e09a3b38aa58::t_47e4536a3af46b 61
+  s_27e09a3b38aa58::t_9208e1d1834f96 46
+src/components/landing/Developers.astro
+  s_27e09a3b38aa58::t_40258bf2ed7a2f 27
+  s_27e09a3b38aa58::t_f75478c6c757db 41,56
+src/content/docs/docs/quickstart.mdx
+  s_27e09a3b38aa58::t_f815e03e8c0e44 19
+src/content/docs/docs/reference/icons.mdx
+  s_27e09a3b38aa58::t_e187a960d3f7ac 13,87
+src/content/docs/docs/frameworks/react.md
+  s_27e09a3b38aa58::t_88058b7cad9c00 52
+  s_27e09a3b38aa58::t_6422748a40d3f6 10,88-90,94-107
+src/content/docs/docs/guides/controlled-mode.mdx
+  s_27e09a3b38aa58::t_9c97c3ef5cf58a 12-13,21-30,38-51,63,67,69-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "14f3d368ad5bffb37df60d721677b6271d8c8b17",
+  "prompts": {},
+  "sessions": {
+    "s_27e09a3b38aa58": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "891d6003-5ab9-4a9d-86d7-e95edb957ddb",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
