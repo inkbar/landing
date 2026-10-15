@@ -73,7 +73,10 @@ export default defineConfig({
         },
         {
           label: 'Reference',
-          items: [{ label: 'Theme tokens', slug: 'docs/reference/theme-tokens' }],
+          items: [
+            { label: 'Theme tokens', slug: 'docs/reference/theme-tokens' },
+            { label: 'Icons', slug: 'docs/reference/icons' },
+          ],
         },
       ],
     }),

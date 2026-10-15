@@ -1,0 +1,72 @@
+---
+/*
+ * Every icon in @inkbar/icons, drawn from the installed package, with the control that shows
+ * it by default.
+ */
+import * as icons from '@inkbar/icons'
+
+import Icon from '../site/Icon.astro'
+
+const entries: [name: keyof typeof icons, usedBy: string][] = [
+  ['Hand', 'View tool'],
+  ['MousePointer2', 'Select tool'],
+  ['Highlighter', 'Highlight tool'],
+  ['Square', 'Mark for redaction tool'],
+  ['MessageSquare', 'Add note tool'],
+  ['Undo2', 'Undo'],
+  ['Redo2', 'Redo'],
+  ['ZoomIn', 'Zoom in'],
+  ['ZoomOut', 'Zoom out'],
+  ['ChevronLeft', 'Previous page'],
+  ['ChevronRight', 'Next page'],
+  ['ChevronDown', 'Zoom select, to open it'],
+  ['Check', 'Zoom select, beside the current level'],
+]
+---
+
+<ul class="icon-grid">
+  {entries.map(([name, usedBy]) => (
+    <li>
+      <Icon icon={icons[name] as icons.IconNode} />
+      <code>{name}</code>
+      <span>{usedBy}</span>
+    </li>
+  ))}
+</ul>
+
+<style>
+  /* Cells draw their own right and bottom borders, so a short last row leaves blank space. */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    margin: 1.5rem 0 0;
+    padding: 0;
+    border-top: 1px solid var(--sl-color-gray-5);
+    border-left: 1px solid var(--sl-color-gray-5);
+    list-style: none;
+  }
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 20px 16px 16px;
+    border-right: 1px solid var(--sl-color-gray-5);
+    border-bottom: 1px solid var(--sl-color-gray-5);
+  }
+  li svg {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 6px;
+    color: var(--sl-color-white);
+  }
+  code {
+    align-self: flex-start;
+    font-size: var(--sl-text-sm);
+  }
+  span {
+    color: var(--sl-color-gray-3);
+    font-size: var(--sl-text-sm);
+    line-height: 1.4;
+  }
+</style>

@@ -16,6 +16,7 @@ const pages = [
   { path: '/docs/frameworks/svelte/', title: 'Svelte' },
   { path: '/docs/frameworks/plain-dom/', title: 'Plain DOM' },
   { path: '/docs/reference/theme-tokens/', title: 'Theme tokens' },
+  { path: '/docs/reference/icons/', title: 'Icons' },
 ]
 
 for (const { path, title } of pages) {
