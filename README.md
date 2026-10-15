@@ -20,6 +20,12 @@ pnpm preview
 
 The build writes the site to `dist/`. The preview serves it at http://localhost:4321.
 
+Set `SITE_BASE` to build the site for a subdirectory, as the pull request previews at `inkbar.dev/pr-preview/pr-<number>/` are:
+
+```sh
+SITE_BASE=/pr-preview/pr-1/ pnpm build
+```
+
 ## Tests
 
 The browser tests run against the built site. Build first, then install the browser once.

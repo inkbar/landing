@@ -1,0 +1,69 @@
+name: pages
+
+# Pages serves the gh-pages branch. Pushes to main publish the site at its root; each pull
+# request gets a preview under pr-preview/pr-<number>/, removed again when the pull request
+# closes.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+    paths-ignore:
+      - README.md
+      - LICENSE
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+# Every run pushes to gh-pages, so runs queue rather than race.
+concurrency:
+  group: gh-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # A fork's token cannot push to gh-pages, so fork pull requests get no preview. The site
+    # root publishes only once DOCS_DEPLOY is on.
+    if: >-
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name != 'pull_request' && vars.DOCS_DEPLOY == 'true')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - if: github.event.action != 'closed'
+        uses: pnpm/action-setup@v6
+      - if: github.event.action != 'closed'
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - if: github.event.action != 'closed'
+        run: pnpm install --frozen-lockfile
+      - if: github.event.action != 'closed'
+        run: pnpm build
+        env:
+          SITE_BASE: ${{ github.event_name == 'pull_request' && format('/pr-preview/pr-{0}/', github.event.number) || '/' }}
+
+      # Only the site root needs this. The deploy actions never delete .nojekyll, so in a
+      # preview it would outlive the preview's removal. Without it, Pages drops the _astro/
+      # directory.
+      - if: github.event_name != 'pull_request'
+        run: touch dist/.nojekyll
+      - if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist
+          branch: gh-pages
+          clean-exclude: pr-preview/
+
+      - if: github.event_name == 'pull_request'
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: dist
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          pages-base-url: inkbar.dev
+          qr-code: false

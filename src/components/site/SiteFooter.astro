@@ -1,4 +1,5 @@
 ---
+import { url } from '../../lib/url'
 import Logo from './Logo.astro'
 
 interface Props {
@@ -19,10 +20,10 @@ const full = variant === 'full'
         </div>
         <nav aria-label="Product">
           <h2>Product</h2>
-          <a href="/#features">Features</a>
-          <a href="/#theming">Theming</a>
-          <a href="/#why">Why Inkbar</a>
-          <a href="/docs/">Documentation</a>
+          <a href={url('/#features')}>Features</a>
+          <a href={url('/#theming')}>Theming</a>
+          <a href={url('/#why')}>Why Inkbar</a>
+          <a href={url('/docs/')}>Documentation</a>
         </nav>
         <nav aria-label="Packages">
           <h2>Packages</h2>

@@ -1,10 +1,18 @@
+import { satteri } from '@astrojs/markdown-satteri'
 import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
 import { defineConfig } from 'astro/config'
 import starlightLinksValidator from 'starlight-links-validator'
 
+import { baseLinks } from './src/markdown/base-links.ts'
+
+// Pull request previews are served from /pr-preview/pr-<number>/; the site itself from the root.
+const base = process.env.SITE_BASE ?? '/'
+
 export default defineConfig({
   site: 'https://inkbar.dev',
+  base,
+  markdown: { processor: satteri({ hastPlugins: [baseLinks(base)] }) },
   integrations: [
     starlight({
       title: 'Inkbar',

@@ -38,7 +38,8 @@ test('the static files for the host and for crawlers are served', async ({ reque
   const robots = await request.get('/robots.txt')
   expect(robots.status()).toBe(200)
   expect(await robots.text()).toContain('Sitemap: https://inkbar.dev/sitemap-index.xml')
-  expect(await robots.text()).not.toContain('Disallow: /')
+  expect(await robots.text()).not.toMatch(/^Disallow: \/$/m)
+  expect(await robots.text()).toContain('Disallow: /pr-preview/')
 
   const cname = await request.get('/CNAME')
   expect((await cname.text()).trim()).toBe('inkbar.dev')
