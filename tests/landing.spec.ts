@@ -12,7 +12,7 @@ test.beforeEach(async ({ page }) => {
 
 test('the hero states the offer and the install command', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-    'Read and mark up PDFs in your web app. No licence fee.'
+    'A full PDF editor for your web app. No licence fee.'
   )
   await expect(page.getByText('free under the MIT licence')).toBeVisible()
   await expect(page.locator('main code').first()).toContainText('pnpm add @inkbar/core')
