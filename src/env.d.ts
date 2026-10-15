@@ -1,3 +1,5 @@
+/// <reference types="astro/client" />
+
 declare module 'virtual:starlight/components/Search' {
   import type { AstroComponentFactory } from 'astro/runtime/server/index.js'
 
