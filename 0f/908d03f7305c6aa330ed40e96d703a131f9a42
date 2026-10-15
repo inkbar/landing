@@ -1,0 +1,36 @@
+package.json
+  s_27e09a3b38aa58::t_f3db87f0b01377 56
+src/components/landing/Theming.astro
+  s_27e09a3b38aa58::t_f3db87f0b01377 1-6,26,29,32,35,38,61,64,67,70,73,102,105,108,111,114
+src/components/landing/ViewerMock.astro
+  s_27e09a3b38aa58::t_f3db87f0b01377 1,14-17,28,31,34,37,40,46,49,54,59
+  s_27e09a3b38aa58::t_9ef5474c70e1d2 63
+  s_27e09a3b38aa58::t_c7a5d9e127cde1 2-13
+  s_27e09a3b38aa58::t_53d30081e8f835 78
+src/components/site/Icon.astro
+  s_27e09a3b38aa58::t_9ef5474c70e1d2 13-14,17
+  s_27e09a3b38aa58::t_0daca5555b0aec 1-12,15-16,22
+  s_27e09a3b38aa58::t_c7a5d9e127cde1 18-21
+src/components/landing/Features.astro
+  s_27e09a3b38aa58::t_f3db87f0b01377 1-6,29,37,42,71
+pnpm-workspace.yaml
+  s_27e09a3b38aa58::t_0daca5555b0aec 5-6
+pnpm-lock.yaml
+  s_27e09a3b38aa58::t_527af81d7771ee 184-186,938-940,4277-4278
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0f908d03f7305c6aa330ed40e96d703a131f9a42",
+  "prompts": {},
+  "sessions": {
+    "s_27e09a3b38aa58": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "891d6003-5ab9-4a9d-86d7-e95edb957ddb",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
