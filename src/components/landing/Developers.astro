@@ -14,7 +14,7 @@ const panels = await Promise.all(
     label: framework.label,
     file: framework.file,
     install: framework.install,
-    html: await codeToHtml(framework.code, { lang: framework.lang, theme }),
+    html: await codeToHtml(framework.short, { lang: framework.lang, theme }),
   }))
 )
 ---
@@ -40,8 +40,9 @@ const panels = await Promise.all(
           <h3>Headless underneath</h3>
           <p>
             The components are unstyled primitives on a framework-free core, which the
-            Vue, React and Svelte packages share. With no framework, one call to
-            <code>createViewer</code> mounts the whole viewer.
+            Vue, React and Svelte packages share. With no framework,{' '}
+            <code>createViewer</code> mounts the document and the same controls build its
+            toolbars.
           </p>
         </div>
         <div class="point">
