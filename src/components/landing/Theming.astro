@@ -52,8 +52,8 @@ import Icon from '../site/Icon.astro'
           The theme's rules have zero specificity and sit in one cascade layer, so your
           CSS overrides them without <code>!important</code>. If your page defines tokens
           such as <span class="token">--primary</span> and{' '}
-          <span class="token">--radius</span>, the theme uses them. Annotation colours
-          have their own variables.
+          <span class="token">--radius</span>, the theme uses them. To restyle one part,
+          set Inkbar's own tokens on it, as this toolbar does.
         </p>
         <div class="stage" aria-hidden="true">
           <div class="bar bar-pill">
@@ -80,13 +80,13 @@ import Icon from '../site/Icon.astro'
           aria-label="Code sample: CSS override example"
         >@layer inkbar, utilities;
 
-:root &#123;
-  --primary: #0d1026;
-  --radius: 999px;
-&#125;
-
-[data-ink-root] &#123;
-  --ink-highlight: #e4ff4a;
+.ink-toolbar &#123;
+  --ink-surface: #0d1026;
+  --ink-fg: #ffffff;
+  --ink-accent: #e4ff4a;
+  --ink-accent-fg: #0d1026;
+  --ink-radius: 999px;
+  border-radius: 999px;
 &#125;</pre>
       </article>
 
@@ -193,11 +193,10 @@ import Icon from '../site/Icon.astro'
   .bar {
     display: flex;
   }
+  /* The default theme: a plain surface, with the active tool in the accent colour. */
   .bar-default {
     gap: 4px;
-    padding: 6px;
-    border: 1px solid var(--line);
-    border-radius: 10px;
+    padding: 6px 8px;
     background: var(--sheet);
   }
   .bar-pill {
@@ -236,7 +235,8 @@ import Icon from '../site/Icon.astro'
     border-right: 0;
   }
   .cell-default.on {
-    background: var(--viewer-ground);
+    background: #151820;
+    color: #ffffff;
   }
   .cell-pill.on {
     background: var(--highlighter);
