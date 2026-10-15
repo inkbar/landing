@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@astrojs/markdown-satteri": "0.4.3",
     "@axe-core/playwright": "^4.13.0",
     "@commitlint/cli": "^20.0.0",
     "@ecssc/commitlint-config": "^0.0.5",
@@ -44,6 +45,7 @@
     "prettier": "^3.9.0",
     "prettier-plugin-astro": "^1.1.1",
     "prettier-plugin-svelte": "^4.1.1",
+    "satteri": "0.10.5",
     "starlight-links-validator": "^0.27.0",
     "typescript": "^6.0.3"
   },

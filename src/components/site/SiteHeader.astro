@@ -1,4 +1,5 @@
 ---
+import { url } from '../../lib/url'
 import Logo from './Logo.astro'
 
 interface Props {
@@ -8,18 +9,18 @@ interface Props {
 const { variant = 'landing' } = Astro.props
 
 const links = [
-  { label: 'Docs', href: '/docs/', on: ['landing', 'docs'] },
-  { label: 'Developers', href: '/#developers', on: ['landing'] },
-  { label: 'Theming', href: '/#theming', on: ['landing'] },
-  { label: 'Features', href: '/#features', on: ['landing', 'docs'] },
-  { label: 'Why Inkbar', href: '/#why', on: ['landing', 'docs'] },
+  { label: 'Docs', href: url('/docs/'), on: ['landing', 'docs'] },
+  { label: 'Developers', href: url('/#developers'), on: ['landing'] },
+  { label: 'Theming', href: url('/#theming'), on: ['landing'] },
+  { label: 'Features', href: url('/#features'), on: ['landing', 'docs'] },
+  { label: 'Why Inkbar', href: url('/#why'), on: ['landing', 'docs'] },
   { label: 'GitHub', href: 'https://github.com/inkbar/inkbar', on: ['landing', 'docs'] },
-  { label: 'Get started', href: '/#start', on: ['landing'] },
+  { label: 'Get started', href: url('/#start'), on: ['landing'] },
 ].filter((link) => link.on.includes(variant))
 ---
 
 <div class="site-header" data-variant={variant}>
-  <a class="home" href="/" aria-label="Inkbar home">
+  <a class="home" href={url('/')} aria-label="Inkbar home">
     <Logo />
   </a>
   <div class="search">

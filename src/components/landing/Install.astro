@@ -1,4 +1,5 @@
 ---
+import { url } from '../../lib/url'
 import { defaultFramework, frameworks } from '../../data/snippets'
 
 const install =
@@ -22,7 +23,7 @@ const install =
         {install}
       </code>
       <div class="links">
-        <a class="text-link" href="/docs/quickstart/">
+        <a class="text-link" href={url('/docs/quickstart/')}>
           Read the quickstart
         </a>
         <a class="text-link" href="https://github.com/inkbar/inkbar">
