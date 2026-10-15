@@ -1,0 +1,112 @@
+src/content/docs/docs/guides/redaction.md
+  s_27e09a3b38aa58::t_94a8e132d1eb00 1-8,10-15,17-61
+  s_27e09a3b38aa58::t_178ba928114ca7 16
+  s_27e09a3b38aa58::t_f611b7270a30a4 9
+src/content/docs/docs/index.mdx
+  s_27e09a3b38aa58::t_f611b7270a30a4 3,28
+  s_27e09a3b38aa58::t_4a17fb5a709d9a 6-19,21-22,24-27,29-33,35,48
+  s_27e09a3b38aa58::t_178ba928114ca7 20,23,34,42-44,46,52
+src/content/docs/docs/frameworks/react.md
+  s_27e09a3b38aa58::t_548f8f9b7f6fb1 19-28,51-59,61-67,75-76,95,99
+astro.config.mjs
+  s_27e09a3b38aa58::t_b166f6febf1be3 50
+  s_27e09a3b38aa58::t_d78805102c796f 52,62
+  s_27e09a3b38aa58::t_2ac808d42e335f 12
+public/schema/annotations-v1.json
+  s_27e09a3b38aa58::t_32f34d6edc16a4 1-619
+src/content/docs/docs/guides/toolbars.mdx
+  s_27e09a3b38aa58::t_f77873593816fa 1-11,24-26,28-127
+  s_27e09a3b38aa58::t_ceddcc8e95bace 12-23
+  s_27e09a3b38aa58::t_e700e0a233bdd3 27
+tests/docs.spec.ts
+  s_27e09a3b38aa58::t_d78805102c796f 11,16
+  s_27e09a3b38aa58::t_b166f6febf1be3 9
+src/components/landing/Install.astro
+  s_27e09a3b38aa58::t_83de74797e5a4c 14-15
+  s_27e09a3b38aa58::t_c2f9d022dee4b8 13,29-30
+  s_27e09a3b38aa58::t_fde0b56110ad4f 31
+src/components/landing/Developers.astro
+  s_27e09a3b38aa58::t_6130151c5f638a 27
+  s_27e09a3b38aa58::t_ceddcc8e95bace 28-29
+  s_27e09a3b38aa58::t_5fcbb4cd51198f 35-36,43-44,114-117
+  s_27e09a3b38aa58::t_d60bb5925e211f 118
+src/content/docs/docs/frameworks/plain-dom.md
+  s_27e09a3b38aa58::t_1f7ab9dd21b1c1 12-15,17-18,32-36,59-64,68-109,121
+  s_27e09a3b38aa58::t_5fee85d6b990c7 3,16,19-31,37-58,65-67
+src/components/landing/Features.astro
+  s_27e09a3b38aa58::t_83de74797e5a4c 17-19,28-29,37,45-46,55-56,65-67,76,87-88
+  s_27e09a3b38aa58::t_ceddcc8e95bace 77
+  s_27e09a3b38aa58::t_72cf06a31efa17 4-8,26,36,41,43-44,47,51,53,61,63-64,68,75,78,85-86,89,92-100,125-129,156-176
+src/content/docs/docs/reference/theme-tokens.md
+  s_27e09a3b38aa58::t_979f33a0602a03 26-29,43-45,67-69
+  s_27e09a3b38aa58::t_83de74797e5a4c 30-42
+  s_27e09a3b38aa58::t_ceddcc8e95bace 50-53
+  s_27e09a3b38aa58::t_b166f6febf1be3 46-49,54
+src/components/site/SiteHeader.astro
+  s_27e09a3b38aa58::t_78483bb7f37d94 16
+src/pages/index.astro
+  s_27e09a3b38aa58::t_2ac808d42e335f 14-15
+src/content/docs/docs/frameworks/svelte.md
+  s_27e09a3b38aa58::t_548f8f9b7f6fb1 19-28,42-50,52-58,64-65,96,100
+  s_27e09a3b38aa58::t_58a8c8144ec5a1 1-18,29-41,51,59-63,66-95,97-99,101-102
+src/data/snippets.ts
+  s_27e09a3b38aa58::t_4d86ccb7837e30 16-25,27,37-45,47-53,55,62-71,73,81-89,91-97,99,108-117,119,128-136,138-144,146
+src/components/landing/Hero.astro
+  s_27e09a3b38aa58::t_2ac808d42e335f 3,6-8,20-21
+  s_27e09a3b38aa58::t_0ff9f4ab404ae7 22
+src/components/site/SiteFooter.astro
+  s_27e09a3b38aa58::t_2ac808d42e335f 18,26
+src/components/landing/Theming.astro
+  s_27e09a3b38aa58::t_1a0288eac01032 36,41-42,82,87-88,134,139-140
+  s_27e09a3b38aa58::t_6130151c5f638a 6-7,13-16,112-113,149-153
+  s_27e09a3b38aa58::t_ab7e45d1a77bd9 102-104
+  s_27e09a3b38aa58::t_83de74797e5a4c 60-61
+src/content/docs/docs/guides/controlled-mode.mdx
+  s_27e09a3b38aa58::t_6b3d80386781b5 8-10,73-124
+  s_27e09a3b38aa58::t_da262c931de7ee 125-127
+src/components/landing/ViewerMock.astro
+  s_27e09a3b38aa58::t_95d98488c5d4a1 9-10,12,25,27,30,48-49,55-56,80-84,87-88,92-96,100-103,105,112,114-118,121-123,155-156,158,163,166,264-271,273-292,304,311-312,314,316,331,335-336,345-360
+  s_27e09a3b38aa58::t_6130151c5f638a 64
+  s_27e09a3b38aa58::t_337f875a195be3 37,40,45,50,52,57,59,62-63,65-67,150-154,157,159-162,177
+  s_27e09a3b38aa58::t_2e0e280e85b2ae 120
+  s_27e09a3b38aa58::t_7f6f8b17f4a109 119
+  s_27e09a3b38aa58::t_9bf8b17b67f35b 149
+src/components/landing/Comparison.astro
+  s_27e09a3b38aa58::t_83de74797e5a4c 8-12
+  s_27e09a3b38aa58::t_c2f9d022dee4b8 27-29
+src/content/docs/docs/guides/annotations.md
+  s_27e09a3b38aa58::t_3ad416cf891168 3,6-11,21-23,36-56,58-60,73-74,76,78-80,83,99,111
+  s_27e09a3b38aa58::t_83de74797e5a4c 12-20
+  s_27e09a3b38aa58::t_c5e2a16bc85190 75,77
+  s_27e09a3b38aa58::t_e030dc2193945e 117
+tests/meta.spec.ts
+  s_27e09a3b38aa58::t_538cd4551b6a78 5
+src/content/docs/docs/frameworks/vue.md
+  s_27e09a3b38aa58::t_548f8f9b7f6fb1 20-29,48-56,58-64,71-72,91
+tests/landing.spec.ts
+  s_27e09a3b38aa58::t_ceddcc8e95bace 44-45
+  s_27e09a3b38aa58::t_d78805102c796f 15,37,40-41,67,97-99,101-105,107,109
+src/content/docs/docs/guides/theming.md
+  s_27e09a3b38aa58::t_d78805102c796f 54-64
+  s_27e09a3b38aa58::t_b166f6febf1be3 42-53
+src/content/docs/docs/quickstart.mdx
+  s_27e09a3b38aa58::t_178ba928114ca7 3,9,37,41,47
+  s_27e09a3b38aa58::t_32f34d6edc16a4 43,49-51
+  s_27e09a3b38aa58::t_a4f032ccc131d1 42
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cde9c25716b71bdff87699f4f377c7dbe3594f87",
+  "prompts": {},
+  "sessions": {
+    "s_27e09a3b38aa58": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "891d6003-5ab9-4a9d-86d7-e95edb957ddb",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
