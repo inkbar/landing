@@ -1,3 +1,9 @@
+---
+import { Highlighter, MessageSquare, Square, Undo2 } from '@inkbar/icons'
+
+import Icon from '../site/Icon.astro'
+---
+
 <section id="features">
   <div class="container inner">
     <div class="intro">
@@ -20,9 +26,7 @@
         </p>
       </div>
       <div class="cell">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path>
-        </svg>
+        <Icon icon={Highlighter} />
         <h3>Highlights</h3>
         <p>
           Select text and highlight it with a click or the Enter key. The mark follows the
@@ -30,16 +34,12 @@
         </p>
       </div>
       <div class="cell">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M5 5h14v10H10l-5 4z"></path>
-        </svg>
+        <Icon icon={MessageSquare} />
         <h3>Note threads</h3>
         <p>Pin a note to the page, then reply, edit and delete in a thread beside it.</p>
       </div>
       <div class="cell">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect>
-        </svg>
+        <Icon icon={Square} />
         <h3>Redaction marks</h3>
         <p>
           Mark selected text, or drag a box over any area. A mark records what to remove.
@@ -68,9 +68,7 @@
         </p>
       </div>
       <div class="cell">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M8 6L3 11l5 5M3 11h11a5 5 0 010 10h-2"></path>
-        </svg>
+        <Icon icon={Undo2} />
         <h3>Undo and redo</h3>
         <p>
           History with grouped steps, whether Inkbar holds the annotations or your app

@@ -1,0 +1,22 @@
+---
+/*
+ * Draws an icon from @inkbar/icons, the set the Inkbar toolbar controls use, so the site shows
+ * the same icons as the product. Decorative: the control or text next to it carries the name.
+ */
+import { ICON_ATTRIBUTES, type IconNode } from '@inkbar/icons'
+
+interface Props {
+  icon: IconNode
+  class?: string
+}
+
+// Astro passes the parent's scope class in `class`, so merge it rather than replace `icon`.
+const { icon, class: className } = Astro.props
+---
+
+<svg {...ICON_ATTRIBUTES} class:list={['icon', className]} aria-hidden="true">
+  {icon.map(([tag, attrs]) => {
+    const Tag = tag
+    return <Tag {...attrs} />
+  })}
+</svg>

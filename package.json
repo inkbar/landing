@@ -55,6 +55,7 @@
     "@fontsource-variable/geist-mono": "^5.3.0",
     "@fontsource-variable/open-sans": "^5.3.0",
     "@fontsource-variable/urbanist": "^5.3.0",
+    "@inkbar/icons": "^0.2.0",
     "astro": "^7.3.8",
     "shiki": "^4.5.0",
     "svelte": "^5.57.2"

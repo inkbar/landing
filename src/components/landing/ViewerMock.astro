@@ -1,3 +1,20 @@
+---
+import {
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Hand,
+  Highlighter,
+  MessageSquare,
+  MousePointer2,
+  Redo2,
+  Square,
+  Undo2,
+} from '@inkbar/icons'
+
+import Icon from '../site/Icon.astro'
+---
+
 <div
   class="container"
   data-section="viewer"
@@ -8,62 +25,42 @@
     <div class="toolbar" role="toolbar" aria-label="PDF tools">
       <div class="group">
         <button type="button" class="tool" aria-label="View">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M8 13V6a1.5 1.5 0 013 0v5m0-1V4.5a1.5 1.5 0 013 0V10m0 0V6a1.5 1.5 0 013 0v8a6 6 0 01-6 6h-1a6 6 0 01-5-2.7L5 14a1.5 1.5 0 012.6-1.5L8 13"></path>
-          </svg>
+          <Icon icon={Hand} />
         </button>
         <button type="button" class="tool" aria-label="Select">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 3l14 8-6 2-2 6z"></path>
-          </svg>
+          <Icon icon={MousePointer2} />
         </button>
         <button type="button" class="tool" aria-label="Highlight" aria-pressed="true">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9 11l6-6 4 4-6 6H9v-4zM4 20h8"></path>
-          </svg>
+          <Icon icon={Highlighter} />
         </button>
         <button type="button" class="tool" aria-label="Mark for redaction">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <rect x="4" y="9" width="16" height="6" rx="1" fill="currentColor"></rect>
-          </svg>
+          <Icon icon={Square} />
         </button>
         <button type="button" class="tool" aria-label="Add note">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 5h14v10H10l-5 4z"></path>
-          </svg>
+          <Icon icon={MessageSquare} />
         </button>
       </div>
       <span class="divider" aria-hidden="true"></span>
       <div class="group">
         <button type="button" class="tool" aria-label="Undo">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9 14L4 9l5-5M4 9h10.5a5.5 5.5 0 010 11H11"></path>
-          </svg>
+          <Icon icon={Undo2} />
         </button>
         <button type="button" class="tool" aria-label="Redo">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M15 14l5-5-5-5M20 9H9.5a5.5 5.5 0 000 11H13"></path>
-          </svg>
+          <Icon icon={Redo2} />
         </button>
       </div>
       <div class="pages">
         <button type="button" class="tool" aria-label="Previous page">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M15 18l-6-6 6-6"></path>
-          </svg>
+          <Icon icon={ChevronLeft} />
         </button>
         <span class="page-box">3</span>
         <span class="page-of">of 24</span>
         <button type="button" class="tool" aria-label="Next page">
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M9 18l6-6-6-6"></path>
-          </svg>
+          <Icon icon={ChevronRight} />
         </button>
         <span class="zoom-level">
           Fit width
-          <svg class="icon chevron" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 9l6 6 6-6"></path>
-          </svg>
+          <Icon icon={ChevronDown} class="chevron" />
         </span>
       </div>
     </div>
@@ -78,9 +75,7 @@
             <span class="hl">shall delete all Customer Data within thirty (30) days</span>{' '}
             of termination.
             <span class="pin" aria-hidden="true">
-              <svg viewBox="0 0 24 24">
-                <path d="M5 5h14v10H10l-5 4z"></path>
-              </svg>
+              <Icon icon={MessageSquare} />
             </span>
           </p>
           <p>
