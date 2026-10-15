@@ -38,6 +38,7 @@ defineProps<{ url: string; id: string }>()
 <template>
   <InkRoot :src="{ url, key: id }" :assets="assets">
     <InkToolbar>
+      <InkToolButton tool="view" />
       <InkToolButton tool="select" />
       <InkToolButton tool="highlight" />
       <InkToolButton tool="redact-area" />
@@ -82,6 +83,7 @@ export function Review({ url, id }: { url: string; id: string }) {
   return (
     <InkRoot src={{ url, key: id }} assets={assets}>
       <InkToolbar>
+        <InkToolButton tool="view" />
         <InkToolButton tool="select" />
         <InkToolButton tool="highlight" />
         <InkToolButton tool="redact-area" />
@@ -129,6 +131,7 @@ const svelte = `<script lang="ts">
 
 <InkRoot src={{ url, key: id }} {assets}>
   <InkToolbar>
+    <InkToolButton tool="view" />
     <InkToolButton tool="select" />
     <InkToolButton tool="highlight" />
     <InkToolButton tool="redact-area" />

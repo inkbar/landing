@@ -43,7 +43,7 @@ doc.history.batch(() => {
 })
 ```
 
-`batch` makes the whole set one undo step. `doc.text(page)` returns a page's text runs with their positions in PDF user space, which is what you need to turn a match into quads.
+`batch` makes the whole set one undo step. In a framework app, use `batch` from `useHistory()` instead, which also works in controlled mode. `doc.text(page)` returns a page's text runs with their positions in PDF user space, which is what you need to turn a match into quads.
 
 The [sandbox](https://sandbox.inkbar.dev) has a working example: its "Suggest redactions" button runs a small pattern matcher for email addresses, UK phone numbers and National Insurance numbers. The source is in [`apps/sandbox/src/shared/suggest.ts`](https://github.com/inkbar/inkbar/blob/main/apps/sandbox/src/shared/suggest.ts).
 
@@ -58,4 +58,4 @@ Activating a suggestion opens `InkSuggestionCard` (or the card `createViewer` ad
 
 Both are undoable. To do the same from your own UI, call `accept(id)` and `dismiss(id)` from `useAnnotations()`, or `acceptSuggestion(doc.annotations, id)` from `@inkbar/core`.
 
-To render the card yourself, pass a function or snippet as its child. It receives `annotation`, `suggestion`, `bucket`, `accept`, `dismiss` and `close`, typed as `SuggestionCardSlotProps`.
+To render the card yourself, use its scoped default slot in Vue, a function as `children` in React, or a `children` snippet in Svelte. It receives `annotation`, `suggestion`, `bucket`, `accept`, `dismiss` and `close`, typed as `SuggestionCardSlotProps`.

@@ -24,7 +24,7 @@ const panels = await Promise.all(
     <div class="intro">
       <h2>A few components and one stylesheet.</h2>
       <p class="lede">
-        Wrap a viewport in a root and build the toolbar from the controls you want: tools,
+        Wrap a viewport in a root and build toolbars from the controls you want: tools,
         undo and redo, pages and zoom. Each is its own component, so move it, drop it or
         add your own buttons beside it.
       </p>
@@ -38,7 +38,7 @@ const panels = await Promise.all(
           <h3>Typed end to end</h3>
           <p>
             Annotations are plain typed objects with a published JSON Schema. Keep them in
-            your own state, or let Inkbar hold them with undo and redo.
+            your own state or let Inkbar hold them. Undo and redo work either way.
           </p>
         </div>
         <div class="point">
@@ -53,7 +53,7 @@ const panels = await Promise.all(
           <h3>One coordinate system</h3>
           <p>
             Inkbar works in PDF points with the origin bottom-left. You store the same
-            numbers that go in the file.
+            numbers the PDF uses.
           </p>
         </div>
       </div>

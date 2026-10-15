@@ -16,7 +16,7 @@ You need the core, the theme and the package for your framework. The packages sh
 
 ## 2. Add the Vite plugin
 
-PDF.js loads a worker, fonts and decoders at runtime. The plugin serves those files in development and copies them into your build.
+PDF.js loads a worker, fonts and decoders at runtime. The plugin serves those files in development and copies them into your build. It works with Vite 6 or later.
 
 ```ts title="vite.config.ts"
 import { inkbar } from '@inkbar/core/vite'

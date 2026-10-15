@@ -9,22 +9,22 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 
 ## Controls
 
-| Component                    | What it does                                                                      |
-| ---------------------------- | --------------------------------------------------------------------------------- |
-| `InkToolbar`                 | Groups controls into one Tab stop, with arrow keys between them. `label` names it |
-| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                  |
-| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                           |
-| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                     |
-| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                       |
-| `InkPageInput`               | The current page number, which the user can type into                             |
-| `InkPageCount`               | "of N", the page count                                                            |
-| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                             |
-| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                             |
-| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                          |
+| Component                    | What it does                                                                         |
+| ---------------------------- | ------------------------------------------------------------------------------------ |
+| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it |
+| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                     |
+| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                              |
+| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                        |
+| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                          |
+| `InkPageInput`               | The current page number, which the user can type into                                |
+| `InkPageCount`               | "of N", the page count                                                               |
+| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                |
+| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                |
+| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                             |
 
-`tool` is one of `view`, `select`, `highlight`, `redact-area` and `note`. Their accessible names are View, Select, Highlight, Mark for redaction and Add note. Pass `label` to change one.
+`tool` is one of `view`, `select`, `highlight`, `redact-area` and `note`. Their accessible names are View, Select, Highlight, Mark for redaction and Add note. Pass `label` to change one. To rename any other button, pass `aria-label` and `title`.
 
-Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history, which is on by default and in controlled mode needs `history` turned on.
+Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history. History is on by default; in controlled mode, turn it on with `history`. The page number field and the zoom select keep their own Tab stops.
 
 ## Icons and labels
 
@@ -42,7 +42,7 @@ import { Eraser } from 'your-icon-library'
 
 <template>
   <InkToolbar label="Review">
-    <InkToolButton tool="redact-area" label="Redact">
+    <InkToolButton tool="redact-area" label="Mark">
       <Eraser />
     </InkToolButton>
     <InkUndo />
@@ -64,7 +64,7 @@ import { Eraser } from 'your-icon-library'
 export function ReviewBar({ finish }: { finish: () => void }) {
   return (
     <InkToolbar label="Review">
-      <InkToolButton tool="redact-area" label="Redact">
+      <InkToolButton tool="redact-area" label="Mark">
         <Eraser />
       </InkToolButton>
       <InkUndo />
@@ -89,7 +89,7 @@ export function ReviewBar({ finish }: { finish: () => void }) {
 </script>
 
 <InkToolbar label="Review">
-  <InkToolButton tool="redact-area" label="Redact">
+  <InkToolButton tool="redact-area" label="Mark">
     <Eraser />
   </InkToolButton>
   <InkUndo />
@@ -102,11 +102,11 @@ export function ReviewBar({ finish }: { finish: () => void }) {
   </TabItem>
 </Tabs>
 
-You only need to install `@inkbar/icons` to use its icons on your own buttons. The controls bring them along.
+Install `@inkbar/icons` only if you want its icons on your own buttons. The controls bring their own. The [Icons](/docs/reference/icons/) reference lists all 13.
 
 ## Rendering your own element
 
-`InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
 
 ## Without a framework
 

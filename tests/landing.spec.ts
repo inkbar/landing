@@ -15,7 +15,9 @@ test('the hero states the offer and the install command', async ({ page }) => {
     'A full PDF editor for your web app. No licence fee.'
   )
   await expect(page.getByText('free under the MIT licence')).toBeVisible()
-  await expect(page.locator('main code').first()).toContainText('pnpm add @inkbar/core')
+  await expect(page.locator('main code').first()).toContainText(
+    'pnpm add @inkbar/react @inkbar/core @inkbar/theme'
+  )
   await expect(
     page.getByRole('link', { name: 'Read the quickstart' }).first()
   ).toHaveAttribute('href', '/docs/quickstart/')

@@ -10,7 +10,7 @@ The toolbar controls show icons from `@inkbar/icons`: 13 icons from [Lucide](htt
 
 <IconGrid />
 
-The core `createZoomSelect` is a native `<select>`, so it shows neither `ChevronDown` nor `Check`.
+The core `createZoomSelect` is a native `<select>`. Inside a toolbar, the theme draws the `ChevronDown` shape on it in CSS, and it has no `Check`.
 
 ## Using an icon on your own button
 
@@ -84,7 +84,7 @@ finish.append(createIcon(Check))
   </TabItem>
 </Tabs>
 
-The icon is hidden from screen readers, so give the button its own name, as `aria-label` does here. `InkIcon` draws at 18px unless you pass `size`. Inside a toolbar, the theme sizes every icon with `--ink-icon-size`.
+The icon is hidden from screen readers, so give the button its own name, as `aria-label` does here. `InkIcon` sets its width and height from `size`, which defaults to 18. With the theme loaded, CSS sizes every icon to `--ink-icon-size` (default `1.125rem`) instead, so set that variable on the button or an ancestor to change the size.
 
 ## Replacing a control's icon
 

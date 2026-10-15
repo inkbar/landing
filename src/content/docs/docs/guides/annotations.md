@@ -7,7 +7,7 @@ Annotations are plain typed objects. Every coordinate is in PDF user space: poin
 
 ## Types
 
-The model knows 13 annotation types. The default tools create three of them. The rest display when they come from your own code, a JSON import or the PDF itself.
+The model knows 13 annotation types. The built-in tools create three of them. The rest display when they come from your own code, a JSON import or the PDF itself.
 
 | Type                                              | Created by a tool           | Displayed |
 | ------------------------------------------------- | --------------------------- | --------- |
@@ -19,7 +19,7 @@ The model knows 13 annotation types. The default tools create three of them. The
 | `square`, `circle`, `line`, `polyline`, `polygon` | No. Add them with `add()`   | Yes       |
 | `ink`                                             | No. Add it with `add()`     | Yes       |
 
-Each annotation has an `id`, a 0-based `page`, a bounding `rect`, a `#RRGGBB` `color` and an `opacity`, plus optional `author`, `contents`, `inReplyTo` for note replies, and `custom` for your own data. Inkbar keeps `custom` as it is and never reads it.
+Each annotation has an `id`, a 0-based `page`, a bounding `rect`, a `#RRGGBB` `color` and an `opacity`. Optional fields are `author`, `contents`, `inReplyTo` for note replies, and `custom` for your own data. Inkbar keeps `custom` as it is and never reads it.
 
 ## Usage
 
@@ -33,7 +33,7 @@ await doc.ready
 doc.annotations.add({ type: 'highlight', page: 0, quads })
 ```
 
-`file` can be a `File`, `Blob`, `ArrayBuffer`, `Uint8Array`, a URL string, or `{ url, key }` when the URL is signed and changes between loads. `quads` is a list of quads in PDF user space. `add` fills in the id, colour, timestamps and bounding box.
+`file` can be a `File`, `Blob`, `ArrayBuffer`, `Uint8Array`, a URL string, `{ url, key }` when the URL is signed and changes between loads, or `{ data, key }` for bytes you want to identify. `quads` is a list of quads in PDF user space. `add` fills in the id, colour, timestamps and bounding box.
 
 In a framework app, `useAnnotations()` gives you the same `add`, `update` and `remove` for the nearest `InkRoot`.
 
@@ -48,6 +48,8 @@ await saveToYourBackend(doc.key, data)
 // On the next open
 doc.importAnnotations(await loadFromYourBackend(doc.key), { mode: 'replace' })
 ```
+
+`doc.key` stays the same between opens only when you open with a key: a URL string, `{ url, key }` or `{ data, key }`. A `File`, `Blob` or raw bytes get a new random key each time, so pass `{ data, key }` with your own document id.
 
 The export is `{ format: 'inkbar/annotations', version: 1, documentKey, annotations }` and holds the annotations made in the session, not the ones embedded in the file. The [JSON Schema](https://inkbar.dev/schema/annotations-v1.json) describes it, so your backend can validate what it stores.
 
@@ -74,9 +76,9 @@ Annotations already in the file are drawn by PDF.js on the page canvas. Inkbar a
 
 Inkbar records history when it holds the annotations, and in controlled mode when you turn `history` on. Put `InkUndo` and `InkRedo` in a toolbar to give people the buttons; each disables itself when there is nothing to undo or redo. There is no keyboard shortcut yet.
 
-To drive history from your own UI, `useHistory()` returns `canUndo`, `canRedo`, `undo`, `redo`, `clear` and `batch` for the nearest `InkRoot`. Without a framework, `doc.history` has the same methods, and `createUndo` and `createRedo` build the buttons.
+To drive history from your own UI, `useHistory()` returns `canUndo`, `canRedo`, `undo`, `redo`, `clear` and `batch` for the nearest `InkRoot`. Without a framework, `doc.history` has `undo`, `redo`, `clear` and `batch`, with `canUndo` and `canRedo` as readables, and `createUndo` and `createRedo` build buttons for a `createViewer` viewer.
 
-`history.batch(fn)` records everything `fn` changes as one undo step, so a host that adds many annotations at once can undo them together. Change events still fire once per annotation. `fn` must be synchronous, and nested calls join the outer batch. The default limit is 200 steps.
+`history.batch(fn)` records everything `fn` changes as one undo step, so a host that adds many annotations at once can undo them together. Change events still fire once per annotation. `fn` must be synchronous, and nested calls join the outer batch. The default limit is 200 steps. In controlled mode `doc.history` records nothing, so in a framework app call `batch` from `useHistory()`, which works in both modes.
 
 ## Tools and keyboard
 

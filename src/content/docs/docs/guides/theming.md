@@ -3,7 +3,7 @@ title: Theming
 description: Import the default stylesheet and restyle it with your own tokens and CSS.
 ---
 
-Default styles for the Inkbar components. The package is one stylesheet with no JavaScript.
+`@inkbar/theme` holds the default styles for the Inkbar components: one stylesheet, no JavaScript.
 
 Install it as the [Quickstart](/docs/quickstart/) shows.
 

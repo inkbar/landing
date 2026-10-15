@@ -36,6 +36,7 @@ const viewer = createViewer(el, { source: file, assets, zoom: 'fit-width' })
 
 const tools = createToolbar()
 tools.append(
+  createToolButton(viewer, 'view'),
   createToolButton(viewer, 'select'),
   createToolButton(viewer, 'highlight'),
   createToolButton(viewer, 'redact-area'),
@@ -62,9 +63,13 @@ viewer.open(lockedFile, { password }) // this password applies to this load only
 viewer.destroy()
 ```
 
-Each control disables itself while no document is ready and lives as long as its viewer. `createZoomIn` and `createZoomOut` are there too. `createToolButton` takes `{ label }` as a third argument to rename a tool. Buttons show an icon from `@inkbar/icons`; replace their children with your own icon and the accessible name stays. `createIcon` draws any `@inkbar/icons` icon for your own buttons. `createToolbar` gives one Tab stop to all its buttons, with arrow keys between them. A button you append joins that order. An input, select or textarea you add keeps its arrow keys and its own `tabindex`: it is a Tab stop unless you give it `tabindex="-1"`.
+Each control disables itself while no document is ready and lives as long as its viewer. `createZoomIn` and `createZoomOut` are there too. `createToolButton` takes `{ label }` as a third argument to rename a tool.
 
-`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `password`, `defaults`, `history`, `onReady` and `onError`. Set `notes` or `suggestions` to `false` to leave that part out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. A password you pass to `open` replaces the `createViewer` one for that load.
+Buttons show an icon from `@inkbar/icons`; replace their children with your own icon and the accessible name stays. `createIcon` draws any `@inkbar/icons` icon for your own buttons.
+
+`createToolbar` gives one Tab stop to all its buttons, with arrow keys between them. A button you append joins that order. An input, select or textarea you add keeps its arrow keys and its own `tabindex`: it is a Tab stop unless you give it `tabindex="-1"`.
+
+`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `onReady` and `onError`. Set `notes` or `suggestions` to `false` to leave that part out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. A password you pass to `open` replaces the `createViewer` one for that load.
 
 `createViewer` reads the theme's colours from the element you pass, so that element needs to be in the page when you call it. Like the framework packages, the viewer fills its parent, so give the element a height.
 
