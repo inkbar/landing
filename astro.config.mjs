@@ -17,7 +17,7 @@ export default defineConfig({
     starlight({
       title: 'Inkbar',
       description:
-        'Documentation for Inkbar, the open-source PDF viewer and markup toolkit for the web.',
+        'Documentation for Inkbar, the open-source PDF viewer and editor for the web.',
       disable404Route: true,
       favicon: '/favicon.svg',
       components: {

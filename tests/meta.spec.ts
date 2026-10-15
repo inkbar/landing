@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test('the landing page carries its search and social metadata', async ({ page }) => {
   await page.goto('/')
-  await expect(page).toHaveTitle('Inkbar: open-source PDF viewer and markup for the web')
+  await expect(page).toHaveTitle('Inkbar: open-source PDF viewer and editor for the web')
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     'href',
     'https://inkbar.dev/'
