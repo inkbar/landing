@@ -9,36 +9,35 @@ import Icon from '../site/Icon.astro'
     <div class="intro">
       <h2>It should look like your product, not ours.</h2>
       <p class="lede">
-        You can ship the default theme as it is. If you'd rather not, restyle it with CSS
-        or render the controls as your own components.
+        Ship the default theme as it is, restyle it with CSS, or render the controls as
+        your own components. If your page already defines tokens such as{' '}
+        <span class="token">--primary</span> and <span class="token">--radius</span>, the
+        theme uses them.
       </p>
     </div>
-    <div class="cards">
-      <article class="card">
-        <h3>Use the default</h3>
-        <p>
-          Import the theme and the toolbars, popovers and pages get a finished look, in
-          light and dark modes.
-        </p>
+    <div class="ways">
+      <article class="way">
         <div class="stage" aria-hidden="true">
           <div class="bar bar-default">
-            <span class="cell cell-default">
+            <span class="cell">
               <Icon icon={MousePointer2} />
             </span>
-            <span class="cell cell-default on">
+            <span class="cell on">
               <Icon icon={Highlighter} />
             </span>
-            <span class="cell cell-default">
+            <span class="cell">
               <Icon icon={MessageSquare} />
             </span>
-            <span class="cell cell-default">
+            <span class="cell">
               <Icon icon={Square} />
             </span>
-            <span class="cell cell-default">
+            <span class="cell">
               <Icon icon={ZoomIn} />
             </span>
           </div>
         </div>
+        <h3>Use the default</h3>
+        <p>One stylesheet styles the toolbars, popovers and pages, in light and dark.</p>
         <pre
           tabindex="0"
           role="region"
@@ -46,34 +45,31 @@ import Icon from '../site/Icon.astro'
         >import '@inkbar/theme/theme.css'</pre>
       </article>
 
-      <article class="card">
-        <h3>Restyle it with CSS</h3>
-        <p>
-          The theme's rules have zero specificity and sit in one cascade layer, so your
-          CSS overrides them without <code>!important</code>. If your page defines tokens
-          such as <span class="token">--primary</span> and{' '}
-          <span class="token">--radius</span>, the theme uses them. To restyle one part,
-          set Inkbar's own tokens on it, as this toolbar does.
-        </p>
+      <article class="way">
         <div class="stage" aria-hidden="true">
           <div class="bar bar-pill">
-            <span class="cell cell-pill">
+            <span class="cell">
               <Icon icon={MousePointer2} />
             </span>
-            <span class="cell cell-pill on">
+            <span class="cell on">
               <Icon icon={Highlighter} />
             </span>
-            <span class="cell cell-pill">
+            <span class="cell">
               <Icon icon={MessageSquare} />
             </span>
-            <span class="cell cell-pill">
+            <span class="cell">
               <Icon icon={Square} />
             </span>
-            <span class="cell cell-pill">
+            <span class="cell">
               <Icon icon={ZoomIn} />
             </span>
           </div>
         </div>
+        <h3>Restyle it with CSS</h3>
+        <p>
+          Every rule has zero specificity, so yours win without <code>!important</code>.
+          Set Inkbar's tokens on any part.
+        </p>
         <pre
           tabindex="0"
           role="region"
@@ -88,31 +84,31 @@ import Icon from '../site/Icon.astro'
 &#125;</pre>
       </article>
 
-      <article class="card">
-        <h3>Rebuild it in your design system</h3>
-        <p>
-          Render any control as your own button with <code>asChild</code>, or wire your
-          own to the hooks for tools, zoom, pages and history.
-        </p>
+      <article class="way">
         <div class="stage" aria-hidden="true">
           <div class="bar bar-square">
-            <span class="cell cell-square">
+            <span class="cell">
               <Icon icon={MousePointer2} />
             </span>
-            <span class="cell cell-square on">
+            <span class="cell on">
               <Icon icon={Highlighter} />
             </span>
-            <span class="cell cell-square">
+            <span class="cell">
               <Icon icon={MessageSquare} />
             </span>
-            <span class="cell cell-square">
+            <span class="cell">
               <Icon icon={Square} />
             </span>
-            <span class="cell cell-square last">
+            <span class="cell">
               <Icon icon={ZoomIn} />
             </span>
           </div>
         </div>
+        <h3>Use your own components</h3>
+        <p>
+          Render any control as your own button with <code>asChild</code>. It keeps its
+          behaviour and its accessible name.
+        </p>
         <pre
           tabindex="0"
           role="region"
@@ -153,103 +149,67 @@ import Icon from '../site/Icon.astro'
     line-height: 1.55;
     color: var(--body);
   }
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
-    gap: 24px;
+  .token {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    white-space: nowrap;
   }
-  .card {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    min-width: 0;
-    padding: 28px;
+
+  /*
+   * One panel, three columns, the same toolbar at the top of each. Each column spans four
+   * rows of a shared grid (subgrid), so the toolbars, headings, text and code line up
+   * across the columns whatever each one's copy runs to.
+   */
+  .ways {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
     border: 1px solid var(--line);
     border-radius: 16px;
+    background: var(--line);
+    overflow: hidden;
   }
-  .card h3 {
-    font-size: 26px;
-    letter-spacing: -0.02em;
+  @media (min-width: 1120px) {
+    .ways {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: auto auto auto 1fr;
+    }
   }
-  .card p {
-    font-size: 15.5px;
-    line-height: 1.55;
-    color: var(--body);
-  }
-  .card code {
-    font-family: var(--font-mono);
-    font-size: 14px;
+  .way {
+    display: grid;
+    grid-row: span 4;
+    grid-template-rows: subgrid;
+    row-gap: 0;
+    min-width: 0;
+    background: var(--sheet);
   }
   .stage {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 28px 12px;
-    border-radius: 12px;
+    min-height: 136px;
+    padding: 24px 12px;
+    border-bottom: 1px solid var(--line);
     background: var(--paper);
   }
-  .bar {
-    display: flex;
+  .way h3 {
+    padding: 28px 28px 0;
+    font-size: 24px;
+    letter-spacing: -0.02em;
   }
-  /* The default theme: a plain surface, with the active tool in the accent colour. */
-  .bar-default {
-    gap: 4px;
-    padding: 6px 8px;
-    background: var(--sheet);
+  .way p {
+    padding: 10px 28px 0;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--body);
   }
-  .bar-pill {
-    gap: 4px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    background: var(--ink);
-    color: #ffffff;
+  .way code {
+    font-family: var(--font-mono);
+    font-size: 14px;
   }
-  .bar-square {
-    border: 2px solid var(--ink);
-    background: var(--sheet);
-  }
-  .cell {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .cell-default,
-  .cell-pill {
-    width: 38px;
-    height: 38px;
-  }
-  .cell-default {
-    border-radius: 6px;
-  }
-  .cell-pill {
-    border-radius: 999px;
-  }
-  .cell-square {
-    width: 42px;
-    height: 42px;
-    border-right: 2px solid var(--ink);
-  }
-  .cell-square.last {
-    border-right: 0;
-  }
-  .cell-default.on {
-    background: #151820;
-    color: #ffffff;
-  }
-  .cell-pill.on {
-    background: var(--highlighter);
-    color: var(--ink);
-  }
-  .cell-square.on {
-    background: var(--ink);
-    color: #ffffff;
-  }
-  .token {
-    white-space: nowrap;
-  }
-  pre {
-    margin: 0;
-    margin-top: auto;
+  .way pre {
+    align-self: start;
+    margin: 20px 28px 28px;
     padding: 16px;
     border-radius: 10px;
     background: var(--ink);
@@ -260,7 +220,60 @@ import Icon from '../site/Icon.astro'
     line-height: 1.65;
     overflow-x: auto;
   }
-  pre:focus-visible {
+  .way pre:focus-visible {
     outline-offset: -5px;
+  }
+
+  /* The same five tools in each column; only the treatment changes. */
+  .bar {
+    display: flex;
+  }
+  .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+  }
+  /* The default theme: a plain surface, with the active tool in the accent colour. */
+  .bar-default {
+    gap: 4px;
+    padding: 6px 8px;
+    background: var(--sheet);
+    box-shadow: 0 1px 2px rgba(13, 16, 38, 0.12);
+  }
+  .bar-default .cell {
+    border-radius: 6px;
+  }
+  .bar-default .on {
+    background: #151820;
+    color: #ffffff;
+  }
+  /* What the CSS sample produces. */
+  .bar-pill {
+    gap: 4px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: var(--ink);
+    color: #ffffff;
+  }
+  .bar-pill .cell {
+    border-radius: 999px;
+  }
+  .bar-pill .on {
+    background: var(--highlighter);
+    color: var(--ink);
+  }
+  /* Someone else's design system. */
+  .bar-square {
+    border: 2px solid var(--ink);
+    background: var(--sheet);
+  }
+  .bar-square .cell + .cell {
+    border-left: 2px solid var(--ink);
+  }
+  .bar-square .on {
+    background: var(--ink);
+    color: #ffffff;
   }
 </style>

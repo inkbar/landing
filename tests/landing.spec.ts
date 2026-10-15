@@ -89,9 +89,7 @@ test('the theming section shows three routes', async ({ page }) => {
   await expect(cards).toHaveCount(3)
   await expect(cards.nth(0).getByRole('heading')).toHaveText('Use the default')
   await expect(cards.nth(1).getByRole('heading')).toHaveText('Restyle it with CSS')
-  await expect(cards.nth(2).getByRole('heading')).toHaveText(
-    'Rebuild it in your design system'
-  )
+  await expect(cards.nth(2).getByRole('heading')).toHaveText('Use your own components')
 })
 
 test('the features grid lists what ships, then what is on the way', async ({ page }) => {
