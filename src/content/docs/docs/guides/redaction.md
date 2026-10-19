@@ -18,7 +18,7 @@ The `redact-area` tool, labelled "Mark for redaction" on its tool button, makes 
 - **Area marks.** Drag a box over any part of the page, including images. With the `select` tool you can then move it and resize it by its corner handles, or from the keyboard.
 - **Text marks.** Select text with the `view` tool, switch to `redact-area`, then click inside the selection or press `Enter`. The mark follows the lines of the selection.
 
-Both are `redact` annotations with `origin: 'user'`. `fill` is the colour the area will be filled with once redactions are applied. It defaults to `--ink-redact-fill`.
+Both are `redact` annotations with `origin: 'user'`. `interiorColor` is the colour the area will be filled with once redactions are applied. It defaults to `--ink-redact-fill`.
 
 ## Suggested redactions
 
