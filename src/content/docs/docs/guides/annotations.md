@@ -13,9 +13,9 @@ The model knows 13 annotation types. The built-in tools create three of them. Th
 | ------------------------------------------------- | --------------------------- | --------- |
 | `highlight`                                       | Yes, the `highlight` tool   | Yes       |
 | `redact`                                          | Yes, the `redact-area` tool | Yes       |
-| `note`                                            | Yes, the `note` tool        | Yes       |
+| `text` (a note)                                   | Yes, the `note` tool        | Yes       |
 | `underline`, `strikeout`, `squiggly`              | No. Add them with `add()`   | Yes       |
-| `freeText`                                        | No. Add it with `add()`     | Yes       |
+| `freetext`                                        | No. Add it with `add()`     | Yes       |
 | `square`, `circle`, `line`, `polyline`, `polygon` | No. Add them with `add()`   | Yes       |
 | `ink`                                             | No. Add it with `add()`     | Yes       |
 
@@ -51,7 +51,7 @@ doc.importAnnotations(await loadFromYourBackend(doc.key), { mode: 'replace' })
 
 `doc.key` stays the same between opens only when you open with a key: a URL string, `{ url, key }` or `{ data, key }`. A `File`, `Blob` or raw bytes get a new random key each time, so pass `{ data, key }` with your own document id.
 
-The export is `{ format: 'inkbar/annotations', version: 1, documentKey, annotations }` and holds the annotations made in the session, not the ones embedded in the file. The [JSON Schema](https://inkbar.dev/schema/annotations-v1.json) describes it, so your backend can validate what it stores.
+The export is `{ format: 'inkbar/annotations', version: 1, documentKey, annotations }` and holds the annotations made in the session, not the ones embedded in the file. The [JSON Schema](https://inkbar.dev/schema/annotations-v1.json) describes it, so your backend can validate what it stores. The [annotation format](/docs/reference/annotation-format/) reference covers every field and how it maps to XFDF.
 
 `importAnnotations` takes the object or a JSON string. `replace` drops the current session annotations first. `merge` overwrites by id and keeps the rest. Items with a type this version does not know come back in the result's `unknown` list, and the next export writes them out again.
 
@@ -59,7 +59,7 @@ In a framework app, `useDocument()` returns `exportAnnotations()` and `importAnn
 
 ## Annotations from the PDF
 
-Annotations already in the file are drawn by PDF.js on the page canvas. Inkbar adds them to the list with `source: 'pdf'` and `locked: true`, so people can select and read them, but cannot move, resize or delete them. `doc.embedded`, or `useEmbedded()`, counts them by subtype, including subtypes Inkbar does not model.
+Annotations already in the file are drawn by PDF.js on the page canvas. Inkbar adds them to the list with `source: 'pdf'` and `locked: true`, so people can select and read them, but cannot move, resize or delete them. Exports leave out `source` and `locked`. `doc.embedded`, or `useEmbedded()`, counts them by subtype, including subtypes Inkbar does not model.
 
 ## Annotation changes
 
