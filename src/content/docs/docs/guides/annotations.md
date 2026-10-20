@@ -51,7 +51,7 @@ doc.importAnnotations(await loadFromYourBackend(doc.key), { mode: 'replace' })
 
 `doc.key` stays the same between opens only when you open with a key: a URL string, `{ url, key }` or `{ data, key }`. A `File`, `Blob` or raw bytes get a new random key each time, so pass `{ data, key }` with your own document id.
 
-The export is `{ format: 'inkbar/annotations', version: 1, documentKey, annotations }` and holds the annotations made in the session, not the ones embedded in the file. The [JSON Schema](https://inkbar.dev/schema/annotations-v1.json) describes it, so your backend can validate what it stores. The [annotation format](/docs/reference/annotation-format/) reference covers every field and how it maps to XFDF.
+The export is a [Gloss](https://gloss-format.org) document, `{ format: 'gloss', version: 1, documentKey, annotations }`, and holds the annotations made in the session, not the ones embedded in the file. Gloss is an open JSON format for PDF annotations, and its [JSON Schema](https://gloss-format.org/schema/v1.json) lets your backend validate what it stores. The [Gloss format](/docs/reference/gloss/) reference covers what Inkbar adds to Gloss and what it leaves out.
 
 `importAnnotations` takes the object or a JSON string. `replace` drops the current session annotations first. `merge` overwrites by id and keeps the rest. Items with a type this version does not know come back in the result's `unknown` list, and the next export writes them out again.
 
