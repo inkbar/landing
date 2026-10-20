@@ -5,7 +5,7 @@ description: The JSON that exportAnnotations writes and importAnnotations reads,
 
 `exportAnnotations` writes annotations as JSON, and `importAnnotations` reads the same JSON back. The format follows XFDF, the ISO standard for exchanging PDF annotations: the same annotation types, the same coordinates and, where XFDF has a name for a field, the same name. A few fields go beyond XFDF to carry suggested redactions and your own data.
 
-The [JSON Schema](https://inkbar.dev/schema/annotations-v1.json) describes the whole document. Validate against it before you store or accept a payload.
+The [JSON Schema](https://inkbar.dev/schema/annotations-v1.json) describes the whole document. Validate against it before you store or accept a payload. A field with a default, such as `icon` or `width`, can be left out, and import fills in the default.
 
 ## Media type
 
