@@ -26,7 +26,7 @@ import {
   InkPageCount,
   InkNextPage,
   InkZoomSelect,
-  InkNotePopover,
+  InkThreadPopover,
 } from '@inkbar/vue'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -54,7 +54,7 @@ defineProps<{ url: string; id: string }>()
       <InkNextPage />
       <InkZoomSelect />
     </InkToolbar>
-    <InkNotePopover />
+    <InkThreadPopover />
   </InkRoot>
 </template>`
 
@@ -71,7 +71,7 @@ const react = `import {
   InkPageCount,
   InkNextPage,
   InkZoomSelect,
-  InkNotePopover,
+  InkThreadPopover,
 } from '@inkbar/react'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -97,7 +97,7 @@ export function Review({ url, id }: { url: string; id: string }) {
         <InkNextPage />
         <InkZoomSelect />
       </InkToolbar>
-      <InkNotePopover />
+      <InkThreadPopover />
     </InkRoot>
   )
 }`
@@ -116,7 +116,7 @@ const svelte = `<script lang="ts">
     InkPageCount,
     InkNextPage,
     InkZoomSelect,
-    InkNotePopover,
+    InkThreadPopover,
   } from '@inkbar/svelte'
   import { assets } from 'virtual:inkbar-assets'
   import '@inkbar/theme/theme.css'
@@ -143,14 +143,14 @@ const svelte = `<script lang="ts">
     <InkNextPage />
     <InkZoomSelect />
   </InkToolbar>
-  <InkNotePopover />
+  <InkThreadPopover />
 </InkRoot>`
 
 const vueShort = `<script setup lang="ts">
 import {
   InkRoot,
   InkViewport,
-  InkNotePopover,
+  InkThreadPopover,
 } from '@inkbar/vue'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -166,14 +166,14 @@ defineProps<{ url: string; id: string }>()
     <Toolbar />
     <InkViewport />
     <Footer />
-    <InkNotePopover />
+    <InkThreadPopover />
   </InkRoot>
 </template>`
 
 const reactShort = `import {
   InkRoot,
   InkViewport,
-  InkNotePopover,
+  InkThreadPopover,
 } from '@inkbar/react'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -187,7 +187,7 @@ export function Review({ url, id }: { url: string; id: string }) {
       <Toolbar />
       <InkViewport />
       <Footer />
-      <InkNotePopover />
+      <InkThreadPopover />
     </InkRoot>
   )
 }`
@@ -196,7 +196,7 @@ const svelteShort = `<script lang="ts">
   import {
     InkRoot,
     InkViewport,
-    InkNotePopover,
+    InkThreadPopover,
   } from '@inkbar/svelte'
   import { assets } from 'virtual:inkbar-assets'
   import '@inkbar/theme/theme.css'
@@ -211,7 +211,7 @@ const svelteShort = `<script lang="ts">
   <Toolbar />
   <InkViewport />
   <Footer />
-  <InkNotePopover />
+  <InkThreadPopover />
 </InkRoot>`
 
 export const frameworks: readonly FrameworkSnippet[] = [

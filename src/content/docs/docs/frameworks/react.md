@@ -26,7 +26,7 @@ import {
   InkPageCount,
   InkNextPage,
   InkZoomSelect,
-  InkNotePopover,
+  InkThreadPopover,
 } from '@inkbar/react'
 import type { Annotation } from '@inkbar/core'
 import { assets } from 'virtual:inkbar-assets'
@@ -65,7 +65,7 @@ export function Review({
         <InkNextPage />
         <InkZoomSelect />
       </InkToolbar>
-      <InkNotePopover />
+      <InkThreadPopover />
     </InkRoot>
   )
 }
@@ -75,15 +75,15 @@ Each control is a separate component, so put them in any order or leave some out
 
 `annotations` with `onAnnotationsChange` makes your list the source of truth. Leave them off and Inkbar keeps the state itself, with undo and redo.
 
-## Note popover
+## Thread popover
 
-`InkNotePopover` opens the thread of the activated note. A new note has no text yet, so the form first writes the note's own text (labelled "Comment"); after that it adds replies.
+`InkThreadPopover` opens the thread of the activated note or text markup. A new note or highlight has no text yet, so the form first writes its own text (labelled "Comment"); after that it adds replies.
 
 A root note with no text and no replies is removed when its popover closes, or when activation moves to another annotation, so abandoned notes do not stay on the page. Locked notes are never removed. If you add notes yourself (`add({ type: 'note', ... })`), give them `contents`, or they will be removed the first time someone opens and closes them.
 
 ## Custom rendering
 
-Slots are render props. `InkViewport` takes `loading`, `empty`, `error`, `renderAnnotation` and `renderPageError`; `InkNotePopover` takes a function as `children`; `InkToolButton` takes a node or a function of `{ active, label }`. The props each receives are typed as `AnnotationSlotProps` and `NotePopoverSlotProps`, the same types the Vue and Svelte packages export.
+Slots are render props. `InkViewport` takes `loading`, `empty`, `error`, `renderAnnotation` and `renderPageError`; `InkThreadPopover` takes a function as `children`; `InkToolButton` takes a node or a function of `{ active, label }`. The props each receives are typed as `AnnotationSlotProps` and `ThreadPopoverSlotProps`, the same types the Vue and Svelte packages export.
 
 `InkRoot` takes `decorateAnnotation`, which returns your own `data`, `classes` and `description` for an annotation's element, as `mountViewer` describes in [Your own chrome](/docs/frameworks/plain-dom/#your-own-chrome). Pass a new function when its output depends on your own state, and Inkbar applies it on the next render.
 
@@ -98,7 +98,7 @@ const decorate: DecorateAnnotation = (a) =>
 </InkRoot>
 ```
 
-For your own card next to an annotation, read `activated`, `setActivated` and `rootEl` from `useInkContext` and pass them to `createPopover`, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) shows. The context's `setActivated` calls `onActivate` for an id.
+For your own card next to an annotation, read `activated`, `setActivated` and `rootEl` from `useInkContext` and use them with `createFocusReturn` and `createPopover`, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) shows. The context's `setActivated` calls `onActivate` for an id; `viewer.setActivated` in plain DOM does not.
 
 `InkRoot`, `InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take `asChild` to render your own element in place of theirs, such as a button from your design system. Pass that element as the only child. The control keeps its behaviour and accessible name.
 
@@ -111,7 +111,7 @@ The scroll area takes focus. From there:
 
 On a focused annotation:
 
-- `Enter` or `Space` selects and activates it. A note opens its thread; other types are only selected.
+- `Enter` or `Space` selects and activates it. A note or text markup opens its thread; other types are only selected.
 - `ArrowUp` and `ArrowDown` move to the previous or next annotation on the page.
 - `Shift` + arrow moves it by 1 pt, or by 10 pt with `Alt` as well.
 - `Ctrl` or `Cmd` + `Shift` + arrow resizes an area redaction, text box or shape.

@@ -108,7 +108,7 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
   await expect(page.locator('#features .next li')).toHaveCount(4)
 })
 
-for (const width of [1280, 700]) {
+for (const width of [1280, 1100, 1099, 900, 850, 849, 700]) {
   test(`the feature grid has no empty cell at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/')
