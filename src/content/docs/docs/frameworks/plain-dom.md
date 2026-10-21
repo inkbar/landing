@@ -69,7 +69,7 @@ Buttons show an icon from `@inkbar/icons`; replace their children with your own 
 
 `createToolbar` gives one Tab stop to all its buttons, with arrow keys between them. A button you append joins that order. An input, select or textarea you add keeps its arrow keys and its own `tabindex`: it is a Tab stop unless you give it `tabindex="-1"`.
 
-`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `onReady` and `onError`. Set `notes` to `false` to leave note threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. A password you pass to `open` replaces the `createViewer` one for that load.
+`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `onReady` and `onError`. Set `notes` to `false` to leave note threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. `viewer.activated` is a readable too: the id of the annotation the user last clicked or activated with Enter, or `null`. `viewer.setActivated(id)` activates one from your code without calling `onActivate`. It ignores an id the document doesn't have, and `setActivated(null)` clears it. A password you pass to `open` replaces the `createViewer` one for that load.
 
 `createViewer` reads the theme's colours from the element you pass, so that element needs to be in the page when you call it. Like the framework packages, the viewer fills its parent, so give the element a height.
 
@@ -102,12 +102,58 @@ Options:
 - `container` and `document`, both required.
 - `zoom` (a number, `'fit-width'` or `'fit-page'`; default `'fit-width'`), `page`, `mode` (`'continuous'` or `'single'`), `rotation` (0, 90, 180 or 270) and `tool` set the starting view. Change them later through `engine.viewport` and `engine.tools`.
 - `gap`, `buffer` and `customAnnotations` are fixed for a build. Change them with `engine.rebuild`.
+- `decorateAnnotation(annotation)` returns your own `data`, `classes` and `description` for an annotation's element, or `undefined`. `{ data: { 'my-flag': 'on' } }` writes `data-my-flag="on"`, and `description` becomes the element's `aria-description`. Data keys are lower-case kebab case. Inkbar applies them again whenever the annotations change. Call `engine.redecorate()` when they depend on anything else. Core's own attributes and `ink-` classes always win.
 - `onActivate(id)` fires when the user activates an annotation.
 - `onBuild(viewport, tools)` fires after every build, the first one included, before `mountViewer` returns. Subscribe to the new viewport and tool controller here.
 - `onPageMount(page, mount, host)` and `onPageUnmount(page)` fire as pages enter and leave the mounted range.
 - `onPageError(page, error)` reports a page whose canvas or text layer failed, and `onPageError(page, null)` once every failed layer renders again. Unmounting a failed page emits no `null`, so clear any per-page error in `onPageUnmount`.
 
 The viewport mounts pages synchronously, so a build's page callbacks fire before its `onBuild`. During a rebuild, `engine.viewport` and `engine.tools` still point at the destroyed objects while those callbacks run. Read the arguments instead, or wait for `onBuild`.
+
+## Your own popovers
+
+`decorateAnnotation` tags your marks, and `createPopover` opens your own card next to one. The panel goes on `<body>` with `role="dialog"` and `data-ink-popover`, so `@inkbar/theme` gives it the viewer's colour tokens. It follows the annotation's element as pages mount and unmount, hiding while the page is gone. Tab stays inside the panel, and Escape or a press outside it calls your `onDismiss`.
+
+```ts
+import { createFocusReturn, createPopover, createViewer } from '@inkbar/core/dom'
+
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  decorateAnnotation: (a) =>
+    a.custom?.review === 'open'
+      ? { data: { review: 'open' }, description: 'Needs review' }
+      : undefined,
+})
+const root = viewer.element // the [data-ink-root] element
+
+const focusReturn = createFocusReturn({
+  root: () => root,
+  activated: () => viewer.activated.get(),
+})
+const card = createPopover({
+  root,
+  attrs: { class: 'review-card', 'aria-label': 'Review' },
+  focusReturn,
+  onDismiss: () => viewer.setActivated(null),
+})
+
+viewer.activated.subscribe((id) => {
+  const a = id ? viewer.document.get()?.annotations.get(id) : undefined
+  if (a?.custom?.review !== 'open') return card.hide()
+  card.panel.textContent = a.contents ?? 'No comment'
+  card.show(a.id)
+})
+```
+
+Style the marks from the attributes you set, for example `[data-annotation][data-review="open"]`.
+
+- `createFocusReturn({ root, activated })` decides where focus goes when the panel hides: back to the annotation, or to the next one on the page when you removed it. Call `focusReturn.beforeRemove(card.anchor)` just before you remove the anchored annotation.
+- `card.anchor` is the anchored annotation's element, or `null` while its page is unmounted. `card.destroy()` removes the panel and its listeners.
+- `placePanel(panel, rect)` positions a fixed panel below a `DOMRect`, or above it when only that fits, inside the window. Use it for a panel anchored to something other than an annotation.
+- `observeAnnotationElement(root, id, onChange)` calls `onChange` with the element for annotation `id` now and whenever it changes, and returns a function that stops observing. `createPopover` uses it to follow the anchor.
+
+For a complete example extension, see the sandbox's [review card](https://github.com/inkbar/inkbar/blob/main/apps/sandbox/src/shared/suggestion-card.ts). It builds on these APIs and keeps its own data under `custom.sandbox`.
 
 ## The document model on its own
 

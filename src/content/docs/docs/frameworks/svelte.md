@@ -76,6 +76,25 @@ A root note with no text and no replies is removed when its popover closes, or w
 
 Slots are snippets. `InkViewport` takes `loading`, `empty`, `error`, `annotation` and `pageError`. `InkNotePopover` takes `children` as a snippet that receives the popover's props. `InkToolButton` takes `children` as a snippet of `{ active, label }`. The props each receives are typed as `AnnotationSlotProps` and `NotePopoverSlotProps`, the same types the Vue and React packages export.
 
+`InkRoot` takes `decorateAnnotation`, which returns your own `data`, `classes` and `description` for an annotation's element, as `mountViewer` describes in [Your own chrome](/docs/frameworks/plain-dom/#your-own-chrome). Pass a new function when its output depends on your own state, and Inkbar applies it again.
+
+```svelte
+<script lang="ts">
+  import type { DecorateAnnotation } from '@inkbar/svelte'
+
+  const decorate: DecorateAnnotation = (a) =>
+    a.custom?.review === 'open'
+      ? { data: { review: 'open' }, description: 'Needs review' }
+      : undefined
+</script>
+
+<InkRoot src={file} {assets} decorateAnnotation={decorate}>
+  <InkViewport />
+</InkRoot>
+```
+
+For your own card next to an annotation, read `activated`, `setActivated` and `rootEl` from `useInkContext` and pass them to `createPopover`, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) shows. The context's `setActivated` calls `onActivate` for an id.
+
 `InkRoot`, `InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take a `child` snippet to render your own element. Spread the `props` it gives you on that element. The snippet type is exported as `ChildSnippet`.
 
 ```svelte

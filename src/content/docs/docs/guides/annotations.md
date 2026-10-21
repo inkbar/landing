@@ -19,7 +19,7 @@ The model knows 13 annotation types. The built-in tools create three of them. Th
 | `square`, `circle`, `line`, `polyline`, `polygon` | No. Add them with `add()`   | Yes       |
 | `ink`                                             | No. Add it with `add()`     | Yes       |
 
-Each annotation has an `id`, a 0-based `page`, a bounding `rect`, a `#RRGGBB` `color` and an `opacity`. Optional fields are `author`, `contents`, `inReplyTo` for note replies, and `custom` for your own data. Inkbar keeps `custom` as it is and never reads it.
+Each annotation has an `id`, a 0-based `page`, a bounding `rect`, a `#RRGGBB` `color` and an `opacity`. Optional fields are `author`, `contents`, `inReplyTo` for note replies, and `custom` for your own data. Inkbar keeps `custom` as it is, except the `inkbar` key, which it writes and reads itself. Keep your own data under a key of your own, such as `custom.myapp`.
 
 ## Usage
 
