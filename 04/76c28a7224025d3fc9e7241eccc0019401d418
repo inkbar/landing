@@ -1,0 +1,43 @@
+src/components/landing/Features.astro
+  s_53bc7b36f6063e::t_ae101707713735 97
+  s_53bc7b36f6063e::t_01851e0c2a0a83 128-143
+src/components/landing/ViewerMock.astro
+  s_53bc7b36f6063e::t_1c610f521230b9 89
+src/content/docs/docs/frameworks/plain-dom.md
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 16,72
+src/content/docs/docs/frameworks/vue.md
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 82,95
+src/content/docs/docs/reference/theme-tokens.md
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 44,59-64
+src/content/docs/docs/guides/annotations.md
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 113
+src/content/docs/docs/frameworks/svelte.md
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 77,98
+src/content/docs/docs/frameworks/react.md
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 86,99
+src/content/docs/docs/guides/redaction.md
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 3,6,21
+src/content/docs/docs/index.mdx
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 17
+src/content/docs/docs/quickstart.mdx
+  s_53bc7b36f6063e::t_e0a5e6c3e18a9f 37,49
+tests/landing.spec.ts
+  s_53bc7b36f6063e::t_f73350e3c8c0f5 111-133
+  s_53bc7b36f6063e::t_7e31bd8cd987a8 134
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0476c28a7224025d3fc9e7241eccc0019401d418",
+  "prompts": {},
+  "sessions": {
+    "s_53bc7b36f6063e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cc4ab85f-ebb1-4dc0-8290-66c99694838b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
