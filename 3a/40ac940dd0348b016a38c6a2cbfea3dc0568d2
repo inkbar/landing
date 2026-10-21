@@ -1,0 +1,19 @@
+src/pages/index.astro
+  s_53bc7b36f6063e::t_ce6ea2919bea92 15
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "3a40ac940dd0348b016a38c6a2cbfea3dc0568d2",
+  "prompts": {},
+  "sessions": {
+    "s_53bc7b36f6063e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cc4ab85f-ebb1-4dc0-8290-66c99694838b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
