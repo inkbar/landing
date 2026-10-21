@@ -74,7 +74,7 @@ export default defineConfig({
         {
           label: 'Reference',
           items: [
-            { label: 'Annotation format', slug: 'docs/reference/annotation-format' },
+            { label: 'Gloss format', slug: 'docs/reference/gloss' },
             { label: 'Theme tokens', slug: 'docs/reference/theme-tokens' },
             { label: 'Icons', slug: 'docs/reference/icons' },
           ],
