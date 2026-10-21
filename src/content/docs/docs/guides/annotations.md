@@ -110,7 +110,7 @@ const detach = attachViewportKeys(container, {
 // later: detach()
 ```
 
-On a focused annotation, `Enter` or `Space` selects it and calls `onActivate`. In the framework packages, a note opens its thread.
+On a focused annotation, `Enter` or `Space` selects it and calls `onActivate`. In the framework packages, a note or text markup opens its thread.
 
 Locked annotations, such as those embedded in the file, ignore move, resize and delete. Without a text selection, `Enter` in the `highlight` and `redact-area` tools does nothing.
 
