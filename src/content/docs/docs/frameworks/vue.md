@@ -100,7 +100,7 @@ const decorate: DecorateAnnotation = (a) =>
 </template>
 ```
 
-For your own card next to an annotation, read the `activated` and `rootEl` refs and `setActivated` from `injectInkContext()` and pass them to `createPopover`, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) shows. The context's `setActivated` emits `activate` for an id.
+For your own card next to an annotation, read the `activated` and `rootEl` refs and `setActivated` from `injectInkContext()` and use them with `createFocusReturn` and `createPopover`, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) shows. The context's `setActivated` emits `activate` for an id; `viewer.setActivated` in plain DOM does not.
 
 `InkRoot`, `InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take `as-child` to render your own element in place of theirs, such as a button from your design system. Put that element in the default slot. The control keeps its behaviour and accessible name.
 

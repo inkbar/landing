@@ -69,7 +69,7 @@ Buttons show an icon from `@inkbar/icons`; replace their children with your own 
 
 `createToolbar` gives one Tab stop to all its buttons, with arrow keys between them. A button you append joins that order. An input, select or textarea you add keeps its arrow keys and its own `tabindex`: it is a Tab stop unless you give it `tabindex="-1"`.
 
-`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `onReady` and `onError`. Set `threads` to `false` to leave note threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. `viewer.activated` is a readable too: the id of the annotation the user last clicked or activated with Enter, or `null`. `viewer.setActivated(id)` activates one from your code without calling `onActivate`. It ignores an id the document doesn't have, and `setActivated(null)` clears it. A password you pass to `open` replaces the `createViewer` one for that load.
+`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `onReady` and `onError`. Set `threads` to `false` to leave threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. `viewer.activated` is a readable too: the id of the annotation the user last clicked or activated with Enter or Space, or `null`. `viewer.setActivated(id)` activates one from your code without calling `onActivate`. It ignores an id the document doesn't have, and `setActivated(null)` clears it. A password you pass to `open` replaces the `createViewer` one for that load.
 
 `createViewer` reads the theme's colours from the element you pass, so that element needs to be in the page when you call it. Like the framework packages, the viewer fills its parent, so give the element a height.
 
@@ -112,7 +112,7 @@ The viewport mounts pages synchronously, so a build's page callbacks fire before
 
 ## Your own popovers
 
-`decorateAnnotation` tags your marks, and `createPopover` opens your own card next to one. The panel goes on `<body>` with `role="dialog"` and `data-ink-popover`, so `@inkbar/theme` gives it the viewer's colour tokens. It follows the annotation's element as pages mount and unmount, hiding while the page is gone. Tab stays inside the panel, and Escape or a press outside it calls your `onDismiss`.
+`decorateAnnotation` tags your marks, and `createPopover` opens your own card next to one. The panel goes on `<body>` with `role="dialog"` and `data-ink-popover`, so `@inkbar/theme` gives it the viewer's colour tokens. It follows the annotation's element as pages mount and unmount, hiding while the page is gone. Tab stays inside the panel. Escape pressed in the panel or the viewer calls your `onDismiss`, as does a press outside the panel. A press on another annotation hands over to it instead.
 
 ```ts
 import { createFocusReturn, createPopover, createViewer } from '@inkbar/core/dom'
@@ -148,7 +148,7 @@ viewer.activated.subscribe((id) => {
 
 Style the marks from the attributes you set, for example `[data-annotation][data-review="open"]`.
 
-- `createFocusReturn({ root, activated })` decides where focus goes when the panel hides: back to the annotation, or to the next one on the page when you removed it. Call `focusReturn.beforeRemove(card.anchor)` just before you remove the anchored annotation.
+- `createFocusReturn({ root, activated })` decides where focus goes when the panel hides: back to the annotation, or to the next one on the page when you removed it. Call `focusReturn.beforeRemove(card.anchor)` just before you remove the anchored annotation. Its optional second argument is a selector, such as `'[data-review]'`, that sends focus to the next of your own marks first.
 - `card.anchor` is the anchored annotation's element, or `null` while its page is unmounted. `card.destroy()` removes the panel and its listeners.
 - `placePanel(panel, rect)` positions a fixed panel below a `DOMRect`, or above it when only that fits, inside the window. Use it for a panel anchored to something other than an annotation.
 - `observeAnnotationElement(root, id, onChange)` calls `onChange` with the element for annotation `id` now and whenever it changes, and returns a function that stops observing. `createPopover` uses it to follow the anchor.
