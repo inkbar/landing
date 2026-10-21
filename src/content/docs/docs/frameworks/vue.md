@@ -81,6 +81,27 @@ A root note with no text and no replies is removed when its popover closes, or w
 
 Slots let you render parts yourself. `InkViewport` has `loading`, `empty`, `error`, `annotation` and `page-error` slots. `InkNotePopover` has a scoped default slot that receives the popover's props, and the default slot of `InkToolButton` receives `{ active, label }`. The props are typed as `AnnotationSlotProps` and `NotePopoverSlotProps`, the same types the React and Svelte packages export.
 
+`InkRoot` takes `decorate-annotation`, a function that returns your own `data`, `classes` and `description` for an annotation's element, as `mountViewer` describes in [Your own chrome](/docs/frameworks/plain-dom/#your-own-chrome). Pass a new function when its output depends on your own state, and Inkbar applies it again.
+
+```vue
+<script setup lang="ts">
+import type { DecorateAnnotation } from '@inkbar/vue'
+
+const decorate: DecorateAnnotation = (a) =>
+  a.custom?.review === 'open'
+    ? { data: { review: 'open' }, description: 'Needs review' }
+    : undefined
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets" :decorate-annotation="decorate">
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+For your own card next to an annotation, read the `activated` and `rootEl` refs and `setActivated` from `injectInkContext()` and pass them to `createPopover`, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) shows. The context's `setActivated` emits `activate` for an id.
+
 `InkRoot`, `InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take `as-child` to render your own element in place of theirs, such as a button from your design system. Put that element in the default slot. The control keeps its behaviour and accessible name.
 
 ## Keyboard
