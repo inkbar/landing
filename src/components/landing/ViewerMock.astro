@@ -86,9 +86,7 @@ import Icon from '../site/Icon.astro'
             4.3 Notices under this clause go to{' '}
             <span class="redact">Jordan Avery, Legal</span>
             <span class="visually-hidden">(marked for redaction)</span> at{' '}
-            <span class="suggest">j.avery@example.com</span>
-            <span class="visually-hidden">(suggested redaction)</span> or the address in
-            Schedule 3.
+            j.avery@example.com or the address in Schedule 3.
           </p>
         </div>
       </div>
@@ -105,18 +103,6 @@ import Icon from '../site/Icon.astro'
             <span>Backups are in 4.4. Leaving this as is.</span>
           </div>
           <div class="field">Reply…</div>
-        </div>
-        <div class="card">
-          <div class="card-head">
-            <span class="swatch swatch-suggest"></span>
-            <span class="name">Email address</span>
-            <span class="where">High confidence</span>
-          </div>
-          <div>A personal email address in a notice clause.</div>
-          <div class="choices">
-            <span class="choice">Accept</span>
-            <span class="choice">Dismiss</span>
-          </div>
         </div>
       </aside>
     </div>
@@ -279,11 +265,6 @@ import Icon from '../site/Icon.astro'
     outline-offset: 0;
     border-radius: 1px;
   }
-  .suggest {
-    background: rgba(230, 126, 34, 0.15);
-    outline: 2px dashed #c25e00;
-    border-radius: 1px;
-  }
   .side {
     flex: 1 1 280px;
     min-width: 0;
@@ -327,9 +308,6 @@ import Icon from '../site/Icon.astro'
     background: var(--highlighter);
     border: 1px solid var(--ink);
   }
-  .swatch-suggest {
-    background: #c25e00;
-  }
   .reply {
     padding-left: 12px;
     border-left: 2px solid var(--line);
@@ -342,15 +320,5 @@ import Icon from '../site/Icon.astro'
     border: 1px solid var(--line);
     border-radius: 8px;
     color: var(--caption);
-  }
-  .choices {
-    display: flex;
-    gap: 8px;
-  }
-  .choice {
-    padding: 6px 12px;
-    border: 1px solid var(--line);
-    border-radius: 8px;
-    font-weight: 600;
   }
 </style>

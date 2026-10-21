@@ -41,7 +41,7 @@ The stylesheet maps those names onto its own tokens. Set these on `[data-ink-roo
 | `--ink-page-shadow`    |                        | The shadow under each page                        |
 | `--ink-text-selection` |                        | Text selection on the page                        |
 
-The note popover and the suggestion card render outside the root, so they read the same tokens from `[data-ink-note-popover]` and `[data-ink-suggestion-card]`. The zoom select's list does the same from `[data-ink-select-content]`.
+The note popover renders outside the root, so it reads the same tokens from `[data-ink-note-popover]`. The zoom select's list does the same from `[data-ink-select-content]`.
 
 ## Control sizes
 
@@ -56,13 +56,12 @@ Set these on an `InkToolbar`, or any ancestor, to size its controls:
 
 Set these variables on `[data-ink-root]` to change the default colour for new annotations:
 
-| Variable                                                                   | Used for                            |
-| -------------------------------------------------------------------------- | ----------------------------------- |
-| `--ink-highlight`, `--ink-underline`, `--ink-strikeout`, `--ink-squiggly`  | Text markup                         |
-| `--ink-note`, `--ink-free-text`                                            | Notes and text boxes                |
-| `--ink-shape`, `--ink-ink`                                                 | Shapes, lines and freehand drawing  |
-| `--ink-redact`, `--ink-redact-fill`                                        | Redaction outline and fill          |
-| `--ink-suggestion-low`, `--ink-suggestion-medium`, `--ink-suggestion-high` | Suggested redactions, by confidence |
+| Variable                                                                  | Used for                           |
+| ------------------------------------------------------------------------- | ---------------------------------- |
+| `--ink-highlight`, `--ink-underline`, `--ink-strikeout`, `--ink-squiggly` | Text markup                        |
+| `--ink-note`, `--ink-free-text`                                           | Notes and text boxes               |
+| `--ink-shape`, `--ink-ink`                                                | Shapes, lines and freehand drawing |
+| `--ink-redact`, `--ink-redact-fill`                                       | Redaction outline and fill         |
 
 The theme declares these on `[data-ink-root]` itself, so a value on `:root` or another ancestor does not reach them. Target `[data-ink-root]`, or pass colours through the `defaults` option on `InkRoot` or `createViewer`.
 

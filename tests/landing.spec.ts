@@ -101,13 +101,36 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
     'Highlights',
     'Note threads',
     'Redaction marks',
-    'Suggested redactions',
     'Annotations as data',
     'Undo and redo',
     'Keyboard and screen readers',
   ])
   await expect(page.locator('#features .next li')).toHaveCount(4)
 })
+
+for (const width of [1280, 700]) {
+  test(`the feature grid has no empty cell at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await page.goto('/')
+    const grid = await page.locator('#features .grid').boundingBox()
+    const cells = await page.locator('#features .cell').evaluateAll((els) =>
+      els.map((el) => {
+        const { top, left, right } = el.getBoundingClientRect()
+        return { top: Math.round(top), left, right }
+      })
+    )
+    const rows = new Map<number, { left: number; right: number }[]>()
+    for (const cell of cells) rows.set(cell.top, [...(rows.get(cell.top) ?? []), cell])
+    expect(rows.size).toBeGreaterThan(1)
+    for (const row of rows.values()) {
+      const left = Math.min(...row.map((cell) => cell.left))
+      const right = Math.max(...row.map((cell) => cell.right))
+      // The grid has a 1px border either side.
+      expect(left).toBeLessThanOrEqual(grid!.x + 2)
+      expect(right).toBeGreaterThanOrEqual(grid!.x + grid!.width - 2)
+    }
+  })
+}
 
 test('the comparison is a real table that names no competitor', async ({ page }) => {
   const table = page.locator('#why table')
