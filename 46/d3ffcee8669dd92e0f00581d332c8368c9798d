@@ -1,0 +1,36 @@
+src/content/docs/docs/frameworks/vue.md
+  s_53bc7b36f6063e::t_32834ebc995a56 91-93
+  s_53bc7b36f6063e::t_d071172407bcc8 87-90,94-100
+  s_53bc7b36f6063e::t_21b59df2afae76 84-86,101-104
+src/content/docs/docs/frameworks/plain-dom.md
+  s_53bc7b36f6063e::t_41ef316efdb0eb 72,105,113-156
+  s_53bc7b36f6063e::t_76dde25d37802c 157
+src/content/docs/docs/reference/gloss.md
+  s_53bc7b36f6063e::t_27555cbd11d47c 41,43,52,54,58,65-66,69-70
+  s_53bc7b36f6063e::t_32834ebc995a56 45-50
+src/content/docs/docs/frameworks/react.md
+  s_53bc7b36f6063e::t_21b59df2afae76 88-90,99-102
+  s_53bc7b36f6063e::t_d071172407bcc8 91-98
+src/content/docs/docs/guides/annotations.md
+  s_53bc7b36f6063e::t_27555cbd11d47c 22
+src/content/docs/docs/frameworks/svelte.md
+  s_53bc7b36f6063e::t_d071172407bcc8 82-85,89-93
+  s_53bc7b36f6063e::t_21b59df2afae76 79-81,94-97
+  s_53bc7b36f6063e::t_32834ebc995a56 86-88
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "46d3ffcee8669dd92e0f00581d332c8368c9798d",
+  "prompts": {},
+  "sessions": {
+    "s_53bc7b36f6063e": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cc4ab85f-ebb1-4dc0-8290-66c99694838b",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
