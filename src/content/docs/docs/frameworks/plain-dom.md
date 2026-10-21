@@ -13,7 +13,7 @@ Install `@inkbar/core` and `@inkbar/theme`, and set up the assets as [Loading as
 
 ## The whole viewer
 
-`createViewer` opens a document and renders it into an element, with a note thread and a suggested-redaction card. You build the toolbars from controls that use the same markup as the framework packages, so `@inkbar/theme` styles them.
+`createViewer` opens a document and renders it into an element, with a note thread. You build the toolbars from controls that use the same markup as the framework packages, so `@inkbar/theme` styles them.
 
 ```ts
 import {
@@ -69,7 +69,7 @@ Buttons show an icon from `@inkbar/icons`; replace their children with your own 
 
 `createToolbar` gives one Tab stop to all its buttons, with arrow keys between them. A button you append joins that order. An input, select or textarea you add keeps its arrow keys and its own `tabindex`: it is a Tab stop unless you give it `tabindex="-1"`.
 
-`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `onReady` and `onError`. Set `notes` or `suggestions` to `false` to leave that part out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. A password you pass to `open` replaces the `createViewer` one for that load.
+`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `onReady` and `onError`. Set `notes` to `false` to leave note threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. A password you pass to `open` replaces the `createViewer` one for that load.
 
 `createViewer` reads the theme's colours from the element you pass, so that element needs to be in the page when you call it. Like the framework packages, the viewer fills its parent, so give the element a height.
 

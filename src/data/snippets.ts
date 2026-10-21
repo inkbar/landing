@@ -27,7 +27,6 @@ import {
   InkNextPage,
   InkZoomSelect,
   InkNotePopover,
-  InkSuggestionCard,
 } from '@inkbar/vue'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -56,7 +55,6 @@ defineProps<{ url: string; id: string }>()
       <InkZoomSelect />
     </InkToolbar>
     <InkNotePopover />
-    <InkSuggestionCard />
   </InkRoot>
 </template>`
 
@@ -74,7 +72,6 @@ const react = `import {
   InkNextPage,
   InkZoomSelect,
   InkNotePopover,
-  InkSuggestionCard,
 } from '@inkbar/react'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -101,7 +98,6 @@ export function Review({ url, id }: { url: string; id: string }) {
         <InkZoomSelect />
       </InkToolbar>
       <InkNotePopover />
-      <InkSuggestionCard />
     </InkRoot>
   )
 }`
@@ -121,7 +117,6 @@ const svelte = `<script lang="ts">
     InkNextPage,
     InkZoomSelect,
     InkNotePopover,
-    InkSuggestionCard,
   } from '@inkbar/svelte'
   import { assets } from 'virtual:inkbar-assets'
   import '@inkbar/theme/theme.css'
@@ -149,7 +144,6 @@ const svelte = `<script lang="ts">
     <InkZoomSelect />
   </InkToolbar>
   <InkNotePopover />
-  <InkSuggestionCard />
 </InkRoot>`
 
 const vueShort = `<script setup lang="ts">
@@ -157,7 +151,6 @@ import {
   InkRoot,
   InkViewport,
   InkNotePopover,
-  InkSuggestionCard,
 } from '@inkbar/vue'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -174,7 +167,6 @@ defineProps<{ url: string; id: string }>()
     <InkViewport />
     <Footer />
     <InkNotePopover />
-    <InkSuggestionCard />
   </InkRoot>
 </template>`
 
@@ -182,7 +174,6 @@ const reactShort = `import {
   InkRoot,
   InkViewport,
   InkNotePopover,
-  InkSuggestionCard,
 } from '@inkbar/react'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -197,7 +188,6 @@ export function Review({ url, id }: { url: string; id: string }) {
       <InkViewport />
       <Footer />
       <InkNotePopover />
-      <InkSuggestionCard />
     </InkRoot>
   )
 }`
@@ -207,7 +197,6 @@ const svelteShort = `<script lang="ts">
     InkRoot,
     InkViewport,
     InkNotePopover,
-    InkSuggestionCard,
   } from '@inkbar/svelte'
   import { assets } from 'virtual:inkbar-assets'
   import '@inkbar/theme/theme.css'
@@ -223,7 +212,6 @@ const svelteShort = `<script lang="ts">
   <InkViewport />
   <Footer />
   <InkNotePopover />
-  <InkSuggestionCard />
 </InkRoot>`
 
 export const frameworks: readonly FrameworkSnippet[] = [

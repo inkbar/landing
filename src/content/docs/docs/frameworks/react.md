@@ -27,7 +27,6 @@ import {
   InkNextPage,
   InkZoomSelect,
   InkNotePopover,
-  InkSuggestionCard,
 } from '@inkbar/react'
 import type { Annotation } from '@inkbar/core'
 import { assets } from 'virtual:inkbar-assets'
@@ -67,7 +66,6 @@ export function Review({
         <InkZoomSelect />
       </InkToolbar>
       <InkNotePopover />
-      <InkSuggestionCard />
     </InkRoot>
   )
 }
@@ -85,7 +83,7 @@ A root note with no text and no replies is removed when its popover closes, or w
 
 ## Custom rendering
 
-Slots are render props. `InkViewport` takes `loading`, `empty`, `error`, `renderAnnotation` and `renderPageError`; `InkNotePopover` and `InkSuggestionCard` take a function as `children`; `InkToolButton` takes a node or a function of `{ active, label }`. The props each receives are typed as `AnnotationSlotProps`, `NotePopoverSlotProps` and `SuggestionCardSlotProps`, the same types the Vue and Svelte packages export.
+Slots are render props. `InkViewport` takes `loading`, `empty`, `error`, `renderAnnotation` and `renderPageError`; `InkNotePopover` takes a function as `children`; `InkToolButton` takes a node or a function of `{ active, label }`. The props each receives are typed as `AnnotationSlotProps` and `NotePopoverSlotProps`, the same types the Vue and Svelte packages export.
 
 `InkRoot`, `InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take `asChild` to render your own element in place of theirs, such as a button from your design system. Pass that element as the only child. The control keeps its behaviour and accessible name.
 
@@ -98,7 +96,7 @@ The scroll area takes focus. From there:
 
 On a focused annotation:
 
-- `Enter` or `Space` selects and activates it. A note opens its thread and a suggested redaction its card; other types are only selected.
+- `Enter` or `Space` selects and activates it. A note opens its thread; other types are only selected.
 - `ArrowUp` and `ArrowDown` move to the previous or next annotation on the page.
 - `Shift` + arrow moves it by 1 pt, or by 10 pt with `Alt` as well.
 - `Ctrl` or `Cmd` + `Shift` + arrow resizes an area redaction, text box or shape.

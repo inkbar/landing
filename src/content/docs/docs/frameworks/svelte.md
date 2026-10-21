@@ -27,7 +27,6 @@ Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/c
     InkNextPage,
     InkZoomSelect,
     InkNotePopover,
-    InkSuggestionCard,
   } from '@inkbar/svelte'
   import type { Annotation } from '@inkbar/core'
   import { assets } from 'virtual:inkbar-assets'
@@ -58,7 +57,6 @@ Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/c
     <InkZoomSelect />
   </InkToolbar>
   <InkNotePopover />
-  <InkSuggestionCard />
 </InkRoot>
 ```
 
@@ -76,7 +74,7 @@ A root note with no text and no replies is removed when its popover closes, or w
 
 ## Custom rendering
 
-Slots are snippets. `InkViewport` takes `loading`, `empty`, `error`, `annotation` and `pageError`. `InkNotePopover` and `InkSuggestionCard` take `children` as a snippet that receives the popover's props. `InkToolButton` takes `children` as a snippet of `{ active, label }`. The props each receives are typed as `AnnotationSlotProps`, `NotePopoverSlotProps` and `SuggestionCardSlotProps`, the same types the Vue and React packages export.
+Slots are snippets. `InkViewport` takes `loading`, `empty`, `error`, `annotation` and `pageError`. `InkNotePopover` takes `children` as a snippet that receives the popover's props. `InkToolButton` takes `children` as a snippet of `{ active, label }`. The props each receives are typed as `AnnotationSlotProps` and `NotePopoverSlotProps`, the same types the Vue and React packages export.
 
 `InkRoot`, `InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take a `child` snippet to render your own element. Spread the `props` it gives you on that element. The snippet type is exported as `ChildSnippet`.
 
@@ -97,7 +95,7 @@ The scroll area takes focus. From there:
 
 On a focused annotation:
 
-- `Enter` or `Space` selects and activates it. A note opens its thread and a suggested redaction its card; other types are only selected.
+- `Enter` or `Space` selects and activates it. A note opens its thread; other types are only selected.
 - `ArrowUp` and `ArrowDown` move to the previous or next annotation on the page.
 - `Shift` + arrow moves it by 1 pt, or by 10 pt with `Alt` as well.
 - `Ctrl` or `Cmd` + `Shift` + arrow resizes an area redaction, text box or shape.

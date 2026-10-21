@@ -48,16 +48,6 @@ import Icon from '../site/Icon.astro'
       </div>
       <div class="cell">
         <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z"></path>
-        </svg>
-        <h3>Suggested redactions</h3>
-        <p>
-          Pass in matches from your own detector. Each one shows its reason and
-          confidence, and nothing counts until someone accepts it.
-        </p>
-      </div>
-      <div class="cell">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M8 4H6v16h2M16 4h2v16h-2M10 9h4M10 13h4"></path>
         </svg>
         <h3>Annotations as data</h3>
@@ -104,6 +94,7 @@ import Icon from '../site/Icon.astro'
     background: var(--paper);
   }
   .inner {
+    container-type: inline-size;
     display: flex;
     flex-direction: column;
     gap: 48px;
@@ -133,6 +124,22 @@ import Icon from '../site/Icon.astro'
     border-radius: 16px;
     background: var(--line);
     overflow: hidden;
+  }
+  /* The grid auto-fits 250px columns. The odd cell out spans the rest of its row. */
+  @container (min-width: 501px) {
+    .cell:last-child {
+      grid-column: span 2;
+    }
+  }
+  @container (min-width: 752px) {
+    .cell:last-child {
+      grid-column: span 3;
+    }
+  }
+  @container (min-width: 1003px) {
+    .cell:last-child {
+      grid-column: span 2;
+    }
   }
   .cell {
     display: flex;
