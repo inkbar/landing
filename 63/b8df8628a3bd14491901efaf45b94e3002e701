@@ -1,0 +1,21 @@
+src/content/docs/docs/guides/plugins.mdx
+  s_611b86d68c2358::t_60a260b9229873 20
+src/content/docs/docs/guides/writing-a-plugin.mdx
+  s_611b86d68c2358::t_2971d07f85c124 142,161
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "63b8df8628a3bd14491901efaf45b94e3002e701",
+  "prompts": {},
+  "sessions": {
+    "s_611b86d68c2358": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f6760cb6-1a68-4a5b-b172-32f4da0aa5b1",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
