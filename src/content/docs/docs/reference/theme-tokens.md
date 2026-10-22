@@ -62,7 +62,7 @@ Set these on `[data-ink-root]` to style fillable fields:
 | `--ink-form-field-focus`   | The focus ring and a signature field's Sign    |
 | `--ink-form-field-invalid` | The outline on a field whose value was refused |
 
-Fields sit on the white page, so these keep similar values in dark mode. To turn the tint off, pass `formHighlight: false`. See [Forms](/docs/guides/forms/#theming).
+Fields sit on the white page, so these change little in dark mode. To turn the tint off, pass `formHighlight: false`. See [Forms](/docs/guides/forms/#theming).
 
 ## Annotation colours
 

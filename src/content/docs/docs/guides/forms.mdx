@@ -58,9 +58,9 @@ In a framework app, `useForm()` returns the same `fields`, `values`, `set` and `
 
 By default Inkbar holds the values. Pass `fields` to hold them in your own state instead, the way [controlled mode](/docs/guides/controlled-mode/) works for annotations. Inkbar applies each change at once, then reports the full map along with what changed. Whatever you pass back wins.
 
-The second argument says what changed: `commit`, `reset`, `import` or `calculate` with the field names, or `history` for an undo or redo.
+The second argument says what changed and names the fields it changed: `commit` (a person, `set` or a signature, plus any fields its calculations changed), `reset`, `import` or `calculate`.
 
-Whether fields are controlled is fixed when a document opens. Inkbar keeps no undo history for controlled fields.
+Whether fields are controlled is fixed when a document opens. While you control fields or annotations, Inkbar keeps no undo history. Your app owns undo.
 
 <Tabs syncKey="framework">
   <TabItem label="Vue">
@@ -229,6 +229,12 @@ async function handleFormAction(action: FormAction) {
 }
 ```
 
+To hear actions from code, subscribe on the document's form. `on` returns a function that stops listening:
+
+```ts
+const stop = doc.form.on('action', handleFormAction)
+```
+
 ## Scripts
 
 Form scripts run in an isolated sandbox. They can read and set field values, calculate totals, format and validate input, show and hide fields, and move focus. They have no network access, cannot open windows and cannot show browser dialogs.
@@ -237,7 +243,9 @@ Form scripts run in an isolated sandbox. They can read and set field values, cal
 - `app.response` cannot wait for an answer. The script gets `null`, and your app gets a `prompt` action.
 - Submit, open-URL, mail and print requests become [form actions](#form-actions).
 
-When a script fails, the form keeps working. The error reaches your error handler (`onError`, or the `error` event in Vue) as a `FormScriptError`. In code, `doc.form.on('error', fn)` hears it too.
+On a document with JavaScript, `ready` waits for the sandbox to load, for up to 10 seconds if the server stalls. Past that, the form opens without scripts.
+
+When a script fails, the form keeps working. The error reaches your error handler (`onError`, or the `error` event in Vue) as a `FormScriptError`. That includes an error raised while the document opens, such as a sandbox that could not start. In code, `doc.form.on('error', fn)` hears it too.
 
 ## Signature fields
 
@@ -260,7 +268,7 @@ Inkbar honours the locks a PDF sets:
 
 ## Save values as Gloss
 
-`exportAnnotations()` adds a `fields` map to the [Gloss](https://gloss-format.org) document when the form has values, and `importAnnotations()` reads it back:
+`doc.exportAnnotations('json')` adds a `fields` map to the [Gloss](https://gloss-format.org) document when the form has values, and `doc.importAnnotations()` reads it back:
 
 ```json
 {
@@ -278,7 +286,7 @@ Inkbar honours the locks a PDF sets:
 }
 ```
 
-`fields` is a flat map keyed by full dotted name. Each value is a string, an array of strings or `{ signature: id }`, as in `doc.form.values`. Checkbox and radio values are appearance-state names, `"Off"` included. Fields marked no-export are left out. The [Gloss docs](https://gloss-format.org) describe the format.
+`fields` is a flat map keyed by full dotted name. Each value is a string, an array of strings or `{ signature: id }`, as in `doc.form.values`. Checkbox and radio values are appearance-state names, `"Off"` included. Fields marked no-export are left out.
 
 The import result's `fields` lists the names it `applied` and the ones it `rejected`, with the same reasons as `set`. An import of field values is not an undo step.
 
