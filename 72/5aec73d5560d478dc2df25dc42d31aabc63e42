@@ -1,0 +1,40 @@
+src/content/docs/docs/frameworks/svelte.md
+  s_611b86d68c2358::t_987ddea1d1b440 77,98,108-111,135
+tests/docs.spec.ts
+  s_611b86d68c2358::t_25e8924c8853ed 13-14
+src/content/docs/docs/guides/writing-a-plugin.mdx
+  s_611b86d68c2358::t_83117dd28631d0 108-123,151-160,178-179,259-265
+  s_611b86d68c2358::t_50f10bfb4c6e69 1-107,124-150,161-177,180-214,216-254,256-258,266-267
+  s_611b86d68c2358::t_aeada31c80f6d3 215,255
+src/content/docs/docs/frameworks/vue.md
+  s_611b86d68c2358::t_987ddea1d1b440 82,105-109,134
+src/content/docs/docs/frameworks/react.md
+  s_611b86d68c2358::t_987ddea1d1b440 86,103-107,132
+src/content/docs/docs/guides/toolbars.mdx
+  s_611b86d68c2358::t_987ddea1d1b440 110
+  s_611b86d68c2358::t_25e8924c8853ed 23,114
+src/content/docs/docs/frameworks/plain-dom.md
+  s_611b86d68c2358::t_987ddea1d1b440 72-74
+astro.config.mjs
+  s_611b86d68c2358::t_25e8924c8853ed 62-63
+src/content/docs/docs/guides/plugins.mdx
+  s_611b86d68c2358::t_734c6018ba60f5 1-52,60-242,248-249,251-269,272-273
+  s_611b86d68c2358::t_83117dd28631d0 53-59,243-247
+  s_611b86d68c2358::t_5cb7b0b8b6fc8f 250,270-271
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "725aec73d5560d478dc2df25dc42d31aabc63e42",
+  "prompts": {},
+  "sessions": {
+    "s_611b86d68c2358": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "f6760cb6-1a68-4a5b-b172-32f4da0aa5b1",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
