@@ -262,6 +262,6 @@ The host places it with a tool button (`tool="review.box"`), which shows the too
 | `DuplicatePlugin`     | Two plugins with the same id are passed to one viewer                                      |
 | `InvalidCommandLabel` | `commands.add` gets an empty label                                                         |
 | `DuplicateId`         | A command, tool or store name is taken within the plugin, or `add` gets a record id in use |
-| `UnknownCommand`      | The host places a command id that no plugin registered                                     |
+| `UnknownCommand`      | The host places a command id that no plugin registered. Logged, not thrown                 |
 
 Each is an `InkError` from `@inkbar/core`, with the code on `error.code`.

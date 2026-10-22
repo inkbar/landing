@@ -268,6 +268,6 @@ The framework packages set plugins up once `InkRoot` has mounted in the browser,
 
 ## Errors
 
-Once the plugins are set up, `InkCommand`, `useCommand` and `createCommandButton` raise `UnknownCommand` for an id no plugin registered. In Vue the error reaches Vue's error handling (`onErrorCaptured`, `app.config.errorHandler`); React, Svelte and plain DOM throw it.
+Once the plugins are set up, `InkCommand`, `useCommand` and `createCommandButton` log an `UnknownCommand` error to the console for an id no plugin registered. The error names the id and the command ids the plugins did register. The control stays disabled and hidden, as it is before setup, and the rest of the viewer keeps working.
 
 Two plugins with the same id raise `DuplicatePlugin` when the viewer sets them up. A plugin whose own callbacks throw, such as a decoration or a page layer, has the error logged so the viewer and other plugins keep working. A command whose run fails logs the error and never rejects.
