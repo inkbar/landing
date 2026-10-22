@@ -10,6 +10,8 @@ const pages = [
   { path: '/docs/guides/annotations/', title: 'Annotations' },
   { path: '/docs/guides/redaction/', title: 'Redaction' },
   { path: '/docs/guides/controlled-mode/', title: 'Controlled mode' },
+  { path: '/docs/guides/plugins/', title: 'Plugins' },
+  { path: '/docs/guides/writing-a-plugin/', title: 'Writing a plugin' },
   { path: '/docs/guides/theming/', title: 'Theming' },
   { path: '/docs/frameworks/vue/', title: 'Vue' },
   { path: '/docs/frameworks/react/', title: 'React' },
