@@ -59,6 +59,8 @@ export default defineConfig({
             { label: 'Annotations', slug: 'docs/guides/annotations' },
             { label: 'Redaction', slug: 'docs/guides/redaction' },
             { label: 'Controlled mode', slug: 'docs/guides/controlled-mode' },
+            { label: 'Plugins', slug: 'docs/guides/plugins' },
+            { label: 'Writing a plugin', slug: 'docs/guides/writing-a-plugin' },
             { label: 'Theming', slug: 'docs/guides/theming' },
           ],
         },

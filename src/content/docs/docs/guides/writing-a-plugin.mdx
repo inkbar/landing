@@ -1,0 +1,267 @@
+---
+title: Writing a plugin
+description: Write an Inkbar plugin with commands, record stores, page layers and tools, once for every framework.
+---
+
+A plugin is a plain object with an `id` and a `setup` function. You write it against `@inkbar/core` and `@inkbar/core/dom`, and it runs in Vue, React, Svelte and `createViewer` alike. This page is for plugin authors. To add a plugin to your app, see [Plugins](/docs/guides/plugins/).
+
+## An example
+
+This plugin suggests redactions. Suggest fills a store with suggestions, a page layer draws each open one as a button over its text, and pressing that button accepts it: the suggestion is marked accepted and a redaction is added in one undo step.
+
+```ts
+import { writable, type Quad, type Rect, type RecordBase } from '@inkbar/core'
+import { definePlugin, type PageTransform } from '@inkbar/core/dom'
+
+export interface Suggestion extends RecordBase {
+  page: number
+  /** Where the text is, in PDF user space. */
+  quads: Quad[]
+  /** The box around `quads`, where the mark goes. */
+  rect: Rect
+  reason: string
+  status: 'suggested' | 'accepted'
+}
+
+export const review = definePlugin({
+  id: 'review',
+  setup(ctx) {
+    // One store per open document, keyed `review.suggestions`; null while none is open.
+    const suggestions = ctx.store<Suggestion>('suggestions')
+
+    const status = writable('')
+    ctx.commands.add({
+      id: 'suggest', // placed as `review.suggest`
+      label: 'Suggest redactions',
+      status,
+      async run() {
+        const doc = ctx.document.get()
+        if (!doc) return
+        const found = await findSuggestions(doc) // your own code
+        const store = suggestions.get()
+        // Another document opened while this one was checked.
+        if (ctx.document.get() !== doc || !store) return
+        const fresh = found.filter((s) => !store.get(s.id))
+        ctx.history.batch(() => fresh.forEach((s) => store.add(s)))
+        status.set(fresh.length === 1 ? '1 suggestion' : `${fresh.length} suggestions`)
+      },
+    })
+
+    function accept(id: string) {
+      const store = suggestions.get()
+      const doc = ctx.document.get()
+      const s = store?.get(id)
+      if (!store || !doc || s?.status !== 'suggested') return
+      ctx.history.batch(() => {
+        store.update(id, { status: 'accepted' })
+        doc.annotations.add({
+          type: 'redact',
+          page: s.page,
+          quads: s.quads,
+          color: doc.annotations.defaults.color('redact'),
+          custom: { review: { suggestionId: id } },
+        })
+      })
+    }
+
+    const layer = ctx.layer({
+      render(el, page, transform) {
+        const open = (suggestions.get()?.list.get() ?? []).filter(
+          (s) => s.page === page && s.status === 'suggested'
+        )
+        el.replaceChildren(...open.map((s) => mark(s, transform, accept)))
+      },
+    })
+    // Redraw whenever the records change, undo and redo included.
+    ctx.onDocument(() => suggestions.get()?.list.subscribe(() => layer.invalidate()))
+  },
+})
+
+function mark(s: Suggestion, transform: PageTransform, accept: (id: string) => void) {
+  const b = document.createElement('button')
+  b.type = 'button'
+  b.className = 'review-mark'
+  b.setAttribute('aria-label', `Accept suggested redaction: ${s.reason}`)
+  const r = transform.toCssRect(s.rect)
+  b.style.cssText = `position:absolute;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`
+  b.addEventListener('pointerdown', (e) => e.stopPropagation())
+  b.addEventListener('click', (e) => {
+    e.stopPropagation()
+    accept(s.id)
+  })
+  return b
+}
+```
+
+The host places the command with `<InkCommand id="review.suggest" />`. The sandbox's [suggestions plugin](https://github.com/inkbar/inkbar/tree/main/apps/sandbox/src/plugin) is a fuller version, with a review card, Dismiss, and marks that keep their focus through a redraw.
+
+## `definePlugin`
+
+`definePlugin({ id, setup })` checks the id and returns the plugin unchanged. The id is lower-case kebab case: a letter, then letters, digits and hyphens (`review`, `pii-check`). Anything else throws `InkError('InvalidPluginId')`.
+
+The id is the namespace for everything the plugin adds. Command `suggest` becomes `review.suggest`, tool `box` becomes `review.box` and store `suggestions` is keyed `review.suggestions`.
+
+`setup(ctx)` runs once per viewer. It can return a function, which runs when the viewer is destroyed.
+
+## The context
+
+| Member                 | What it does                                                                                             |
+| ---------------------- | -------------------------------------------------------------------------------------------------------- |
+| `id`                   | The plugin's id                                                                                          |
+| `document`             | A readable of the open `InkDocument`, or `null`                                                          |
+| `history.batch(fn)`    | Makes everything `fn` changes, annotations and records alike, one undo step                              |
+| `activated`            | A readable of the activated annotation's id, or `null`                                                   |
+| `setActivated(id)`     | Activates an annotation, or clears the activation with `null`. An id not in the open document is ignored |
+| `root`                 | A readable of the viewport's scroll container, or `null` while none is mounted                           |
+| `commands.add(spec)`   | Adds a command and returns it                                                                            |
+| `tools.add(tool)`      | Adds a tool                                                                                              |
+| `decorate(fn)`         | Adds `data`, `classes` and a `description` to annotation elements                                        |
+| `redecorate()`         | Runs every decoration again                                                                              |
+| `store(name, options)` | A readable of the record store for the open document, or `null`                                          |
+| `onDocument(fn)`       | Runs `fn(doc)` for each document that opens. The function it returns runs when that document closes      |
+| `onAnnotationEdit(fn)` | Runs `fn(edit)` for every user add, update and remove of an annotation, inside that edit's undo step     |
+| `layer(spec)`          | Adds a page layer and returns a handle with `invalidate(page?)`                                          |
+
+A readable has `get()` and `subscribe(fn)`, which returns a function that stops it. `writable` from `@inkbar/core` makes one you can `set`.
+
+## Commands
+
+`ctx.commands.add(spec)` takes:
+
+- `id`, namespaced to `<plugin>.<id>`.
+- `label`, which names the command's button. It is required: an empty label throws `InkError('InvalidCommandLabel')`.
+- `icon`, an optional icon node such as one from `@inkbar/icons`. Without one, the button shows the label as text.
+- `enabled`, an optional readable of a boolean. Without it, the command is enabled while a document is open and ready.
+- `status`, an optional readable of a short progress or result message. The command button announces it in a live region.
+- `run()`, which may return a promise.
+
+The returned command has `id`, `label`, `icon` and three readables: `enabled`, `busy` and `status`. It is busy from `run()` until the promise settles, and disabled while busy, so a double click runs it once. `command.run()` does nothing while the command is busy or disabled, and never rejects. A failure is logged. One caused by the document closing during the run (`DocumentDestroyed`) is dropped silently. Check `ctx.document.get()` after each `await`, as the example does, so results for a closed document go nowhere.
+
+## Record stores
+
+`ctx.store(name, options)` asks for a store keyed `<plugin>.<name>`. Each document that opens gets a fresh one, and the readable holds `null` while no document is open. Read it with `get()` when you need it rather than keep the store.
+
+Inkbar keeps no plugin data. Accept `initial` and `onChange` from the host and pass them on:
+
+- `initial(doc)` returns the records a document opens with, called once for each document.
+- `onChange(list, change)` runs after every change, with the list as it now stands.
+
+A store holds plain records, each with a string `id`:
+
+| Member                     | What it does                                                                                                   |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `key`                      | `<plugin>.<name>`                                                                                              |
+| `list`                     | A readable of the records, in order                                                                            |
+| `get(id)`                  | The record, or `undefined`                                                                                     |
+| `add(record)`              | Adds a record and returns the stored copy. Throws `InkError('DuplicateId')` when the id is taken               |
+| `update(id, patch)`        | Merges `patch` into a record and returns it. The id cannot change. An unknown id returns `undefined`           |
+| `remove(id)`               | Removes a record and returns it, or `undefined` for an unknown id                                              |
+| `replaceAll(list, reason)` | Replaces every record. Pass `'reset'` to start over: earlier undo steps no longer restore this store's records |
+| `on('change', fn)`         | Calls `fn(change)` after every change and returns a function that stops it                                     |
+
+Records are stored as frozen copies, so the object you pass to `add` stays yours and a stored record never changes under you. Change one with `update`.
+
+A change is one of `add` (with `record`), `update` (`id`, `before` and `after`), `remove` (`record`) or `replace`. A `replace` has a `reason`, `history` for undo and redo or `reset`, and the ids it `added`, `updated` and `removed`.
+
+## One undo step
+
+The stores you get from `ctx.store` join the viewer's undo history. On its own each change is one step. To make several changes one step, annotations included, wrap them in `ctx.history.batch(fn)`, as `accept` does above. `fn` must be synchronous: changes made after an `await` inside it are not part of the batch.
+
+`ctx.onAnnotationEdit(fn)` runs inside the user's edit, so a record change made there undoes with the edit. It receives `add` (`annotation`), `update` (`id`, `before`, `after`) and `remove` (`annotation`, and `removed`: it and the replies removed with it). It never runs for undo and redo, which restore your records themselves. This puts a suggestion back up for review when the user deletes the redaction that accepted it:
+
+```ts
+ctx.onAnnotationEdit((edit) => {
+  const store = suggestions.get()
+  if (edit.kind !== 'remove' || !store) return
+  for (const a of edit.removed) {
+    const id = (a.custom?.review as { suggestionId?: string } | undefined)?.suggestionId
+    if (id && store.get(id)?.status === 'accepted')
+      store.update(id, { status: 'suggested' })
+  }
+})
+```
+
+The same works in controlled mode, where the host owns the annotation list.
+
+## Page layers
+
+`ctx.layer(spec)` adds a layer to every mounted page, above the annotations. Each page gets its own element, `div.ink-plugin-layer[data-plugin="<id>"]`, covering the page.
+
+- `render(el, page, transform)` draws into `el`. It runs when the page mounts, whenever the page's zoom or rotation changes, and when you call `invalidate`.
+- `destroy(el, page)` is optional and runs when the page unmounts.
+
+The handle's `invalidate(page)` redraws one page, or every mounted page without an argument. A layer added after pages have mounted, from `onDocument` say, appears on them at once.
+
+Keep your geometry in PDF user space: points, origin bottom-left, before the page's `/Rotate`, as annotations are. `transform`, a `PageTransform`, is the only conversion you need:
+
+- `toCssRect(rect)` returns `{ left, top, width, height }` in CSS pixels from the page's top-left corner.
+- `toCss(point)`, `toCssQuad(quad)` and `toCssLength(points)` convert a point, a quad or a length.
+- `fromCss(point)`, `fromCssRect(cssRect)` and `fromCssLength(px)` go the other way.
+- `cssWidth`, `cssHeight`, `zoom` and `rotation` describe the page as drawn.
+
+## Marks and the keyboard
+
+A mark is anything you put in a layer that the user can press or focus.
+
+- The layer lets presses through to the page and the tools underneath. The elements you put straight into it take presses back (`pointer-events: auto`), with or without `@inkbar/theme`. That rule has no specificity, so a rule of yours such as `pointer-events: none` on a mark wins.
+- The viewer's tools leave presses and keys on your marks alone. They still bubble up to the viewer's root, so stop propagation if listeners there should not see them.
+- A focusable mark is a Tab stop after the page's annotations, in DOM order. Use a `<button>`: it gets Enter and Space as a click.
+- Escape is yours to handle. A card opened with `createPopover`, as in [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers), closes on Escape and `createFocusReturn` sends focus back to the mark.
+
+Replacing every mark on each render, as the example does, drops focus when a mark redraws. To keep it, reuse the marks that stay and only move them.
+
+## Tools and decorations
+
+`ctx.tools.add(tool)` adds a tool under `<plugin>.<id>`. A tool has an `id`, a `cursor`, `activate(toolCtx)` and `deactivate()`, and optional `label`, `icon`, `kind` (`'sticky'`, the default, or `'one-shot'`) and pointer and key handlers. `toolCtx` gives it the annotation `store`, the `viewport` and more. The press handlers receive the page `hit`, whose `user` is the point in user space.
+
+```ts
+import type { PageHit, ToolContext } from '@inkbar/core/dom'
+
+class BoxTool {
+  id = 'box' // placed as `review.box`
+  label = 'Box'
+  cursor = 'crosshair'
+  #ctx: ToolContext | null = null
+
+  activate(ctx: ToolContext) {
+    this.#ctx = ctx
+  }
+  deactivate() {
+    this.#ctx = null
+  }
+  onPointerDown(e: PointerEvent, hit: PageHit | undefined, annotationId?: string) {
+    if (!this.#ctx || !hit || annotationId) return
+    const { x, y } = hit.user
+    const a = this.#ctx.store.add({
+      type: 'square',
+      page: hit.page,
+      rect: { x: x - 20, y: y - 20, width: 40, height: 40 },
+    })
+    this.#ctx.store.select([a.id])
+  }
+}
+
+ctx.tools.add(new BoxTool())
+```
+
+The host places it with a tool button (`tool="review.box"`), which shows the tool's own `label` and `icon`. Its methods run on your own object, so inside them `this.id` is the id you gave (`box`), and a class instance keeps its `#private` fields.
+
+`ctx.decorate(fn)` works like the host's `decorateAnnotation`, which [Plain DOM](/docs/frameworks/plain-dom/#your-own-chrome) describes. Decorations apply after the host's own and earlier plugins', and the earlier ones win on a data key or description. They re-apply when the annotations change. Call `ctx.redecorate()` when one reads state of your own that changed.
+
+## Things to know
+
+- The framework packages run `setup` once the viewer has mounted in the browser, never during server rendering. Until then the plugin's commands are disabled, and anything `setup` creates, such as a store, does not exist yet.
+- A layer's `destroy` can run after the document's stores have closed, so check `store.get()` for `null` there.
+- An error thrown from your decoration, a layer's `render` or `destroy`, or an `onDocument` callback is logged, so one plugin cannot break the viewer or the others.
+
+## Errors
+
+| Code                  | When                                                                                       |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| `InvalidPluginId`     | `definePlugin` gets an id that is not lower-case kebab case                                |
+| `DuplicatePlugin`     | Two plugins with the same id are passed to one viewer                                      |
+| `InvalidCommandLabel` | `commands.add` gets an empty label                                                         |
+| `DuplicateId`         | A command, tool or store name is taken within the plugin, or `add` gets a record id in use |
+| `UnknownCommand`      | The host places a command id that no plugin registered                                     |
+
+Each is an `InkError` from `@inkbar/core`, with the code on `error.code`.

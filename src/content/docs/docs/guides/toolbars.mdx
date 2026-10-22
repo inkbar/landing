@@ -20,6 +20,7 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 | `InkPageCount`               | "of N", the page count                                                               |
 | `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                |
 | `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                |
+| `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                         |
 | `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                             |
 
 `tool` is one of `view`, `select`, `highlight`, `redact-area` and `note`. Their accessible names are View, Select, Highlight, Mark for redaction and Add note. Pass `label` to change one. To rename any other button, pass `aria-label` and `title`.
@@ -106,11 +107,11 @@ Install `@inkbar/icons` only if you want its icons on your own buttons. The cont
 
 ## Rendering your own element
 
-`InkRoot`, `InkToolbar`, `InkToolButton`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
 
 ## Without a framework
 
-`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect` and `createIcon`.
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createCommandButton` and `createIcon`.
 
 ## Styling
 
