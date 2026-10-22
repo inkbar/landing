@@ -17,7 +17,7 @@ A plugin is written once with `definePlugin` from `@inkbar/core/dom` and runs in
 
 ## Adding a plugin
 
-A plugin module exports a factory: call it, with any options the plugin takes, and pass the result to `InkRoot` as `plugins`, or to `createViewer`. The list is read once, when the root mounts: a later change to it is not applied, so make the plugins once rather than on every render.
+Call a factory-style plugin with its options, and pass a plugin written as an object as it is; the plugin's docs say which. Pass the result to `InkRoot` as `plugins`, or to `createViewer`. The list is read once, when the root mounts: a later change to it is not applied, so make the plugins once rather than on every render.
 
 Nothing a plugin registers shows by itself. Place each command with `InkCommand` and each tool with `InkToolButton`, inside an `InkToolbar`, as you place the built-in controls:
 

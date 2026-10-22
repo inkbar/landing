@@ -139,7 +139,7 @@ Inside a command, write through `records.in(doc)`. A command often waits, for a 
 
 - `rect(record)` and `label(record)`, the mark's accessible name, are required.
 - `where(record)` picks the records that get a mark. Default: all.
-- `style(record)` returns inline styles, `className` adds classes, and `attrs(record)` adds attributes such as `data-*` and `aria-*`. Core draws nothing else.
+- `style(record)` returns inline styles, custom properties such as `--tint` included, `className` adds classes, and `attrs(record)` adds attributes such as `data-*` and `aria-*`. Core draws nothing else.
 - `card(record)` opens a card when the mark is activated. See [Cards](#cards).
 - `onActivate(record, mark)` runs when the mark is clicked, or activated with Enter or Space, for anything a card does not cover.
 
@@ -158,7 +158,7 @@ A card is a popover next to its mark, styled by `@inkbar/theme` like the viewer'
 - `actions`, one button per key, in order.
 - `className`, classes added to the card.
 
-The card is a `role="dialog"` and its first action takes focus when it opens. Each card action is one undo step. After an action, the card re-renders if the mark stays. If the mark goes, the card closes and focus moves to the next mark, else the previous one, else the viewport. Escape or a press outside closes the card and returns focus to the mark.
+The card is a `role="dialog"`. Its first action is the primary one and takes focus when the card opens. Each card action is one undo step. Actions must be synchronous: a write after an `await` falls outside the action's undo step. After an action, the card re-renders if the mark stays. If the mark goes, the card closes and focus moves to the next of this `marks()` call's marks, else the previous one, else the viewport. Escape or a press outside closes the card and returns focus to the mark.
 
 The theme styles the card through these classes, which are yours to restyle:
 
