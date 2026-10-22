@@ -145,8 +145,8 @@ A plugin's decorations and page layers apply to every document without being pla
 `InkCommand` (`createCommandButton` in plain DOM) renders a button with the command's status text beside it:
 
 - The button is named by the command's label. It shows the command's icon, or the label as text when the command has none.
-- It is disabled while the command is: until a document is ready, unless the plugin sets its own condition, and while the command runs.
-- It carries `aria-busy="true"` while the command runs. An async command stays busy until its promise settles, so a double click runs it once.
+- It is disabled until a document is ready, unless the plugin sets its own condition.
+- While the command runs, the button keeps focus and carries `aria-busy="true"` and `aria-disabled="true"`, and pressing it does nothing. An async command stays busy until its promise settles, so a double click runs it once.
 - The status, a short progress or result message such as "4 suggestions", sits in a live region, so screen readers announce it.
 
 `InkCommand` takes `asChild` (`as-child` in Vue, the `child` snippet in Svelte) to render your own element, as [Toolbars](/docs/guides/toolbars/#rendering-your-own-element) describes. Its slot, render prop or snippet receives `{ label, busy }`.
