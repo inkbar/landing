@@ -48,24 +48,26 @@ export const review = definePlugin('review', (plugin) => {
     { errorStatus: 'Could not check this document.' }
   )
 
-  plugin.marks(suggestions, {
-    where: (s) => s.status === 'suggested',
-    rect: (s) => s.rect,
-    label: (s) => `Suggested redaction: ${s.reason}`,
-    className: 'review-mark',
-    card: (s) => ({
-      title: s.reason,
-      label: 'Suggested redaction',
-      ...(s.explanation && { body: s.explanation }),
-      actions: {
-        Accept: () => {
-          suggestions.update(s.id, { status: 'accepted' })
-          redaction.add(s)
+  plugin
+    .marks(suggestions, {
+      where: (s) => s.status === 'suggested',
+      rect: (s) => s.rect,
+      label: (s) => `Suggested redaction: ${s.reason}`,
+      className: 'review-mark',
+      card: (s) => ({
+        title: s.reason,
+        label: 'Suggested redaction',
+        ...(s.explanation && { body: s.explanation }),
+        actions: {
+          Accept: () => {
+            suggestions.update(s.id, { status: 'accepted' })
+            redaction.add(s)
+          },
+          Dismiss: () => suggestions.update(s.id, { status: 'dismissed' }),
         },
-        Dismiss: () => suggestions.update(s.id, { status: 'dismissed' }),
-      },
-    }),
-  })
+      }),
+    })
+    .scrollToFirst()
 })
 ```
 
@@ -145,7 +147,10 @@ Inside a command, write through `records.in(doc)`. A command often waits, for a 
 
 Each mark carries `data-record` with the record's id and `data-plugin` with the plugin's id. Marks redraw when the records change, undo and redo included, and when the page's zoom or rotation changes. A mark that stays keeps its element, so focus and an open card survive a redraw. Presses and clicks on a mark go no further, so the active tool and listeners on the viewer's root never see them. Marks are Tab stops after the page's annotations.
 
-The returned handle's `refresh()` redraws every mark, for marks that read state of your own that changed.
+`plugin.marks` returns a handle:
+
+- `refresh()` redraws every mark, for marks that read state of your own that changed.
+- `scrollToFirst()` scrolls the viewer to new marks. When records start to get a mark, added or changed to pass `where`, the viewer scrolls to the first of them in reading order, unless that one is in view already. Focus stays where it is, and the records a document opens with, undo and redo never scroll. It returns the handle, so you can chain it onto `plugin.marks(…)`.
 
 ## Cards
 
@@ -212,6 +217,7 @@ A plugin can also be a plain object, `definePlugin({ id, setup(ctx) { … } })`,
 | `onDocument(fn)`       | Runs `fn(doc)` for each document that opens. The function it returns runs when that document closes      |
 | `onAnnotationEdit(fn)` | Runs `fn(edit)` for every user add, update and remove of an annotation, inside that edit's undo step     |
 | `layer(spec)`          | Adds a page layer and returns a handle with `invalidate(page?)`                                          |
+| `scrollTo(page, rect)` | Scrolls the viewer so `rect`, in user space on `page`, is in view. Moves no focus                        |
 
 A readable has `get()` and `subscribe(fn)`, which returns a function that stops it. `writable` from `@inkbar/core` makes one you can `set`.
 
