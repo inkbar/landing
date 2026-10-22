@@ -10,14 +10,14 @@ A plugin adds features to a viewer without changing Inkbar. It can bring:
 - commands, actions with a label that you place as buttons
 - tools, which you place with a tool button like the built-in ones
 - decorations on annotation elements
-- page layers, drawn over every page above the annotations
+- page layers, drawn over every page above the annotations, such as marks that open a card
 - record stores, a list of its own records for each open document
 
 A plugin is written once with `definePlugin` from `@inkbar/core/dom` and runs in every framework package and in `createViewer`. Everything it adds is named under its id: command `suggest` of plugin `review` is `review.suggest`. This page is for the app that uses a plugin. To build one, see [Writing a plugin](/docs/guides/writing-a-plugin/).
 
 ## Adding a plugin
 
-Pass plugins to `InkRoot` as `plugins`, or to `createViewer`. The list is read once, when the root mounts: a later change to it is not applied.
+A plugin module exports a factory: call it, with any options the plugin takes, and pass the result to `InkRoot` as `plugins`, or to `createViewer`. The list is read once, when the root mounts: a later change to it is not applied, so make the plugins once rather than on every render.
 
 Nothing a plugin registers shows by itself. Place each command with `InkCommand` and each tool with `InkToolButton`, inside an `InkToolbar`, as you place the built-in controls:
 
@@ -32,10 +32,12 @@ import { assets } from 'virtual:inkbar-assets'
 import { review } from './review-plugin'
 
 defineProps<{ file: File }>()
+
+const plugins = [review()]
 </script>
 
 <template>
-  <InkRoot :src="file" :assets="assets" :plugins="[review]">
+  <InkRoot :src="file" :assets="assets" :plugins="plugins">
     <InkToolbar>
       <InkToolButton tool="redact-area" />
       <InkToolButton tool="review.stamp" />
@@ -61,7 +63,7 @@ import { assets } from 'virtual:inkbar-assets'
 
 import { review } from './review-plugin'
 
-const plugins = [review]
+const plugins = [review()]
 
 export function Review({ file }: { file: File }) {
   return (
@@ -94,9 +96,11 @@ export function Review({ file }: { file: File }) {
   import { review } from './review-plugin'
 
   let { file }: { file: File } = $props()
+
+  const plugins = [review()]
 </script>
 
-<InkRoot src={file} {assets} plugins={[review]}>
+<InkRoot src={file} {assets} {plugins}>
   <InkToolbar>
     <InkToolButton tool="redact-area" />
     <InkToolButton tool="review.stamp" />
@@ -120,7 +124,7 @@ import { assets } from 'virtual:inkbar-assets'
 
 import { review } from './review-plugin'
 
-const viewer = createViewer(el, { source: file, assets, plugins: [review] })
+const viewer = createViewer(el, { source: file, assets, plugins: [review()] })
 
 const tools = createToolbar()
 tools.append(
@@ -224,18 +228,24 @@ A plugin tool's id is `<plugin>.<id>`, so tool `stamp` of plugin `review` is `re
 
 ## Loading and saving records
 
-A plugin can keep records of its own, such as suggestions, in a store that each open document gets. Inkbar keeps no plugin data. A plugin that wants its records loaded and saved takes two functions from you and passes them to its store:
+A plugin can keep records of its own, such as suggestions, in a store that each open document gets. Inkbar keeps no plugin data. To load and save its records, give it two functions:
 
 - `initial(doc)` returns the records a document opens with. It runs once for each document that opens.
 - `onChange(list, change)` runs after every change, with the whole list as it now stands.
 
-How you hand them over depends on the plugin. A plugin built as a function of options might look like this:
+Pass them in the plugin's `records` option, under the name of the plugin's records. The plugin's docs give the names; the review plugin calls its records `suggestions`:
 
 ```ts
-const review = reviewPlugin({
-  initial: (doc) => savedSuggestions.get(doc.key) ?? [],
-  onChange: (list) => saveSuggestions(list),
-})
+const plugins = [
+  review({
+    records: {
+      suggestions: {
+        initial: (doc) => savedSuggestions.get(doc.key) ?? [],
+        onChange: (list) => saveSuggestions(list),
+      },
+    },
+  }),
+]
 ```
 
 `change` says what happened:
