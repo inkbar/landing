@@ -52,6 +52,18 @@ Set these on an `InkToolbar`, or any ancestor, to size its controls:
 | `--ink-control-size` | `2.25rem`  | Height of buttons, fields and the zoom select |
 | `--ink-icon-size`    | `1.125rem` | Size of the icons inside them                 |
 
+## Form fields
+
+Set these on `[data-ink-root]` to style fillable fields:
+
+| Variable                   | Used for                                       |
+| -------------------------- | ---------------------------------------------- |
+| `--ink-form-field-bg`      | The tint on fillable fields                    |
+| `--ink-form-field-focus`   | The focus ring and a signature field's Sign    |
+| `--ink-form-field-invalid` | The outline on a field whose value was refused |
+
+Fields sit on the white page, so these keep similar values in dark mode. To turn the tint off, pass `formHighlight: false`. See [Forms](/docs/guides/forms/#theming).
+
 ## Annotation colours
 
 Set these variables on `[data-ink-root]` to change the default colour for new annotations:
