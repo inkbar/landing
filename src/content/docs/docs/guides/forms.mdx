@@ -13,6 +13,8 @@ Values live in memory. Inkbar does not write them into the PDF yet, and `doc.sav
 
 Fields take input while the default `select-text` tool or the `select` tool is active. Under a drawing or markup tool, a press on a field goes to the tool instead.
 
+A small annotation that sits over a field takes the click when a select tool is active, so select it to move or delete it. Press the part of the field the annotation leaves uncovered to fill it.
+
 Each field has a light tint so people can find it. A focused field gets a ring, and a field whose value was refused gets a red outline. Read-only fields have no tint.
 
 Tab moves through the fields in the order the PDF sets for each page, and carries on to the next page at the last field. Shift+Tab goes back. Enter commits a single-line text field. Space toggles a checkbox, and the arrow keys move between the buttons of a radio group.
