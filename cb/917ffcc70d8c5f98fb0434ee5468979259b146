@@ -1,0 +1,28 @@
+src/content/docs/docs/frameworks/vue.md
+  s_a9eee6338cf60a::t_43487ba1d6dca7 134
+src/content/docs/docs/frameworks/react.md
+  s_a9eee6338cf60a::t_43487ba1d6dca7 132
+src/content/docs/docs/guides/toolbars.mdx
+  s_a9eee6338cf60a::t_43487ba1d6dca7 23-24
+  s_a9eee6338cf60a::t_10ab1279d4d05f 116
+src/content/docs/docs/frameworks/svelte.md
+  s_a9eee6338cf60a::t_43487ba1d6dca7 135
+src/content/docs/docs/frameworks/plain-dom.md
+  s_a9eee6338cf60a::t_43487ba1d6dca7 76-77
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cb917ffcc70d8c5f98fb0434ee5468979259b146",
+  "prompts": {},
+  "sessions": {
+    "s_a9eee6338cf60a": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "c2869588-dbba-445a-be19-91e3d8b07d87",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
