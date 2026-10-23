@@ -1,0 +1,93 @@
+src/content/docs/docs/guides/forms.mdx
+  s_e6109f66fbb4ed::t_32f80f13e2e580 1-15,18-62,64,66-184,186-233,240-247,251-272,274-290,292-309
+  s_e6109f66fbb4ed::t_800b04715d5150 63,65,234-239,248-250,273,291
+  s_e6109f66fbb4ed::t_77e18b5576acf2 16-17
+  s_e6109f66fbb4ed::t_cea76dbc8b1e14 310
+  s_e6109f66fbb4ed::t_f6fb81688679be 185
+astro.config.mjs
+  s_e6109f66fbb4ed::t_caf855063e20e9 62
+  s_e6109f66fbb4ed::t_dc1c54f3804380 63
+  s_e6109f66fbb4ed::t_d8b43fb76a1b80 60
+src/content/docs/docs/reference/theme-tokens.md
+  s_e6109f66fbb4ed::t_005b60cded5602 55-64,66
+  s_e6109f66fbb4ed::t_18eb70e7f92dc0 65
+src/content/docs/docs/guides/controlled-mode.mdx
+  s_e6109f66fbb4ed::t_2b9588b9d495c0 170-173
+src/content/docs/docs/frameworks/plain-dom.md
+  s_e6109f66fbb4ed::t_dc8d6010c7a08b 39
+  s_e6109f66fbb4ed::t_f6fb81688679be 78
+  s_e6109f66fbb4ed::t_629e89755dd123 79
+  s_e6109f66fbb4ed::t_dc1c54f3804380 80-81
+src/content/docs/docs/frameworks/react.md
+  s_e6109f66fbb4ed::t_d9a4c2b4fb3090 51
+  s_e6109f66fbb4ed::t_629e89755dd123 78-83,142
+  s_e6109f66fbb4ed::t_dc1c54f3804380 84-87
+src/content/docs/docs/frameworks/svelte.md
+  s_e6109f66fbb4ed::t_1a20238490ef05 42
+  s_e6109f66fbb4ed::t_629e89755dd123 69-74,145
+  s_e6109f66fbb4ed::t_dc1c54f3804380 75-78
+src/content/docs/docs/frameworks/vue.md
+  s_e6109f66fbb4ed::t_7aec0380ad75ef 48
+  s_e6109f66fbb4ed::t_629e89755dd123 74-79,144
+  s_e6109f66fbb4ed::t_dc1c54f3804380 80-83
+src/content/docs/docs/guides/annotations.md
+  s_e6109f66fbb4ed::t_c9a905ec0b07dd 85,117
+src/content/docs/docs/guides/redaction.md
+  s_e6109f66fbb4ed::t_22774be9a1e5e2 19
+src/content/docs/docs/guides/toolbars.mdx
+  s_e6109f66fbb4ed::t_aeca38aca157e5 29
+  s_e6109f66fbb4ed::t_53e31242756ef7 33-34
+  s_e6109f66fbb4ed::t_dc1c54f3804380 12-27,119
+src/content/docs/docs/index.mdx
+  s_e6109f66fbb4ed::t_9b51052418d929 26
+  s_e6109f66fbb4ed::t_f6fb81688679be 22
+  s_e6109f66fbb4ed::t_629e89755dd123 6,16,32-33
+  s_e6109f66fbb4ed::t_dc1c54f3804380 17
+src/components/landing/Comparison.astro
+  s_e6109f66fbb4ed::t_2bf03ceb05a457 11,27
+  s_e6109f66fbb4ed::t_dc1c54f3804380 10
+tests/landing.spec.ts
+  s_e6109f66fbb4ed::t_2bf03ceb05a457 102,112
+  s_e6109f66fbb4ed::t_dc1c54f3804380 103
+src/pages/index.astro
+  s_e6109f66fbb4ed::t_2bf03ceb05a457 15
+src/components/landing/Features.astro
+  s_e6109f66fbb4ed::t_b6babb3f01e000 121-122
+  s_e6109f66fbb4ed::t_2bf03ceb05a457 41-48,51-52,110-111,123
+  s_e6109f66fbb4ed::t_1e3a44d3a575f2 49-50,130
+  s_e6109f66fbb4ed::t_dc1c54f3804380 12-14,53-60
+  s_e6109f66fbb4ed::t_ea190715b1ecb9 61-62
+src/components/landing/Hero.astro
+  s_e6109f66fbb4ed::t_2bf03ceb05a457 14-15
+  s_e6109f66fbb4ed::t_c6761cb293af49 16
+tests/docs.spec.ts
+  s_e6109f66fbb4ed::t_629e89755dd123 13
+  s_e6109f66fbb4ed::t_dc1c54f3804380 14
+  s_e6109f66fbb4ed::t_d8b43fb76a1b80 12
+tests/narrow.spec.ts
+  s_e6109f66fbb4ed::t_629e89755dd123 13
+  s_e6109f66fbb4ed::t_dc1c54f3804380 14
+  s_e6109f66fbb4ed::t_d8b43fb76a1b80 12
+src/content/docs/docs/guides/signatures.mdx
+  s_e6109f66fbb4ed::t_2967d97e25528b 143,163
+  s_e6109f66fbb4ed::t_d5b81369ccf4c2 1-142,144-162,164-228
+src/content/docs/docs/guides/drawing.mdx
+  s_e6109f66fbb4ed::t_68db2ead0e15fe 10-13,15,184,226-227,229-232
+  s_e6109f66fbb4ed::t_aec4265d638b35 1-9,14,16-183,185-225,228,233-247
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d4f4b17f70d9eda68de3206f2194a154054fba05",
+  "prompts": {},
+  "sessions": {
+    "s_e6109f66fbb4ed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05debb7a-28e3-41cd-ba81-971c90bba7df",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
