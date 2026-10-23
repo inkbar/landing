@@ -307,4 +307,4 @@ Three tokens style the fields. Set them on `[data-ink-root]`:
 | `--ink-form-field-focus`   | The focus ring and Sign button |
 | `--ink-form-field-invalid` | The outline on a refused value |
 
-To turn the tint off, pass `formHighlight: false` to `createViewer`, or set `formHighlight` to false on `InkRoot`. The option is read when the viewer is built.
+To turn the tint off, pass `formHighlight: false` to `createViewer`, or set `formHighlight` to false on `InkRoot`. Changing it later updates the open viewer. With `createViewer`, call `viewer.setFormHighlight(false)`.
