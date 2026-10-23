@@ -10,6 +10,7 @@ const docsPaths = [
   '/docs/guides/controlled-mode/',
   '/docs/guides/search/',
   '/docs/guides/forms/',
+  '/docs/guides/signatures/',
   '/docs/guides/theming/',
   '/docs/frameworks/vue/',
   '/docs/frameworks/react/',

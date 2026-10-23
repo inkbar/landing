@@ -77,6 +77,10 @@ Each control is a separate component, so put them in any order or leave some out
 
 [Forms](/docs/guides/forms/) covers controlled fields, form actions, scripts, signature fields and saving values as Gloss.
 
+## Signatures
+
+`InkSignatureMenu` lists the saved signatures, turns on the `signature` tool with the chosen one, and opens `InkSignatureDialog` to draw, type or upload a new one. These are marks on the page, not cryptographic signatures. Pass `signatures` to `InkRoot` to keep them somewhere: `createLocalSignatureStore(key)` from `@inkbar/core` uses `localStorage`, and without it they last until reload. `signatureFonts` lists the handwriting fonts the Type tab offers. Load them with `@font-face`. [Signatures](/docs/guides/signatures/) has the details.
+
 ## Thread popover
 
 `InkThreadPopover` opens the thread of the activated note or text markup. A new note or highlight has no text yet, so the form first writes its own text (labelled "Comment"); after that it adds replies.

@@ -100,6 +100,7 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
     'Viewing',
     'Search',
     'Forms',
+    'Signatures',
     'Highlights',
     'Note threads',
     'Redaction marks',
