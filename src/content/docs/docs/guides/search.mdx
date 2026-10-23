@@ -1,0 +1,346 @@
+---
+title: Search
+description: Find text with the find bar or from code, read where each match sits on the page, and turn matches into a plugin's records.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+Inkbar searches the page text. Your users get a find bar that floats over the pages, and your code gets `doc.search`, which returns each match with its place on the page. The bar runs on `doc.search` too, so the bar and your code find the same matches for the same query.
+
+## The find bar
+
+`InkSearchButton` opens the bar, and `InkFindBar` is the bar itself. Put the button in a toolbar. Put the bar anywhere inside `InkRoot`: it moves itself into the viewport, and the theme floats it over the top-right of the pages. It stays hidden until it opens.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import {
+  InkFindBar,
+  InkRoot,
+  InkSearchButton,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/vue'
+import { assets } from 'virtual:inkbar-assets'
+
+defineProps<{ file: File }>()
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets">
+    <InkToolbar>
+      <InkToolButton tool="highlight" />
+      <InkSearchButton />
+    </InkToolbar>
+    <InkViewport />
+    <InkFindBar />
+  </InkRoot>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import {
+  InkFindBar,
+  InkRoot,
+  InkSearchButton,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/react'
+import { assets } from 'virtual:inkbar-assets'
+
+export function Viewer({ file }: { file: File }) {
+  return (
+    <InkRoot src={file} assets={assets}>
+      <InkToolbar>
+        <InkToolButton tool="highlight" />
+        <InkSearchButton />
+      </InkToolbar>
+      <InkViewport />
+      <InkFindBar />
+    </InkRoot>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import {
+    InkFindBar,
+    InkRoot,
+    InkSearchButton,
+    InkToolbar,
+    InkToolButton,
+    InkViewport,
+  } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+</script>
+
+<InkRoot src={file} {assets}>
+  <InkToolbar>
+    <InkToolButton tool="highlight" />
+    <InkSearchButton />
+  </InkToolbar>
+  <InkViewport />
+  <InkFindBar />
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import {
+  createFindBar,
+  createSearchButton,
+  createToolbar,
+  createToolButton,
+  createViewer,
+} from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, { source: file, assets })
+
+const tools = createToolbar()
+tools.append(createToolButton(viewer, 'highlight'), createSearchButton(viewer))
+viewer.element.prepend(tools)
+
+viewer.element.querySelector('[data-ink-viewport-root]')!.append(createFindBar(viewer))
+```
+
+In plain DOM the bar does not move itself. Append it to `[data-ink-viewport-root]` so the theme can float it.
+
+  </TabItem>
+</Tabs>
+
+The bar has a field, the match count, previous and next buttons, a match-case toggle and a close button. As the user types, Inkbar starts searching from the current page, highlights every match and scrolls to the first one it finds.
+
+- **Enter** steps to the next match and **Shift+Enter** to the previous. Both wrap around at the ends of the document.
+- **Escape** or the close button hides the bar, clears the highlights and sends focus back to where it was before the bar opened.
+- **Ctrl+F** (**Cmd+F** on a Mac) opens the bar, but only while focus is inside the viewer and a bar is mounted. Text selected on the page, up to 200 characters, becomes the query. Anywhere else on your page, the browser's own find keeps the key.
+- The count reads "3 of 17", with a trailing "…" while pages remain to scan, or "No results". A live region tells screen reader users the match number and page as they step.
+- Pressing the search button while the bar is open moves focus back to the field.
+
+The bar has no whole-word or regular expression toggles. `doc.search` takes both, [below](#searching-from-code).
+
+`InkSearchButton` takes `asChild` (`as-child` in Vue, the `child` snippet in Svelte), like the other toolbar controls. In React and Svelte, the bar handles Escape and stops it, so an `onKeyDown` (`onkeydown` in Svelte) you pass to `InkFindBar` never sees that key.
+
+## Your own control
+
+`useSearch()` returns the state behind the find bar and the actions that change it. In plain DOM the same object is `viewer.search`, and plugins get it as `ctx.search`.
+
+| State       | What it holds                                                      |
+| ----------- | ------------------------------------------------------------------ |
+| `open`      | Whether the search is open                                         |
+| `query`     | The query                                                          |
+| `matchCase` | Whether case must match                                            |
+| `hits`      | The matches found so far, as [search hits](#search-hits), in order |
+| `current`   | The index of the current hit in `hits`, or -1 when there is none   |
+| `scanning`  | Whether pages remain to scan                                       |
+
+| Action             | What it does                                                         |
+| ------------------ | -------------------------------------------------------------------- |
+| `open(query?)`     | Opens the search, with a new query if you pass one                   |
+| `setQuery(query)`  | Sets the query and searches again                                    |
+| `setMatchCase(on)` | Turns match case on or off and searches again                        |
+| `next()`           | Moves to the next hit and scrolls to it                              |
+| `previous()`       | Moves to the previous hit and scrolls to it                          |
+| `close()`          | Closes the search and clears the hits. It keeps the query and toggle |
+
+`open()` searches and draws the highlights even with no find bar on the page, so you can build your own. In Vue `state` is a ref, in React a plain value, and in Svelte a getter, so read it through the returned object. In plain DOM `viewer.search.state` is a readable. Before `InkRoot` mounts, and during server rendering, the state reads closed and the actions do nothing.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { useSearch } from '@inkbar/vue'
+
+const search = useSearch()
+</script>
+
+<template>
+  <button type="button" @click="search.open('invoice')">Find invoices</button>
+  <span>{{ search.state.value.hits.length }} found</span>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { useSearch } from '@inkbar/react'
+
+export function FindInvoices() {
+  const search = useSearch()
+  return (
+    <>
+      <button type="button" onClick={() => search.open('invoice')}>
+        Find invoices
+      </button>
+      <span>{search.state.hits.length} found</span>
+    </>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { useSearch } from '@inkbar/svelte'
+
+  const search = useSearch()
+</script>
+
+<button type="button" onclick={() => search.open('invoice')}>Find invoices</button>
+<span>{search.state.hits.length} found</span>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+button.addEventListener('click', () => viewer.search.open('invoice'))
+viewer.search.state.subscribe((s) => (count.textContent = `${s.hits.length} found`))
+```
+
+  </TabItem>
+</Tabs>
+
+Call `useSearch` inside `InkRoot`.
+
+## Searching from code
+
+`doc.search(query, options)` finds a string or a regular expression in the open document. Iterate the result with `for await` to get hits as Inkbar scans each page, or call `all()` to wait for the whole list:
+
+```ts
+for await (const hit of doc.search('invoice')) {
+  console.log(hit.page, `${hit.before}[${hit.text}]${hit.after}`)
+}
+
+// UK National Insurance numbers
+const ni = await doc.search(/\b[A-Z]{2}\d{6}[A-D]\b/).all()
+```
+
+A string matches the text as a reader sees it. It ignores case, accents, ligatures and curly quotes, and it finds words split across a line break or a hyphen at the end of a line. A regular expression runs on that same text.
+
+| Option      | What it does                                                                                   |
+| ----------- | ---------------------------------------------------------------------------------------------- |
+| `matchCase` | Case must match. Default `false`. A regular expression ignores it and follows its own `i` flag |
+| `wholeWord` | A hit must not have a letter, digit or underscore on either side. Default `false`              |
+| `pages`     | The page indices to search, from 0, in the order you give. Default: every page, first to last  |
+| `signal`    | An `AbortSignal`. Aborting it stops the scan, which then throws the signal's reason            |
+
+The scan yields to the browser between pages, so a long document keeps the page responsive. To stop a search the user no longer wants, abort it:
+
+```ts
+const controller = new AbortController()
+cancelButton.onclick = () => controller.abort()
+
+try {
+  const hits = await doc.search('total', { signal: controller.signal }).all()
+} catch (error) {
+  if (!controller.signal.aborted) throw error
+}
+```
+
+Closing the document stops a running scan too, with an `AbortError`. Plugin commands receive a `signal` that aborts when the document closes, so pass it straight through.
+
+## Search hits
+
+| Field             | What it holds                                                            |
+| ----------------- | ------------------------------------------------------------------------ |
+| `page`            | The page index, from 0                                                   |
+| `start`, `end`    | Offsets into `doc.pageText(page)`                                        |
+| `text`            | The page text the hit covers                                             |
+| `quads`           | One quad for each run of text the hit touches, in PDF user space         |
+| `rect`            | The box around `quads`                                                   |
+| `exact`           | Whether every quad follows the page's own glyph positions                |
+| `before`, `after` | Up to 40 characters of page text on each side, with whitespace collapsed |
+
+Each quad follows where the page draws each glyph, and spans the font's full height, so it covers ascenders and descenders. You can pass `quads` straight to a text markup annotation, such as a highlight or a redaction mark.
+
+`exact` is `false` when Inkbar could not match some of the text to the page's glyphs. Right-to-left and vertical text cause this, as do some unusual files. Inkbar then cuts that quad at estimated widths, which can fall short of the glyphs. Pad those quads before you use them to cover text, as you would for a redaction.
+
+`page` and `start` together identify a hit. The same query on the same document gives the same pair, so use them as a key, for example as a record id.
+
+## In a plugin
+
+Inkbar has no "redact all" or "highlight all" button. Actions on every match belong in a plugin. This one adds a command that finds National Insurance numbers, keeps each as a record, and draws a mark over it:
+
+```ts
+import type { Quad, RecordBase, Rect } from '@inkbar/core'
+import { definePlugin } from '@inkbar/core/dom'
+
+interface NiNumber extends RecordBase {
+  page: number
+  quads: Quad[]
+  rect: Rect
+  text: string
+}
+
+const NI_NUMBER = /\b[A-Z]{2}\d{6}[A-D]\b/
+
+export const niNumbers = definePlugin('ni-numbers', (plugin) => {
+  const found = plugin.records<NiNumber>('found')
+
+  plugin.command('find', 'Find NI numbers', async ({ doc, signal }) => {
+    const hits = await doc.search(NI_NUMBER, { signal }).all()
+    const added = found.in(doc).addMissing(
+      hits.map((hit) => ({
+        id: `${hit.page}:${hit.start}`,
+        page: hit.page,
+        quads: hit.quads,
+        rect: hit.rect,
+        text: hit.text,
+      }))
+    )
+    return added.length === 1 ? '1 new match' : `${added.length} new matches`
+  })
+
+  plugin
+    .marks(found, {
+      rect: (n) => n.rect,
+      label: (n) => `NI number ${n.text}`,
+      className: 'ni-mark',
+    })
+    .scrollToFirst()
+})
+```
+
+The `(page, start)` key makes `addMissing` skip a number the plugin already holds, so running the command twice adds nothing new. Place the command with `<InkCommand id="ni-numbers.find" />`. To turn a record into a redaction mark the user can undo, link the records to `redact` annotations with `found.annotates`, as [Writing a plugin](/docs/guides/writing-a-plugin/#linked-annotations) shows.
+
+The `plugin` that `setup` receives also carries the viewer's search as `plugin.search`, the same object as `useSearch()`, for a plugin that opens the find bar or reads its hits.
+
+## Theming
+
+`@inkbar/theme` colours the matches with two tokens:
+
+| Variable               | Used for        |
+| ---------------------- | --------------- |
+| `--ink-search-hit`     | Every match     |
+| `--ink-search-current` | The current one |
+
+The theme declares them on `[data-ink-root]`, so set yours there:
+
+```css
+[data-ink-root] {
+  --ink-search-hit: #fff3b0;
+  --ink-search-current: #ffd84a;
+}
+```
+
+The theme draws the matches in a layer that multiplies with the page, so the text stays dark on top of the colour and the matches sit under the annotations. Pages stay white in dark mode, so one pair of colours serves both themes.
