@@ -1,0 +1,228 @@
+---
+title: Signatures
+description: Let people draw, type or upload a signature, keep it for next time, and place it on the page or in a signature field.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+A signature in Inkbar is a mark on the page: a drawing, a name typed in a handwriting font, or an image of a scan. Someone creates it once, and Inkbar saves it as a template they can place again on any page. It does not sign the file with a certificate.
+
+## The signature menu
+
+`InkSignatureMenu` is a split button. The main button, Sign, turns on the `signature` tool with the chosen signature, or opens the menu if none is chosen yet. The arrow beside it, Choose signature, lists the saved signatures, each with a remove button, then Create signature, which opens the dialog.
+
+Pass `signatures` to `InkRoot` to say where the templates live, and `signatureFonts` for the handwriting fonts the dialog offers. Both are optional: without them, signatures last until the page reloads and the dialog offers the browser's `cursive` font.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { createLocalSignatureStore } from '@inkbar/core'
+import {
+  InkRoot,
+  InkSignatureMenu,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/vue'
+import { assets } from 'virtual:inkbar-assets'
+
+defineProps<{ file: File }>()
+
+const signatures = createLocalSignatureStore('my-app-signatures')
+</script>
+
+<template>
+  <InkRoot
+    :src="file"
+    :assets="assets"
+    :signatures="signatures"
+    :signature-fonts="['Dancing Script']"
+  >
+    <InkToolbar>
+      <InkToolButton tool="select" />
+      <InkSignatureMenu />
+    </InkToolbar>
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { createLocalSignatureStore } from '@inkbar/core'
+import {
+  InkRoot,
+  InkSignatureMenu,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/react'
+import { assets } from 'virtual:inkbar-assets'
+
+const signatures = createLocalSignatureStore('my-app-signatures')
+const fonts = ['Dancing Script']
+
+export function Viewer({ file }: { file: File }) {
+  return (
+    <InkRoot src={file} assets={assets} signatures={signatures} signatureFonts={fonts}>
+      <InkToolbar>
+        <InkToolButton tool="select" />
+        <InkSignatureMenu />
+      </InkToolbar>
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { createLocalSignatureStore } from '@inkbar/core'
+  import {
+    InkRoot,
+    InkSignatureMenu,
+    InkToolbar,
+    InkToolButton,
+    InkViewport,
+  } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+
+  const signatures = createLocalSignatureStore('my-app-signatures')
+</script>
+
+<InkRoot src={file} {assets} {signatures} signatureFonts={['Dancing Script']}>
+  <InkToolbar>
+    <InkToolButton tool="select" />
+    <InkSignatureMenu />
+  </InkToolbar>
+  <InkViewport />
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { createLocalSignatureStore } from '@inkbar/core'
+import {
+  createSignatureMenu,
+  createToolbar,
+  createToolButton,
+  createViewer,
+} from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  signatures: createLocalSignatureStore('my-app-signatures'),
+  signatureFonts: ['Dancing Script'],
+})
+
+const tools = createToolbar()
+tools.append(createToolButton(viewer, 'select'), createSignatureMenu(viewer))
+viewer.element.prepend(tools)
+```
+
+  </TabItem>
+</Tabs>
+
+## Placing a signature
+
+With the `signature` tool on, a click on the page places the chosen signature about 150 pt wide, centred where you pressed. From the keyboard, `Enter` in the viewport places it at the centre of the current page. The new signature is selected, so you can move or resize it straight away, and placing it is one undo step.
+
+A drawn signature becomes an `ink` annotation and the others a `stamp`, both with `subject: 'Signature'`. Both keep their aspect ratio when resized. On a page the PDF rotates with `/Rotate`, the signature still reads upright. Placed signatures export and import with the other annotations.
+
+To place one from code, `placeSignature(template, page, centre)` from `@inkbar/core` returns the annotation to add. `centre` is a point in PDF user space. An optional fourth argument sets the width in points.
+
+```ts
+import { placeSignature } from '@inkbar/core'
+
+doc.annotations.add(placeSignature(template, 0, { x: 300, y: 120 }))
+```
+
+## Creating a signature
+
+The dialog has three tabs:
+
+- **Draw** has a pad to sign on with a mouse, pen or finger, and a Clear button.
+- **Type** takes a name and draws it in one of the `signatureFonts`.
+- **Image** takes a PNG or JPEG, such as a scan. Inkbar scales it to at most 1000 px on its long side before storing it.
+
+Save stores the template and makes it the chosen signature. Drawing needs a pointer. The Type and Image tabs work from the keyboard.
+
+To open the dialog from your own button, use `InkSignatureDialog`. Bind `open` the way your framework does (`v-model:open` in Vue, `open` with `onOpenChange` in React, `bind:open` in Svelte). It emits `save` with the new template. Set `select` to false to keep the new signature from becoming the chosen one. Without a framework, `createSignatureDialog(viewer)` returns a dialog with `open`, `close` and `destroy`.
+
+## Fonts for typed signatures
+
+Each entry in `signatureFonts` is a CSS font family name. Inkbar does not load fonts, so load each one with `@font-face` or your font service before you offer it. A menu or dialog can take its own `fonts` list in place of the root's.
+
+```css
+@font-face {
+  font-family: 'Dancing Script';
+  src: url('/fonts/dancing-script.woff2') format('woff2');
+}
+```
+
+## Where signatures are kept
+
+Your app owns the templates. A `SignatureStore` has three methods, each returning a promise:
+
+```ts
+interface SignatureStore {
+  list(): Promise<SignatureTemplate[]>
+  save(template: SignatureTemplate): Promise<void> // adds, or replaces the one with its id
+  remove(id: string): Promise<void>
+}
+```
+
+`@inkbar/core` ships two:
+
+- `createMemorySignatureStore()` is the default. It forgets everything on reload.
+- `createLocalSignatureStore(key)` keeps the templates in `localStorage` under `key`. Where the browser blocks storage, it keeps them in memory for the page's life. When storage is full, `save` rejects and the dialog says the signature was not saved.
+
+A signature belongs to a person, so key the store by user, or keep the templates on your server with your own store:
+
+```ts
+import type { SignatureStore } from '@inkbar/core'
+
+async function ok(res: Response) {
+  if (!res.ok) throw new Error(`Signature request failed: ${res.status}`)
+}
+
+const signatures: SignatureStore = {
+  list: () => fetch('/api/signatures').then((res) => res.json()),
+  save: (template) =>
+    fetch(`/api/signatures/${template.id}`, {
+      method: 'PUT',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(template),
+    }).then(ok),
+  remove: (id) => fetch(`/api/signatures/${id}`, { method: 'DELETE' }).then(ok),
+}
+```
+
+Reject from `save` or `remove` when the request fails, so the dialog and menu can say so. Inkbar skips any template from `list` it cannot read.
+
+A template is plain JSON. A drawn one holds its strokes in a unit box, and an image holds a data URL:
+
+```ts
+type SignatureTemplate =
+  | { id: string; kind: 'ink'; inklist: Point[][]; pressure?: number[][]; aspect: number }
+  | { id: string; kind: 'image'; imagedata: string; aspect: number }
+```
+
+`aspect` is the width over the height.
+
+## Signature fields
+
+A PDF form's signature field shows its own Sign button, which opens the same list of saved signatures and the same dialog. The chosen signature goes inside the field and stays locked to it. [Signature fields](/docs/guides/forms/#signature-fields) in the forms guide has the details.

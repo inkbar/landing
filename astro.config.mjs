@@ -59,6 +59,7 @@ export default defineConfig({
             { label: 'Annotations', slug: 'docs/guides/annotations' },
             { label: 'Search', slug: 'docs/guides/search' },
             { label: 'Forms', slug: 'docs/guides/forms' },
+            { label: 'Signatures', slug: 'docs/guides/signatures' },
             { label: 'Redaction', slug: 'docs/guides/redaction' },
             { label: 'Controlled mode', slug: 'docs/guides/controlled-mode' },
             { label: 'Plugins', slug: 'docs/guides/plugins' },
