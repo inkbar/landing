@@ -98,37 +98,41 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
   const titles = await page.locator('#features .cell h3').allTextContents()
   expect(titles.map((text) => text.trim())).toEqual([
     'Viewing',
+    'Search',
     'Highlights',
     'Note threads',
     'Redaction marks',
+    'Drawing',
     'Annotations as data',
     'Undo and redo',
     'Keyboard and screen readers',
   ])
-  await expect(page.locator('#features .next li')).toHaveCount(3)
+  await expect(page.locator('#features .next li')).toHaveCount(2)
 })
 
-for (const width of [1280, 1100, 1099, 900, 850, 849, 700]) {
-  test(`the feature grid has no empty cell at ${width}px`, async ({ page }) => {
+for (const [width, columns] of [
+  [1280, 3],
+  [960, 3],
+  [800, 2],
+  [600, 2],
+  [500, 1],
+  [375, 1],
+] as const) {
+  test(`the feature grid has ${columns} equal columns at ${width}px`, async ({
+    page,
+  }) => {
     await page.setViewportSize({ width, height: 900 })
     await page.goto('/')
-    const grid = await page.locator('#features .grid').boundingBox()
     const cells = await page.locator('#features .cell').evaluateAll((els) =>
       els.map((el) => {
-        const { top, left, right } = el.getBoundingClientRect()
-        return { top: Math.round(top), left, right }
+        const { left, width } = el.getBoundingClientRect()
+        return { left: Math.round(left), width: Math.round(width) }
       })
     )
-    const rows = new Map<number, { left: number; right: number }[]>()
-    for (const cell of cells) rows.set(cell.top, [...(rows.get(cell.top) ?? []), cell])
-    expect(rows.size).toBeGreaterThan(1)
-    for (const row of rows.values()) {
-      const left = Math.min(...row.map((cell) => cell.left))
-      const right = Math.max(...row.map((cell) => cell.right))
-      // The grid has a 1px border either side.
-      expect(left).toBeLessThanOrEqual(grid!.x + 2)
-      expect(right).toBeGreaterThanOrEqual(grid!.x + grid!.width - 2)
-    }
+    // No cell stretches across a short last row: every cell has the first one's width.
+    for (const cell of cells)
+      expect(Math.abs(cell.width - cells[0].width)).toBeLessThanOrEqual(1)
+    expect(new Set(cells.map((cell) => cell.left)).size).toBe(columns)
   })
 }
 
