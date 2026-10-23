@@ -29,6 +29,8 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 
 Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history. History is on by default; in controlled mode, turn it on with `history`. The page number field and the zoom select keep their own Tab stops.
 
+Ctrl or Cmd with Z undoes, and Ctrl or Cmd with Shift and Z, or Ctrl with Y, redoes. Both work on every platform. The keys do what `InkUndo` and `InkRedo` do, from anywhere inside `InkRoot`, toolbars included. In a text field, a select or editable content, they act on that element instead.
+
 ## Icons and labels
 
 Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. The accessible name stays the same either way.
