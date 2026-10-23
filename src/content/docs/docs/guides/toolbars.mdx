@@ -9,24 +9,29 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 
 ## Controls
 
-| Component                    | What it does                                                                                      |
-| ---------------------------- | ------------------------------------------------------------------------------------------------- |
-| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it              |
-| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                  |
-| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                           |
-| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                     |
-| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                       |
-| `InkPageInput`               | The current page number, which the user can type into                                             |
-| `InkPageCount`               | "of N", the page count                                                                            |
-| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                             |
-| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                             |
-| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                      |
-| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](/docs/guides/search/)                |
-| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](/docs/guides/signatures/) |
-| `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                                      |
-| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                          |
+| Component                    | What it does                                                                                                   |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                           |
+| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                               |
+| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                        |
+| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                  |
+| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                    |
+| `InkPageInput`               | The current page number, which the user can type into                                                          |
+| `InkPageCount`               | "of N", the page count                                                                                         |
+| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                                          |
+| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                                          |
+| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                                   |
+| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](/docs/guides/search/)                             |
+| `InkHighlightMenu`           | Turns on the `highlight` tool, and picks highlight, underline, strikethrough or squiggly and the markup colour |
+| `InkShapeMenu`               | Turns on the `shape` tool, and picks the kind. See [Drawing](/docs/guides/drawing/)                            |
+| `InkLineStyleMenu`           | Line weight, solid or dashed, and arrowheads for the active tool or the selection                              |
+| `InkColorMenu`               | The `border`, `fill` or `textColor` colour, given as `property`                                                |
+| `InkTextStyleMenu`           | A text box's font, size, colour, bold, italic, underline and alignment                                         |
+| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](/docs/guides/signatures/)              |
+| `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                                                   |
+| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                       |
 
-`tool` is one of `select-text`, `select`, `highlight`, `redact-area` and `note`. Their accessible names are Select text, Rectangle select, Highlight, Mark for redaction and Add note. Pass `label` to change one. To rename any other button, pass `aria-label` and `title`.
+`tool` is one of `select-text`, `select`, `highlight`, `redact-area`, `sketch`, `draw`, `shape`, `freetext`, `signature` and `note`. Their accessible names are Select text, Rectangle select, Highlight, Mark for redaction, Sketch, Draw, Shape, Text, Sign and Add note. Pass `label` to change one. To rename any other button, pass `aria-label` and `title`.
 
 Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history. History is on by default; in controlled mode, turn it on with `history`. The page number field and the zoom select keep their own Tab stops.
 
@@ -116,7 +121,7 @@ Install `@inkbar/icons` only if you want its icons on your own buttons. The cont
 
 ## Without a framework
 
-`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createSignatureMenu`, `createCommandButton` and `createIcon`.
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`.
 
 ## Styling
 

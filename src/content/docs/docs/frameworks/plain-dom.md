@@ -75,6 +75,8 @@ Buttons show an icon from `@inkbar/icons`; replace their children with your own 
 
 `createSearchButton(viewer)` opens the find bar from `createFindBar(viewer)`, which you append to `[data-ink-viewport-root]`. `viewer.search` holds the search state and actions. [Search](/docs/guides/search/) has the details.
 
+`createShapeMenu`, `createLineStyleMenu`, `createColorMenu` and `createTextStyleMenu` add the drawing controls, and `viewer.engine.get()?.toolStyle` reads and sets the style they show. [Drawing](/docs/guides/drawing/) has the details.
+
 The viewer fills the PDF's form fields and runs the form's scripts. `viewer.form` is a readable that holds the open document's form, or `null` before one is ready. `onFormAction` receives each submit, link, mail and print request, since the form never acts on them itself. `formHighlight: false` turns off the field tint, and `viewer.setFormHighlight(on)` changes it later. [Forms](/docs/guides/forms/) has the details.
 
 `createSignatureMenu(viewer)` lists the saved signatures and turns on the `signature` tool with the chosen one. Pass `signatures` and `signatureFonts` to `createViewer` to say where templates live and which handwriting fonts the dialog offers. [Signatures](/docs/guides/signatures/) has the details.
