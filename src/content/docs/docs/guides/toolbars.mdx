@@ -20,6 +20,8 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 | `InkPageCount`               | "of N", the page count                                                               |
 | `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                |
 | `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                |
+| `InkSearchButton`            | Opens the find bar, pressed while it is open                                         |
+| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](/docs/guides/search/)   |
 | `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                         |
 | `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                             |
 
@@ -111,7 +113,7 @@ Install `@inkbar/icons` only if you want its icons on your own buttons. The cont
 
 ## Without a framework
 
-`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createCommandButton` and `createIcon`.
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createCommandButton` and `createIcon`.
 
 ## Styling
 
