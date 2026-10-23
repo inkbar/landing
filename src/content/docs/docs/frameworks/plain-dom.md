@@ -77,6 +77,8 @@ Buttons show an icon from `@inkbar/icons`; replace their children with your own 
 
 The viewer fills the PDF's form fields and runs the form's scripts. `viewer.form` is a readable that holds the open document's form, or `null` before one is ready. `onFormAction` receives each submit, link, mail and print request, since the form never acts on them itself. `formHighlight: false` turns off the field tint, and `viewer.setFormHighlight(on)` changes it later. [Forms](/docs/guides/forms/) has the details.
 
+`createSignatureMenu(viewer)` lists the saved signatures and turns on the `signature` tool with the chosen one. Pass `signatures` and `signatureFonts` to `createViewer` to say where templates live and which handwriting fonts the dialog offers. [Signatures](/docs/guides/signatures/) has the details.
+
 `createViewer` reads the theme's colours from the element you pass, so that element needs to be in the page when you call it. Like the framework packages, the viewer fills its parent, so give the element a height.
 
 ## Your own chrome
