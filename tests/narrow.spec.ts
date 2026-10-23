@@ -8,6 +8,7 @@ const docsPaths = [
   '/docs/loading-assets/',
   '/docs/guides/annotations/',
   '/docs/guides/controlled-mode/',
+  '/docs/guides/search/',
   '/docs/guides/theming/',
   '/docs/frameworks/vue/',
   '/docs/frameworks/react/',

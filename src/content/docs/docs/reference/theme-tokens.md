@@ -66,3 +66,14 @@ Set these variables on `[data-ink-root]` to change the default colour for new an
 The theme declares these on `[data-ink-root]` itself, so a value on `:root` or another ancestor does not reach them. Target `[data-ink-root]`, or pass colours through the `defaults` option on `InkRoot` or `createViewer`.
 
 Inkbar reads a colour when you create the annotation and stores it on the annotation, because the colour will be written into the PDF. Changing a variable later affects new annotations only, and dark mode does not change annotation colours.
+
+## Search highlights
+
+Set these on `[data-ink-root]` to colour the matches of a [search](/docs/guides/search/):
+
+| Variable               | Used for          |
+| ---------------------- | ----------------- |
+| `--ink-search-hit`     | Every match       |
+| `--ink-search-current` | The current match |
+
+The theme draws the matches in a layer that multiplies with the page, so the text shows through the colour. Pages stay white in dark mode, so one pair of values serves both.
