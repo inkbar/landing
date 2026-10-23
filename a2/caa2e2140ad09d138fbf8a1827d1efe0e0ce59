@@ -1,0 +1,24 @@
+src/components/landing/Comparison.astro
+  s_e6109f66fbb4ed::t_dc1c54f3804380 10
+tests/landing.spec.ts
+  s_e6109f66fbb4ed::t_dc1c54f3804380 103
+src/components/landing/Features.astro
+  s_e6109f66fbb4ed::t_dc1c54f3804380 12-14,53-60
+  s_e6109f66fbb4ed::t_ea190715b1ecb9 61-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "a2caa2e2140ad09d138fbf8a1827d1efe0e0ce59",
+  "prompts": {},
+  "sessions": {
+    "s_e6109f66fbb4ed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05debb7a-28e3-41cd-ba81-971c90bba7df",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
