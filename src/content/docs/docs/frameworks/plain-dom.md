@@ -36,7 +36,7 @@ const viewer = createViewer(el, { source: file, assets, zoom: 'fit-width' })
 
 const tools = createToolbar()
 tools.append(
-  createToolButton(viewer, 'view'),
+  createToolButton(viewer, 'select-text'),
   createToolButton(viewer, 'select'),
   createToolButton(viewer, 'highlight'),
   createToolButton(viewer, 'redact-area'),
