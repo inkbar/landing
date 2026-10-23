@@ -45,7 +45,7 @@ const annotations = ref<Annotation[]>([])
     v-model:annotations="annotations"
   >
     <InkToolbar>
-      <InkToolButton tool="view" />
+      <InkToolButton tool="select-text" />
       <InkToolButton tool="select" />
       <InkToolButton tool="highlight" />
       <InkToolButton tool="redact-area" />
@@ -70,6 +70,12 @@ const annotations = ref<Annotation[]>([])
 Each control is a separate component, so put them in any order or leave some out. Buttons show icons from `@inkbar/icons`. Put your own in a button's default slot to replace one, and use `InkIcon` to put the same icons on your own buttons. [Toolbars](/docs/guides/toolbars/) lists every control.
 
 `v-model:annotations` makes your list the source of truth. Leave it off and Inkbar keeps the state itself, with undo and redo.
+
+## Forms
+
+`InkViewport` fills the PDF's form fields and runs the form's scripts. `useForm()` returns the fields, their values, and `set` and `reset`. Bind `v-model:fields` to hold the values in your own state. The form never submits, opens a link, sends mail or prints: `@form-action` hands each request to you. `:form-highlight="false"` turns off the field tint, and a change applies to the open document in place.
+
+[Forms](/docs/guides/forms/) covers controlled fields, form actions, scripts, signature fields and saving values as Gloss.
 
 ## Thread popover
 
@@ -131,4 +137,4 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 ## Composables
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand` and `useSearch` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch` and `useForm` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.

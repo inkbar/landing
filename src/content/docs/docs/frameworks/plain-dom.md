@@ -36,7 +36,7 @@ const viewer = createViewer(el, { source: file, assets, zoom: 'fit-width' })
 
 const tools = createToolbar()
 tools.append(
-  createToolButton(viewer, 'view'),
+  createToolButton(viewer, 'select-text'),
   createToolButton(viewer, 'select'),
   createToolButton(viewer, 'highlight'),
   createToolButton(viewer, 'redact-area'),
@@ -74,6 +74,8 @@ Buttons show an icon from `@inkbar/icons`; replace their children with your own 
 `plugins` takes plugins from `definePlugin`, set up once for the viewer's life. Place a plugin command with `createCommandButton(viewer, 'review.suggest')` and a plugin tool with `createToolButton(viewer, 'review.box')`. `viewer.commands.get(id)` returns a command for a control of your own. [Plugins](/docs/guides/plugins/) has the details.
 
 `createSearchButton(viewer)` opens the find bar from `createFindBar(viewer)`, which you append to `[data-ink-viewport-root]`. `viewer.search` holds the search state and actions. [Search](/docs/guides/search/) has the details.
+
+The viewer fills the PDF's form fields and runs the form's scripts. `viewer.form` is a readable that holds the open document's form, or `null` before one is ready. `onFormAction` receives each submit, link, mail and print request, since the form never acts on them itself. `formHighlight: false` turns off the field tint, and `viewer.setFormHighlight(on)` changes it later. [Forms](/docs/guides/forms/) has the details.
 
 `createViewer` reads the theme's colours from the element you pass, so that element needs to be in the page when you call it. Like the framework packages, the viewer fills its parent, so give the element a height.
 

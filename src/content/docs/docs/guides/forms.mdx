@@ -1,0 +1,310 @@
+---
+title: Forms
+description: Fill AcroForm fields in the viewer, read and set values from code, handle what a form asks your app to do, and save values as Gloss.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+Inkbar fills the AcroForm fields in a PDF: text, checkboxes, radio buttons, combo boxes, lists, push buttons and signature fields. The form's own scripts run too, so totals calculate and validation works as the author intended.
+
+Values live in memory. Inkbar does not write them into the PDF yet, and `doc.save()` still rejects with `EngineUnavailable`. To keep what someone typed, store the values yourself: hold them in your own state, or export them as [Gloss](#save-values-as-gloss) and import them the next time the document opens.
+
+## Filling
+
+Fields take input while the default `select-text` tool or the `select` tool is active. Under a drawing or markup tool, a press on a field goes to the tool instead.
+
+A small annotation that sits over a field takes the click when a select tool is active, so select it to move or delete it. Press the part of the field the annotation leaves uncovered to fill it.
+
+Each field has a light tint so people can find it. A focused field gets a ring, and a field whose value was refused gets a red outline. Read-only fields have no tint.
+
+Tab moves through the fields in the order the PDF sets for each page, and carries on to the next page at the last field. Shift+Tab goes back. Enter commits a single-line text field. Space toggles a checkbox, and the arrow keys move between the buttons of a radio group.
+
+A value commits when the field loses focus, when Enter is pressed in single-line text, or at once for a checkbox, radio button, choice or signature. When annotations and fields are both uncontrolled, each commit is one undo step in the same history as annotations, and the calculations it triggers belong to that step.
+
+## Reading and setting values
+
+`doc.form` holds the open document's form:
+
+```ts
+import { openDocument } from '@inkbar/core'
+import { assets } from 'virtual:inkbar-assets'
+
+const doc = await openDocument(file, { assets })
+
+doc.form.fields.get() // each field's name, type, flags, options and widgets
+doc.form.values.get() // { 'applicant.name': 'Ada', agree: 'Yes', ... }
+
+const result = doc.form.set({ 'applicant.name': 'Grace', agree: 'Off' })
+// { applied: ['applicant.name', 'agree'], rejected: [] }
+
+doc.form.reset() // every field back to the PDF's default
+doc.form.reset(['applicant.name'])
+```
+
+`fields` and `values` are readables: call `get()` for the current value, or `subscribe()` to follow changes.
+
+Values are keyed by the field's full name, its name parts joined with dots. A value is one of:
+
+- a string for a text field, a combo box or a single-select list;
+- the name of an appearance state for a checkbox or radio group, such as `"Yes"`, or `"Off"` when nothing is checked;
+- an array of option values for a multi-select list, in option order;
+- `{ signature: id }` for a signed signature field, where `id` is the signature annotation's id.
+
+`set` commits values as a person would. Each value runs the field's validate and calculate scripts, and the whole call is one undo step. A value that names no field, targets a read-only field, does not suit the field or is refused by a script stays out, and `rejected` lists it with the reason: `unknown`, `readOnly`, `invalid` or `script`.
+
+`reset` restores the PDF's default values. Read-only fields reset too. Locked fields keep their values.
+
+In a framework app, `useForm()` returns the same `fields`, `values`, `set` and `reset` for the open document, as reactive state.
+
+## Controlled fields
+
+By default Inkbar holds the values. Pass `fields` to hold them in your own state instead, the way [controlled mode](/docs/guides/controlled-mode/) works for annotations. Inkbar applies each change at once, then reports the full map along with what changed. Whatever you pass back wins.
+
+The second argument says what changed and names the fields it changed: `commit` (a person, `set` or a signature, plus any fields its calculations changed), `reset`, `import` or `calculate`.
+
+Whether fields are controlled is fixed when a document opens. While you control fields or annotations, Inkbar keeps no undo history. Your app owns undo.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { ref } from 'vue'
+import { InkRoot, InkViewport } from '@inkbar/vue'
+import type { FieldValues, FormAction } from '@inkbar/core'
+import { assets } from 'virtual:inkbar-assets'
+
+const fields = ref<FieldValues>({ 'applicant.name': 'Ada' })
+
+function onFormAction(action: FormAction) {
+  // See "Form actions" below.
+}
+</script>
+
+<template>
+  <InkRoot
+    v-model:fields="fields"
+    :src="file"
+    :assets="assets"
+    @form-action="onFormAction"
+  >
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+`update:fields` also carries the change as its second argument. Replace the object to change values yourself: `fields.value = { ...fields.value, agree: 'Yes' }`. In-place changes are not observed.
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { useState } from 'react'
+import { InkRoot, InkViewport } from '@inkbar/react'
+import type { FieldValues, FormAction } from '@inkbar/core'
+import { assets } from 'virtual:inkbar-assets'
+
+export function Application({ file }: { file: File }) {
+  const [fields, setFields] = useState<FieldValues>({ 'applicant.name': 'Ada' })
+
+  function onFormAction(action: FormAction) {
+    // See "Form actions" below.
+  }
+
+  return (
+    <InkRoot
+      fields={fields}
+      onFieldsChange={(next) => setFields(next)}
+      onFormAction={onFormAction}
+      src={file}
+      assets={assets}
+    >
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+`onFieldsChange` receives the change as its second argument. Set a new object to change values yourself: `setFields({ ...fields, agree: 'Yes' })`.
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { InkRoot, InkViewport } from '@inkbar/svelte'
+  import type { FieldValues, FormAction } from '@inkbar/core'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+
+  let fields = $state.raw<FieldValues>({ 'applicant.name': 'Ada' })
+
+  function onformaction(action: FormAction) {
+    // See "Form actions" below.
+  }
+</script>
+
+<InkRoot bind:fields src={file} {assets} {onformaction}>
+  <InkViewport />
+</InkRoot>
+```
+
+Pass `onFieldsChange` to hear what changed. Replace the object to change values yourself: `fields = { ...fields, agree: 'Yes' }`.
+
+  </TabItem>
+</Tabs>
+
+With `createViewer`, pass a `FieldsMode`. `onChange` hears each change with the full map, and you push values back through `viewer.form`:
+
+```ts
+import { createViewer } from '@inkbar/core/dom'
+import type { FieldValues } from '@inkbar/core'
+import { assets } from 'virtual:inkbar-assets'
+
+let values: FieldValues = await loadValues()
+
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  fields: {
+    mode: 'controlled',
+    initial: values,
+    onChange(next) {
+      values = next
+      saveValues(next)
+    },
+  },
+  onFormAction: handleFormAction,
+})
+
+// Later, to change a value from your app:
+viewer.form.get()?.setControlledValue({ ...values, agree: 'Yes' })
+```
+
+`viewer.form.get()` returns `null` until a document is ready. For uncontrolled fields that start from your own values, pass `{ mode: 'uncontrolled', initial }`. Your values apply over the PDF's.
+
+## Form actions
+
+A form can ask to submit its data, open a link, send mail or print. Inkbar does none of these itself. It turns each request into a `FormAction` and hands it to your app. If you do not handle an action, nothing happens.
+
+| `kind`     | Fields                                           | Comes from                                  |
+| ---------- | ------------------------------------------------ | ------------------------------------------- |
+| `submit`   | `url`, `fields`, `format`, and `method` for HTML | A submit button, or a script's `submitForm` |
+| `open-url` | `url`, `newWindow`                               | A link button, or `app.launchURL`           |
+| `mail`     | `to`, `cc`, `bcc`, `subject`, `body`, `withData` | `mailDoc` or `mailForm`                     |
+| `print`    | none                                             | A print button, or `print()`                |
+| `prompt`   | `message`                                        | `app.response`                              |
+
+`submit.fields` holds the values the form wants to send, keyed by full name. It leaves out fields marked no-export and fields with no value. `format` is the format the PDF asked for (`fdf`, `xfdf`, `html` or `pdf`). You can ignore it and send the values in whatever shape your backend expects.
+
+Every URL and mail address is limited to the `http`, `https`, `mailto` and `tel` schemes. A request with any other scheme, or a relative URL, never reaches your app.
+
+The URL in a `submit` comes from the PDF, so treat it as untrusted. This handler posts the values to your own backend and only opens links after asking:
+
+```ts
+import type { FormAction } from '@inkbar/core'
+
+async function handleFormAction(action: FormAction) {
+  switch (action.kind) {
+    case 'submit':
+      await fetch('/api/forms', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ fields: action.fields }),
+      })
+      showToast('Form sent')
+      break
+    case 'open-url':
+      if (confirm(`Open ${action.url}?`)) window.open(action.url, '_blank', 'noopener')
+      break
+    case 'mail':
+      if (action.to) window.location.href = `mailto:${action.to}`
+      break
+    case 'print':
+      window.print()
+      break
+    case 'prompt':
+      // The script has already moved on. Show the question if your app needs the answer.
+      break
+  }
+}
+```
+
+To hear actions from code, subscribe on the document's form. `on` returns a function that stops listening:
+
+```ts
+const stop = doc.form.on('action', handleFormAction)
+```
+
+## Scripts
+
+Form scripts run in an isolated sandbox. They can read and set field values, calculate totals, format and validate input, show and hide fields, and move focus. They have no network access, cannot open windows and cannot show browser dialogs.
+
+- `app.alert` shows an Inkbar dialog over the viewer.
+- `app.response` cannot wait for an answer. The script gets `null`, and your app gets a `prompt` action.
+- Submit, open-URL, mail and print requests become [form actions](#form-actions).
+
+On a document with JavaScript, `ready` waits for the sandbox to load, for up to 10 seconds if the server stalls. Past that, the form opens without scripts.
+
+When a script fails, the form keeps working. The error reaches your error handler (`onError`, or the `error` event in Vue) as a `FormScriptError`. That includes an error raised while the document opens, such as a sandbox that could not start. In code, `doc.form.on('error', fn)` hears it too.
+
+## Signature fields
+
+An empty signature field shows a Sign button. Pressing it opens the signature menu, with the person's saved signatures and an option to create one. The chosen signature goes inside the field's box and stays locked to it: it cannot be moved, resized or restyled. To clear the field, select the signature and delete it.
+
+From code, `signField(doc, fieldName, widgetId, template)` from `@inkbar/core` does the same.
+
+Signing is visual only. It places an image or drawing of a signature, and it does not add a digital signature to the file.
+
+## Locked documents
+
+Inkbar honours the locks a PDF sets:
+
+- Fields signed with a certificate are read-only.
+- A certifying signature that forbids changes makes the whole form read-only.
+- Fields locked by a signature field's lock list stay as they are.
+- Fields the PDF marks read-only cannot be filled, though scripts and `reset` can still change them.
+
+`set` reports a locked or read-only field as `readOnly`.
+
+## Save values as Gloss
+
+`doc.exportAnnotations('json')` adds a `fields` map to the [Gloss](https://gloss-format.org) document when the form has values, and `doc.importAnnotations()` reads it back:
+
+```json
+{
+  "format": "gloss",
+  "version": 1,
+  "documentKey": "application-2026.pdf",
+  "annotations": [],
+  "fields": {
+    "applicant.name": "Ada Lovelace",
+    "agree": "Yes",
+    "newsletter": "Off",
+    "topics": ["maths", "engines"],
+    "signature": { "signature": "c41f9e" }
+  }
+}
+```
+
+`fields` is a flat map keyed by full dotted name. Each value is a string, an array of strings or `{ signature: id }`, as in `doc.form.values`. Checkbox and radio values are appearance-state names, `"Off"` included. Fields marked no-export are left out.
+
+The import result's `fields` lists the names it `applied` and the ones it `rejected`, with the same reasons as `set`. An import of field values is not an undo step.
+
+## Not supported
+
+- XFA forms. A PDF with an AcroForm alongside its XFA fills through the AcroForm. A pure XFA form shows as a static page.
+- File-select and barcode fields show their appearance but cannot be filled.
+
+## Theming
+
+Three tokens style the fields. Set them on `[data-ink-root]`:
+
+| Variable                   | Used for                       |
+| -------------------------- | ------------------------------ |
+| `--ink-form-field-bg`      | The tint on fillable fields    |
+| `--ink-form-field-focus`   | The focus ring and Sign button |
+| `--ink-form-field-invalid` | The outline on a refused value |
+
+To turn the tint off, pass `formHighlight: false` to `createViewer`, or set `formHighlight` to false on `InkRoot`. Changing it later updates the open viewer. With `createViewer`, call `viewer.setFormHighlight(false)`.

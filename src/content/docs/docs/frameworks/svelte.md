@@ -39,7 +39,7 @@ Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/c
 
 <InkRoot src={{ url: signedUrl, key: documentId }} {assets} bind:annotations>
   <InkToolbar>
-    <InkToolButton tool="view" />
+    <InkToolButton tool="select-text" />
     <InkToolButton tool="select" />
     <InkToolButton tool="highlight" />
     <InkToolButton tool="redact-area" />
@@ -65,6 +65,12 @@ Each control is a separate component, so put them in any order or leave some out
 `bind:annotations` makes your list the source of truth. Declare it with `$state.raw`, since Inkbar replaces the list whole. Leave the binding off and Inkbar keeps the state itself, with undo and redo. [Controlled mode](/docs/guides/controlled-mode/) covers the details.
 
 `tool`, `page` and `zoom` are bindable too, and each has a callback prop such as `onToolChange` if you would rather not bind.
+
+## Forms
+
+`InkViewport` fills the PDF's form fields and runs the form's scripts. `useForm()` returns the fields, their values, and `set` and `reset`. Use `bind:fields` to hold the values in your own state. The form never submits, opens a link, sends mail or prints: `onformaction` hands each request to you. `formHighlight={false}` turns off the field tint, and a change applies to the open document in place.
+
+[Forms](/docs/guides/forms/) covers controlled fields, form actions, scripts, signature fields and saving values as Gloss.
 
 ## Thread popover
 
@@ -132,6 +138,6 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 ## Hooks
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand` and `useSearch` read the state of the nearest `InkRoot`. Call them during component initialisation, as you would `getContext`. Build your own controls or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch` and `useForm` read the state of the nearest `InkRoot`. Call them during component initialisation, as you would `getContext`. Build your own controls or side panel from them.
 
 Each hook returns an object whose reactive members are getters. Read `useZoom().zoom` in your template or an effect and it tracks. Destructure it (`const { zoom } = useZoom()`) and you copy the value once, so keep the object and read through it.

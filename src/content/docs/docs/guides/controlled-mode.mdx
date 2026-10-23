@@ -167,3 +167,7 @@ Inside `InkRoot`, `useHistory()` returns the same object.
 
   </TabItem>
 </Tabs>
+
+## Form fields
+
+Form field values work the same way. Pass `fields` (`v-model:fields` in Vue, `bind:fields` in Svelte) to hold them in your own state. Inkbar keeps no undo history for controlled fields, and fields join the annotation history only when both are uncontrolled. [Forms](/docs/guides/forms/#controlled-fields) has the examples.
