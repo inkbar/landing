@@ -105,7 +105,7 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
     'Undo and redo',
     'Keyboard and screen readers',
   ])
-  await expect(page.locator('#features .next li')).toHaveCount(4)
+  await expect(page.locator('#features .next li')).toHaveCount(3)
 })
 
 for (const width of [1280, 1100, 1099, 900, 850, 849, 700]) {
