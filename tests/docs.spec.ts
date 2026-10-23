@@ -9,6 +9,7 @@ const pages = [
   { path: '/docs/guides/toolbars/', title: 'Toolbars' },
   { path: '/docs/guides/annotations/', title: 'Annotations' },
   { path: '/docs/guides/search/', title: 'Search' },
+  { path: '/docs/guides/forms/', title: 'Forms' },
   { path: '/docs/guides/redaction/', title: 'Redaction' },
   { path: '/docs/guides/controlled-mode/', title: 'Controlled mode' },
   { path: '/docs/guides/plugins/', title: 'Plugins' },

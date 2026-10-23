@@ -75,6 +75,12 @@ Each control is a separate component, so put them in any order or leave some out
 
 `annotations` with `onAnnotationsChange` makes your list the source of truth. Leave them off and Inkbar keeps the state itself, with undo and redo.
 
+## Forms
+
+`InkViewport` fills the PDF's form fields and runs the form's scripts. `useForm()` returns the fields, their values, and `set` and `reset`. Pass `fields` with `onFieldsChange` to hold the values in your own state. The form never submits, opens a link, sends mail or prints: `onFormAction` hands each request to you. `formHighlight={false}` turns off the field tint, and a change applies to the open document in place.
+
+[Forms](/docs/guides/forms/) covers controlled fields, form actions, scripts, signature fields and saving values as Gloss.
+
 ## Thread popover
 
 `InkThreadPopover` opens the thread of the activated note or text markup. A new note or highlight has no text yet, so the form first writes its own text (labelled "Comment"); after that it adds replies.
@@ -129,4 +135,4 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 ## Hooks
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand` and `useSearch` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch` and `useForm` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.
