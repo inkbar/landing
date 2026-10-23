@@ -182,7 +182,7 @@ const viewer = createViewer(el, {
 viewer.form.get()?.setControlledValue({ ...values, agree: 'Yes' })
 ```
 
-`viewer.form` is `null` until a document is ready. For uncontrolled fields that start from your own values, pass `{ mode: 'uncontrolled', initial }`. Your values apply over the PDF's.
+`viewer.form.get()` returns `null` until a document is ready. For uncontrolled fields that start from your own values, pass `{ mode: 'uncontrolled', initial }`. Your values apply over the PDF's.
 
 ## Form actions
 
