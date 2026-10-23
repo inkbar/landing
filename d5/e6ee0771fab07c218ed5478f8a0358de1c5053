@@ -1,0 +1,26 @@
+tests/narrow.spec.ts
+  s_e6109f66fbb4ed::t_dc1c54f3804380 13
+tests/docs.spec.ts
+  s_e6109f66fbb4ed::t_dc1c54f3804380 13
+astro.config.mjs
+  s_e6109f66fbb4ed::t_dc1c54f3804380 62
+src/content/docs/docs/guides/signatures.mdx
+  s_e6109f66fbb4ed::t_2967d97e25528b 143,163
+  s_e6109f66fbb4ed::t_d5b81369ccf4c2 1-142,144-162,164-228
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d5e6ee0771fab07c218ed5478f8a0358de1c5053",
+  "prompts": {},
+  "sessions": {
+    "s_e6109f66fbb4ed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05debb7a-28e3-41cd-ba81-971c90bba7df",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
