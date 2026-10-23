@@ -9,8 +9,9 @@ import Icon from '../site/Icon.astro'
     <div class="intro">
       <h2>What it does today.</h2>
       <p class="lede">
-        Inkbar covers viewing, search, highlights, note threads, drawing and redaction
-        marks. Everything below works in every framework package and with no framework.
+        Inkbar covers viewing, search, forms, highlights, note threads, drawing and
+        redaction marks. Everything below works in every framework package and with no
+        framework.
       </p>
     </div>
     <div class="grid">
@@ -35,6 +36,18 @@ import Icon from '../site/Icon.astro'
           Press Ctrl/Cmd+F in the viewer and type. Every match highlights and the count
           updates as pages scan. <code>doc.search</code> hands your code the same matches,
           with where each one sits on the page.
+        </p>
+      </div>
+      <div class="cell">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="4" width="16" height="16" rx="2"></rect>
+          <path d="M8 12l3 3 5-6"></path>
+        </svg>
+        <h3>Forms</h3>
+        <p>
+          Fill text fields, checkboxes, radio buttons, lists and signature fields. The
+          form's own scripts calculate totals and check input, and your code reads and
+          sets the values through <code>doc.form</code>.
         </p>
       </div>
       <div class="cell">
@@ -84,7 +97,8 @@ import Icon from '../site/Icon.astro'
         <h3>Undo and redo</h3>
         <p>
           History with grouped steps, whether Inkbar holds the annotations or your app
-          does. Put the undo and redo buttons wherever your toolbar has room.
+          does, and field edits undo too. Press Ctrl/Cmd+Z, or put the undo and redo
+          buttons wherever your toolbar has room.
         </p>
       </div>
       <div class="cell">
@@ -94,16 +108,16 @@ import Icon from '../site/Icon.astro'
         </svg>
         <h3>Keyboard and screen readers</h3>
         <p>
-          Highlight, add notes, and move, resize or delete marks from the keyboard, with
-          labelled controls throughout. Area marks and freehand drawing need a pointer.
+          Fill fields, highlight, add notes, and move, resize or delete marks from the
+          keyboard, with labelled controls throughout. Area marks and freehand drawing
+          need a pointer.
         </p>
       </div>
     </div>
     <div class="next">
       <h3>On the way</h3>
       <ul>
-        <li>Filling form fields</li>
-        <li>Saving annotations and applied redactions into the PDF</li>
+        <li>Saving annotations, field values and applied redactions into the PDF</li>
       </ul>
     </div>
   </div>
