@@ -1,0 +1,26 @@
+src/content/docs/docs/guides/drawing.mdx
+  s_e6109f66fbb4ed::t_68db2ead0e15fe 10-13,15,184,226-227,229-232
+  s_e6109f66fbb4ed::t_aec4265d638b35 1-9,14,16-183,185-225,228,233-247
+tests/docs.spec.ts
+  s_e6109f66fbb4ed::t_d8b43fb76a1b80 12
+tests/narrow.spec.ts
+  s_e6109f66fbb4ed::t_d8b43fb76a1b80 12
+astro.config.mjs
+  s_e6109f66fbb4ed::t_d8b43fb76a1b80 60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "37d10ad9001ce5edd3a8fd1c4a8ccf15f75a5251",
+  "prompts": {},
+  "sessions": {
+    "s_e6109f66fbb4ed": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "05debb7a-28e3-41cd-ba81-971c90bba7df",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
