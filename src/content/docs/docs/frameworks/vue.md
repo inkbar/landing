@@ -141,4 +141,4 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 ## Composables
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch` and `useForm` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch`, `useForm`, `useToolOptions` and `useToolStyle` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.

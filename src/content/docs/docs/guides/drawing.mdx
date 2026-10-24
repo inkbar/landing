@@ -1,0 +1,247 @@
+---
+title: Drawing
+description: Draw freehand, add shapes, lines and text boxes, and set their colour, line style and text style from the toolbar or from code.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+Four tools draw on the page:
+
+| Tool       | Button label | Makes                                                                                                      |
+| ---------- | ------------ | ---------------------------------------------------------------------------------------------------------- |
+| `sketch`   | Sketch       | Freehand ink. A stroke that looks like a shape becomes that shape                                          |
+| `draw`     | Draw         | Freehand ink. Strokes made in quick succession join one drawing                                            |
+| `shape`    | Shape        | Lines, arrows, rectangles, rounded rectangles, ellipses, speech bubbles, stars, polygons, loupes and masks |
+| `freetext` | Text         | Text boxes                                                                                                 |
+
+Everything they make is an ordinary annotation, so it exports, imports and undoes like the rest. [Annotations](/docs/guides/annotations/#types) lists which type each one becomes.
+
+## A drawing toolbar
+
+`InkShapeMenu` is a split button for the `shape` tool: the main button draws the current kind, and the arrow opens a grid of kinds. Next to the tools, three menus style what you draw and what you select:
+
+- `InkLineStyleMenu` sets the line weight, solid or dashed, and arrowheads.
+- `InkColorMenu` sets one colour. `property` picks which: `border`, `fill` or `textColor`.
+- `InkTextStyleMenu` sets a text box's font, size, colour, bold, italic, underline and alignment.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import {
+  InkColorMenu,
+  InkLineStyleMenu,
+  InkRoot,
+  InkShapeMenu,
+  InkTextStyleMenu,
+  InkToolbar,
+  InkToolbarSeparator,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/vue'
+import { assets } from 'virtual:inkbar-assets'
+
+defineProps<{ file: File }>()
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets">
+    <InkToolbar>
+      <InkToolButton tool="select" />
+      <InkToolButton tool="sketch" />
+      <InkToolButton tool="draw" />
+      <InkShapeMenu />
+      <InkToolButton tool="freetext" />
+      <InkToolbarSeparator />
+      <InkLineStyleMenu />
+      <InkColorMenu property="border" />
+      <InkColorMenu property="fill" />
+      <InkTextStyleMenu />
+    </InkToolbar>
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import {
+  InkColorMenu,
+  InkLineStyleMenu,
+  InkRoot,
+  InkShapeMenu,
+  InkTextStyleMenu,
+  InkToolbar,
+  InkToolbarSeparator,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/react'
+import { assets } from 'virtual:inkbar-assets'
+
+export function Viewer({ file }: { file: File }) {
+  return (
+    <InkRoot src={file} assets={assets}>
+      <InkToolbar>
+        <InkToolButton tool="select" />
+        <InkToolButton tool="sketch" />
+        <InkToolButton tool="draw" />
+        <InkShapeMenu />
+        <InkToolButton tool="freetext" />
+        <InkToolbarSeparator />
+        <InkLineStyleMenu />
+        <InkColorMenu property="border" />
+        <InkColorMenu property="fill" />
+        <InkTextStyleMenu />
+      </InkToolbar>
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import {
+    InkColorMenu,
+    InkLineStyleMenu,
+    InkRoot,
+    InkShapeMenu,
+    InkTextStyleMenu,
+    InkToolbar,
+    InkToolbarSeparator,
+    InkToolButton,
+    InkViewport,
+  } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+</script>
+
+<InkRoot src={file} {assets}>
+  <InkToolbar>
+    <InkToolButton tool="select" />
+    <InkToolButton tool="sketch" />
+    <InkToolButton tool="draw" />
+    <InkShapeMenu />
+    <InkToolButton tool="freetext" />
+    <InkToolbarSeparator />
+    <InkLineStyleMenu />
+    <InkColorMenu property="border" />
+    <InkColorMenu property="fill" />
+    <InkTextStyleMenu />
+  </InkToolbar>
+  <InkViewport />
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import {
+  createColorMenu,
+  createLineStyleMenu,
+  createShapeMenu,
+  createTextStyleMenu,
+  createToolbar,
+  createToolbarSeparator,
+  createToolButton,
+  createViewer,
+} from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, { source: file, assets })
+
+const tools = createToolbar()
+tools.append(
+  createToolButton(viewer, 'select'),
+  createToolButton(viewer, 'sketch'),
+  createToolButton(viewer, 'draw'),
+  createShapeMenu(viewer),
+  createToolButton(viewer, 'freetext'),
+  createToolbarSeparator(),
+  createLineStyleMenu(viewer),
+  createColorMenu(viewer, { property: 'border' }),
+  createColorMenu(viewer, { property: 'fill' }),
+  createTextStyleMenu(viewer)
+)
+viewer.element.prepend(tools)
+```
+
+  </TabItem>
+</Tabs>
+
+A style menu disables itself while neither the active tool nor the selection has that property. When a selection mixes values, the menu shows it as mixed.
+
+## Freehand
+
+`draw` turns each press, drag and release into a stroke. A stroke that starts within a second of the last one joins the same drawing, so a handwritten word stays one annotation. Each stroke is still its own undo step. Switching tools or pressing `Escape` ends the drawing. Pens and touch screens record pressure, and the stroke thins where you press lightly. A mouse records none.
+
+`sketch` draws each stroke as its own annotation and tidies it. If a stroke looks like a line, an arrow, a rectangle, an ellipse, a polygon or a star, it becomes that shape, styled as shapes are. A click, or a stroke under 4 CSS px across, stays ink. One undo turns the shape back into your stroke, and a second removes it. Draw each shape in one stroke: for an arrow, draw the shaft and then the head without lifting.
+
+The recogniser is exported for your own input. `recogniseStroke(points)` from `@inkbar/core` takes points in PDF user space and returns the shape it found with a score from 0 to 1, or `undefined`. `sketch` swaps in the shape at `RECOGNISE_THRESHOLD` (0.8) or above.
+
+## Shapes
+
+With the `shape` tool, drag to draw the current kind between the press and the release, or click to place one 72 pt across. `Enter` in the viewport places one at the centre of the current page. Hold `Shift` while you drag for a square or circle, or to snap a line to the nearest 45 degrees.
+
+A speech bubble is a text box with a tail. Inkbar stores it as a PDF free-text callout, so other viewers show a box with a leader line.
+
+Stars start with 5 points and polygons with 6 sides. Set the kind, `points` or `sides` through the tool's options. In a framework app, `useToolOptions('shape')` returns the options and `setOptions`. With `createViewer`, call `set` or `setOptions` on `viewer.tools.get()`:
+
+```ts
+viewer.tools.get()?.set('shape', { kind: 'star', points: 7 })
+```
+
+### Loupes and masks
+
+A loupe is a circle that shows the page under its centre at twice the size. A drag sizes it, and a click places one 72 pt across. It magnifies the page, not the annotations on it, and its rim takes the shape colour and line weight.
+
+A mask dims the page outside a rectangle (Mask) or an ellipse (Oval mask) by half. Inside it, the page works as usual: you can select text, highlight it and add notes. A page has one mask, so adding a second replaces the first in the same undo step. The style menus have nothing to change on a mask.
+
+Loupes and masks need a pointer. `Enter` does not place them.
+
+## Text boxes
+
+With the `freetext` tool, click to place a text box with its top-left corner at the press, or drag to size one. `Enter` places one at the centre of the current page. The box opens for typing at once, and joins the annotations, selected, once it has text.
+
+Text boxes offer the PDF standard families: Helvetica, Times and Courier. Pass `fonts` to `InkRoot` or `createViewer` to offer your own. A PDF writer has to embed any font beyond the standard three.
+
+## After you draw
+
+`sketch` and `draw` stay on until you pick another tool. `shape` and `freetext` make one thing each and select it, so you can drag it or its handles straight away. A press on empty page, or `Escape`, then clears the selection and switches back to `select-text`. Press another annotation to select it instead.
+
+A selected shape, text box or drawing shows four corner handles. Drag one to resize, and hold `Shift` to keep the aspect ratio. A line has a handle at each end that moves that end alone. A speech bubble's corner handles resize its box, and its tip handle moves the tip. Each drag is one undo step. The [keyboard table](/docs/guides/annotations/#tools-and-keyboard) covers moving and resizing without a pointer.
+
+## Style
+
+Each tool draws in the style of its group, and the groups are shared between tools:
+
+| Group    | Used by                                                                                                               |
+| -------- | --------------------------------------------------------------------------------------------------------------------- |
+| `shape`  | Lines, arrows, rectangles, ellipses, stars, polygons, loupes, a speech bubble's outline and the shapes `sketch` makes |
+| `ink`    | `draw` and `sketch` strokes                                                                                           |
+| `text`   | Text boxes and a speech bubble's text                                                                                 |
+| `markup` | Highlights, underlines, strikeouts and squiggly underlines                                                            |
+| `redact` | Redaction marks                                                                                                       |
+
+Changing a colour with a shape tool on changes it for the next line and the next rectangle too. Until you set a style, each type takes the theme's default. With something selected, the menus show and change the selection's style. The change is one undo step.
+
+The line style menu offers weights from 0.5 to 8 pt, solid or dashed, and arrowheads at either end. Each colour menu offers a palette plus Custom, which opens the browser's colour picker. The fill menu also has No fill. Pass `group` to an `InkColorMenu` to tie it to one group whatever tool is on, as `InkHighlightMenu` does for the markup colour.
+
+To read or set the style from code, use `useToolStyle()` in a framework app. Without a framework, use `viewer.engine.get()?.toolStyle`. `current` holds the values the menus show, with `'mixed'` where a selection disagrees, and `set` takes the same props the menus write:
+
+```ts
+const style = useToolStyle()
+
+style.set({ border: '#1D4ED8', width: 2, dashes: null })
+style.set({ fontSize: 14, fontWeight: 'bold' }, { group: 'text' })
+```
+
+Colours are `#RRGGBB`. `fill: null` means no fill and `dashes: null` means a solid line. The tool style belongs to the open document: opening another starts again from the theme's defaults.

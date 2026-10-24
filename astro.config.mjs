@@ -57,6 +57,7 @@ export default defineConfig({
           items: [
             { label: 'Toolbars', slug: 'docs/guides/toolbars' },
             { label: 'Annotations', slug: 'docs/guides/annotations' },
+            { label: 'Drawing', slug: 'docs/guides/drawing' },
             { label: 'Search', slug: 'docs/guides/search' },
             { label: 'Forms', slug: 'docs/guides/forms' },
             { label: 'Signatures', slug: 'docs/guides/signatures' },

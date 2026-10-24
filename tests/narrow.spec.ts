@@ -9,6 +9,7 @@ const docsPaths = [
   '/docs/guides/annotations/',
   '/docs/guides/controlled-mode/',
   '/docs/guides/search/',
+  '/docs/guides/drawing/',
   '/docs/guides/forms/',
   '/docs/guides/signatures/',
   '/docs/guides/theming/',
