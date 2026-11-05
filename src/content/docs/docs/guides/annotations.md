@@ -88,7 +88,7 @@ To drive history from your own UI, `useHistory()` returns `canUndo`, `canRedo`, 
 
 ## Tools and keyboard
 
-`createToolController` from `@inkbar/core/dom` routes pointer and key events on the viewport to the active tool: `select-text`, `select`, `highlight`, `redact-area`, `sketch`, `draw`, `shape`, `freetext`, `signature` or `note`. Highlights, text redactions, notes, shapes, text boxes and signatures can be made from the keyboard. Area redactions, freehand drawing, loupes and masks need a pointer.
+`createToolController` from `@inkbar/core/dom` routes pointer and key events on the viewport to the active tool. `select-text` and `select` are always there. The creation tools, `highlight`, `redact-area`, `sketch`, `draw`, `shape`, `freetext`, `signature` and `note`, are there when you pass them in `tools`: [Toolbars](/docs/guides/toolbars/#choosing-tools) shows how. Highlights, text redactions, notes, shapes, text boxes and signatures can be made from the keyboard. Area redactions, freehand drawing, loupes and masks need a pointer.
 
 | Where focus is               | Key                                           | Effect                                                                                              |
 | ---------------------------- | --------------------------------------------- | --------------------------------------------------------------------------------------------------- |

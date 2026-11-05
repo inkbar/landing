@@ -19,7 +19,7 @@ A plugin is written once with `definePlugin` from `@inkbar/core/dom` and runs in
 
 Call a factory-style plugin with its options, and pass a plugin written as an object as it is; the plugin's docs say which. Pass the result to `InkRoot` as `plugins`, or to `createViewer`. The list is read once, when the root mounts: a later change to it is not applied, so make the plugins once rather than on every render.
 
-Nothing a plugin registers shows by itself. Place each command with `InkCommand` and each tool with `InkToolButton`, inside an `InkToolbar`, as you place the built-in controls:
+Nothing a plugin registers shows by itself. Place each command with `InkCommand` and each tool with `InkToolButton`, inside an `InkToolbar`, as you place the built-in controls. A plugin's tools join the viewer's on their own, so `tools` lists only the built-in tools you offer:
 
 <Tabs syncKey="framework">
   <TabItem label="Vue">
@@ -27,17 +27,19 @@ Nothing a plugin registers shows by itself. Place each command with `InkCommand`
 ```vue
 <script setup lang="ts">
 import { InkCommand, InkRoot, InkToolbar, InkToolButton, InkViewport } from '@inkbar/vue'
+import { redactAreaTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
 import { review } from './review-plugin'
 
 defineProps<{ file: File }>()
 
+const tools = [redactAreaTool()]
 const plugins = [review()]
 </script>
 
 <template>
-  <InkRoot :src="file" :assets="assets" :plugins="plugins">
+  <InkRoot :src="file" :assets="assets" :tools="tools" :plugins="plugins">
     <InkToolbar>
       <InkToolButton tool="redact-area" />
       <InkToolButton tool="review.stamp" />
@@ -59,15 +61,17 @@ import {
   InkToolButton,
   InkViewport,
 } from '@inkbar/react'
+import { redactAreaTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
 import { review } from './review-plugin'
 
+const tools = [redactAreaTool()]
 const plugins = [review()]
 
 export function Review({ file }: { file: File }) {
   return (
-    <InkRoot src={file} assets={assets} plugins={plugins}>
+    <InkRoot src={file} assets={assets} tools={tools} plugins={plugins}>
       <InkToolbar>
         <InkToolButton tool="redact-area" />
         <InkToolButton tool="review.stamp" />
@@ -91,16 +95,18 @@ export function Review({ file }: { file: File }) {
     InkToolButton,
     InkViewport,
   } from '@inkbar/svelte'
+  import { redactAreaTool } from '@inkbar/core/dom'
   import { assets } from 'virtual:inkbar-assets'
 
   import { review } from './review-plugin'
 
   let { file }: { file: File } = $props()
 
+  const tools = [redactAreaTool()]
   const plugins = [review()]
 </script>
 
-<InkRoot src={file} {assets} {plugins}>
+<InkRoot src={file} {assets} {tools} {plugins}>
   <InkToolbar>
     <InkToolButton tool="redact-area" />
     <InkToolButton tool="review.stamp" />
@@ -119,12 +125,18 @@ import {
   createToolbar,
   createToolButton,
   createViewer,
+  redactAreaTool,
 } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
 import { review } from './review-plugin'
 
-const viewer = createViewer(el, { source: file, assets, plugins: [review()] })
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  tools: [redactAreaTool()],
+  plugins: [review()],
+})
 
 const tools = createToolbar()
 tools.append(
@@ -224,7 +236,7 @@ Call `useCommand` inside `InkRoot`. Announce `status` yourself if your control s
 
 ## Plugin tools
 
-A plugin tool's id is `<plugin>.<id>`, so tool `stamp` of plugin `review` is `review.stamp`. Pass that id to `InkToolButton` (`createToolButton` in plain DOM). The button takes the tool's own label and icon; pass `label` to change the name.
+A plugin tool's id is `<plugin>.<id>`, so tool `stamp` of plugin `review` is `review.stamp`. Pass that id to `InkToolButton` (`createToolButton` in plain DOM). The tool needs no entry in `tools`. The button takes the tool's own label and icon; pass `label` to change the name.
 
 ## Loading and saving records
 

@@ -168,6 +168,37 @@ Inside `InkRoot`, `useHistory()` returns the same object.
   </TabItem>
 </Tabs>
 
+## Without a framework
+
+Pass `annotations: { mode: 'controlled', initial, onChange }` to [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer). `onChange` hears each proposed list, and nothing shows until you push a list back with `viewer.document.get()?.annotations.setControlledValue(next)`. `initial` applies to every document the viewer opens, including after `viewer.open()`, so push your own list in `onReady` for each new document:
+
+```ts
+import type { Annotation } from '@inkbar/core'
+import { createViewer } from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+let annotations: Annotation[] = []
+
+const viewer = createViewer(el, {
+  source: { url: signedUrl, key: documentId },
+  assets,
+  annotations: {
+    mode: 'controlled',
+    initial: [],
+    onChange: (next) => {
+      annotations = next
+      viewer.document.get()?.annotations.setControlledValue(next)
+    },
+  },
+  onReady: async (doc) => {
+    annotations = await loadAnnotations(doc.key)
+    doc.annotations.setControlledValue(annotations)
+  },
+})
+```
+
+To refuse a change, leave it out of the list you push back. Undo and redo do nothing in controlled mode: your app owns the list, so it owns undo too.
+
 ## Form fields
 
 Form field values work the same way. Pass `fields` (`v-model:fields` in Vue, `bind:fields` in Svelte) to hold them in your own state. Inkbar keeps no undo history for controlled fields, and fields join the annotation history only when both are uncontrolled. [Forms](/docs/guides/forms/#controlled-fields) has the examples.

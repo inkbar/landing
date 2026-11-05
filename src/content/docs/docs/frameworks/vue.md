@@ -29,6 +29,7 @@ import {
   InkZoomSelect,
   InkThreadPopover,
 } from '@inkbar/vue'
+import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
 import type { Annotation } from '@inkbar/core'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
@@ -36,12 +37,14 @@ import '@inkbar/theme/theme.css'
 defineProps<{ signedUrl: string; documentId: string }>()
 
 const annotations = ref<Annotation[]>([])
+const tools = [highlightTool(), redactAreaTool(), noteTool()]
 </script>
 
 <template>
   <InkRoot
     :src="{ url: signedUrl, key: documentId }"
     :assets="assets"
+    :tools="tools"
     v-model:annotations="annotations"
   >
     <InkToolbar>
@@ -67,7 +70,9 @@ const annotations = ref<Annotation[]>([])
 </template>
 ```
 
-Each control is a separate component, so put them in any order or leave some out. Buttons show icons from `@inkbar/icons`. Put your own in a button's default slot to replace one, and use `InkIcon` to put the same icons on your own buttons. [Toolbars](/docs/guides/toolbars/) lists every control.
+`select-text` and `select` are always there. Every other tool is opt-in: pass the ones you offer through `tools`, from the tool factories in `@inkbar/core/dom`, or `allTools()` for all of them. A button for a tool you did not pass renders disabled and hidden, a tool menu renders nothing, and each logs an `InkError('UnknownTool')` to the console once. If the active tool leaves `tools`, the viewer switches to `select-text` and reports it through `update:tool`.
+
+Each control is a separate component, so put them in any order or leave some out. Buttons show icons from `@inkbar/icons`. Put your own in a button's default slot to replace one, and use `InkIcon` to put the same icons on your own buttons. For a button of your own, such as `<InkToolbarButton @click="download">Download</InkToolbarButton>`, use `InkToolbarButton`: it joins the toolbar's arrow-key focus and looks like the other buttons. [Toolbars](/docs/guides/toolbars/) lists every control.
 
 `v-model:annotations` makes your list the source of truth. Leave it off and Inkbar keeps the state itself, with undo and redo.
 
@@ -79,7 +84,7 @@ Each control is a separate component, so put them in any order or leave some out
 
 ## Signatures
 
-`InkSignatureMenu` lists the saved signatures, turns on the `signature` tool with the chosen one, and opens `InkSignatureDialog` to draw, type or upload a new one. These are marks on the page, not cryptographic signatures. Pass `signatures` to `InkRoot` to keep them somewhere: `createLocalSignatureStore(key)` from `@inkbar/core` uses `localStorage`, and without it they last until reload. `signatureFonts` lists the handwriting fonts the Type tab offers. Load them with `@font-face`. [Signatures](/docs/guides/signatures/) has the details.
+`InkSignatureMenu` lists the saved signatures, turns on the `signature` tool with the chosen one, and opens `InkSignatureDialog` to draw, type or upload a new one. The menu needs `signatureTool()` in `tools`. The dialog and signature form fields work without it; the dialog then only saves the signature. These are marks on the page, not cryptographic signatures. Pass `signatures` to `InkRoot` to keep them somewhere: `createLocalSignatureStore(key)` from `@inkbar/core` uses `localStorage`, and without it they last until reload. `signatureFonts` lists the handwriting fonts the Type tab offers. Load them with `@font-face`. [Signatures](/docs/guides/signatures/) has the details.
 
 ## Thread popover
 
@@ -112,11 +117,11 @@ const decorate: DecorateAnnotation = (a) =>
 
 For your own card next to an annotation, read the `activated` and `rootEl` refs and `setActivated` from `injectInkContext()` and use them with `createFocusReturn` and `createPopover`, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) shows. The context's `setActivated` emits `activate` for an id; `viewer.setActivated` in plain DOM does not.
 
-`InkRoot`, `InkToolbar`, `InkToolButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take `as-child` to render your own element in place of theirs, such as a button from your design system. Put that element in the default slot. The control keeps its behaviour and accessible name.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take `as-child` to render your own element in place of theirs, such as a button from your design system. Put that element in the default slot. The control keeps its behaviour and accessible name.
 
 ## Plugins
 
-Pass plugins to `InkRoot` as `:plugins`. The list is read once, when the root mounts. Nothing a plugin adds shows until you place it: a command with `InkCommand id="<plugin>.<id>"`, a tool with `InkToolButton tool="<plugin>.<id>"`. For a control of your own, `useCommand(id)` returns the command's `run`, `enabled`, `busy`, `status`, `label` and `icon`. [Plugins](/docs/guides/plugins/) covers placing commands, saving plugin records and undo, and [Writing a plugin](/docs/guides/writing-a-plugin/) covers building one.
+Pass plugins to `InkRoot` as `:plugins`. The list is read once, when the root mounts. A plugin's tools join the viewer's on their own, without `tools`. Nothing a plugin adds shows until you place it: a command with `InkCommand id="<plugin>.<id>"`, a tool with `InkToolButton tool="<plugin>.<id>"`. For a control of your own, `useCommand(id)` returns the command's `run`, `enabled`, `busy`, `status`, `label` and `icon`. [Plugins](/docs/guides/plugins/) covers placing commands, saving plugin records and undo, and [Writing a plugin](/docs/guides/writing-a-plugin/) covers building one.
 
 ## Keyboard
 

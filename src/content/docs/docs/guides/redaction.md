@@ -13,7 +13,7 @@ Until then, the marks are a review record: who marked what, where and why. Expor
 
 ## Marking by hand
 
-The `redact-area` tool, labelled "Mark for redaction" on its tool button, makes two kinds of mark:
+Pass `redactAreaTool()` from `@inkbar/core/dom` in `tools` to offer the `redact-area` tool. Its tool button is labelled "Mark for redaction", and it makes two kinds of mark:
 
 - **Area marks.** Drag a box over any part of the page, including images. With the `select` tool you can then move it and resize it by its corner handles, or from the keyboard.
 - **Text marks.** Select text with the `select-text` tool, switch to `redact-area`, then click inside the selection or press `Enter`. The mark follows the lines of the selection.

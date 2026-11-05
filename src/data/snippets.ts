@@ -28,16 +28,19 @@ import {
   InkZoomSelect,
   InkThreadPopover,
 } from '@inkbar/vue'
+import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
 
 defineProps<{ url: string; id: string }>()
+
+const tools = [highlightTool(), redactAreaTool(), noteTool()]
 </script>
 
 <template>
-  <InkRoot :src="{ url, key: id }" :assets="assets">
+  <InkRoot :src="{ url, key: id }" :assets="assets" :tools="tools">
     <InkToolbar>
-      <InkToolButton tool="view" />
+      <InkToolButton tool="select-text" />
       <InkToolButton tool="select" />
       <InkToolButton tool="highlight" />
       <InkToolButton tool="redact-area" />
@@ -73,14 +76,17 @@ const react = `import {
   InkZoomSelect,
   InkThreadPopover,
 } from '@inkbar/react'
+import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
 
+const tools = [highlightTool(), redactAreaTool(), noteTool()]
+
 export function Review({ url, id }: { url: string; id: string }) {
   return (
-    <InkRoot src={{ url, key: id }} assets={assets}>
+    <InkRoot src={{ url, key: id }} assets={assets} tools={tools}>
       <InkToolbar>
-        <InkToolButton tool="view" />
+        <InkToolButton tool="select-text" />
         <InkToolButton tool="select" />
         <InkToolButton tool="highlight" />
         <InkToolButton tool="redact-area" />
@@ -118,15 +124,18 @@ const svelte = `<script lang="ts">
     InkZoomSelect,
     InkThreadPopover,
   } from '@inkbar/svelte'
+  import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
   import { assets } from 'virtual:inkbar-assets'
   import '@inkbar/theme/theme.css'
 
   let { url, id }: { url: string; id: string } = $props()
+
+  const tools = [highlightTool(), redactAreaTool(), noteTool()]
 </script>
 
-<InkRoot src={{ url, key: id }} {assets}>
+<InkRoot src={{ url, key: id }} {assets} {tools}>
   <InkToolbar>
-    <InkToolButton tool="view" />
+    <InkToolButton tool="select-text" />
     <InkToolButton tool="select" />
     <InkToolButton tool="highlight" />
     <InkToolButton tool="redact-area" />
@@ -152,6 +161,7 @@ import {
   InkViewport,
   InkThreadPopover,
 } from '@inkbar/vue'
+import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
 
@@ -159,10 +169,12 @@ import Footer from './Footer.vue'
 import Toolbar from './Toolbar.vue'
 
 defineProps<{ url: string; id: string }>()
+
+const tools = [highlightTool(), redactAreaTool(), noteTool()]
 </script>
 
 <template>
-  <InkRoot :src="{ url, key: id }" :assets="assets">
+  <InkRoot :src="{ url, key: id }" :assets="assets" :tools="tools">
     <Toolbar />
     <InkViewport />
     <Footer />
@@ -175,15 +187,18 @@ const reactShort = `import {
   InkViewport,
   InkThreadPopover,
 } from '@inkbar/react'
+import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
 
 import { Footer } from './Footer'
 import { Toolbar } from './Toolbar'
 
+const tools = [highlightTool(), redactAreaTool(), noteTool()]
+
 export function Review({ url, id }: { url: string; id: string }) {
   return (
-    <InkRoot src={{ url, key: id }} assets={assets}>
+    <InkRoot src={{ url, key: id }} assets={assets} tools={tools}>
       <Toolbar />
       <InkViewport />
       <Footer />
@@ -198,6 +213,7 @@ const svelteShort = `<script lang="ts">
     InkViewport,
     InkThreadPopover,
   } from '@inkbar/svelte'
+  import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
   import { assets } from 'virtual:inkbar-assets'
   import '@inkbar/theme/theme.css'
 
@@ -205,9 +221,11 @@ const svelteShort = `<script lang="ts">
   import Toolbar from './Toolbar.svelte'
 
   let { url, id }: { url: string; id: string } = $props()
+
+  const tools = [highlightTool(), redactAreaTool(), noteTool()]
 </script>
 
-<InkRoot src={{ url, key: id }} {assets}>
+<InkRoot src={{ url, key: id }} {assets} {tools}>
   <Toolbar />
   <InkViewport />
   <Footer />

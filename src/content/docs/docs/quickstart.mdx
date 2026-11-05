@@ -38,6 +38,8 @@ Wrap the viewport in a root. Put a toolbar of tools, undo and redo above it and 
 
 <FrameworkSnippet />
 
+`select-text` and `select` are always there. Every other tool is opt-in: pass the ones your toolbar offers as `tools`, from the factories in `@inkbar/core/dom`, so only those end up in your bundle. `allTools()` returns all eight. A button for a tool you did not pass renders disabled and hidden, and logs an `InkError('UnknownTool')` to the console.
+
 The viewer fills its parent, so give the parent a height. Without one, the document has no room to scroll. Each control is its own component: drop the ones you don't need, move them, or add your own buttons. [Toolbars](/docs/guides/toolbars/) covers them.
 
 Inkbar keeps the annotations itself here, with undo and redo. To hold them in your own state, read [Controlled mode](/docs/guides/controlled-mode/). Annotations live in memory until you save them: [Annotations](/docs/guides/annotations/#saving-annotations) shows how to store them as JSON.

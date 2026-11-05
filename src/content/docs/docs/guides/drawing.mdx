@@ -12,9 +12,11 @@ Four tools draw on the page:
 | `sketch`   | Sketch       | Freehand ink. A stroke that looks like a shape becomes that shape                                          |
 | `draw`     | Draw         | Freehand ink. Strokes made in quick succession join one drawing                                            |
 | `shape`    | Shape        | Lines, arrows, rectangles, rounded rectangles, ellipses, speech bubbles, stars, polygons, loupes and masks |
-| `freetext` | Text         | Text boxes                                                                                                 |
+| `freetext` | Text box     | Text boxes                                                                                                 |
 
 Everything they make is an ordinary annotation, so it exports, imports and undoes like the rest. [Annotations](/docs/guides/annotations/#types) lists which type each one becomes.
+
+Each one is opt-in. Pass the ones you offer as `tools`, from `sketchTool()`, `drawTool()`, `shapeTool()` and `freetextTool()` in `@inkbar/core/dom`.
 
 ## A drawing toolbar
 
@@ -40,13 +42,16 @@ import {
   InkToolButton,
   InkViewport,
 } from '@inkbar/vue'
+import { drawTool, freetextTool, shapeTool, sketchTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
 defineProps<{ file: File }>()
+
+const tools = [sketchTool(), drawTool(), shapeTool(), freetextTool()]
 </script>
 
 <template>
-  <InkRoot :src="file" :assets="assets">
+  <InkRoot :src="file" :assets="assets" :tools="tools">
     <InkToolbar>
       <InkToolButton tool="select" />
       <InkToolButton tool="sketch" />
@@ -79,11 +84,14 @@ import {
   InkToolButton,
   InkViewport,
 } from '@inkbar/react'
+import { drawTool, freetextTool, shapeTool, sketchTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
+
+const tools = [sketchTool(), drawTool(), shapeTool(), freetextTool()]
 
 export function Viewer({ file }: { file: File }) {
   return (
-    <InkRoot src={file} assets={assets}>
+    <InkRoot src={file} assets={assets} tools={tools}>
       <InkToolbar>
         <InkToolButton tool="select" />
         <InkToolButton tool="sketch" />
@@ -118,12 +126,15 @@ export function Viewer({ file }: { file: File }) {
     InkToolButton,
     InkViewport,
   } from '@inkbar/svelte'
+  import { drawTool, freetextTool, shapeTool, sketchTool } from '@inkbar/core/dom'
   import { assets } from 'virtual:inkbar-assets'
 
   let { file }: { file: File } = $props()
+
+  const tools = [sketchTool(), drawTool(), shapeTool(), freetextTool()]
 </script>
 
-<InkRoot src={file} {assets}>
+<InkRoot src={file} {assets} {tools}>
   <InkToolbar>
     <InkToolButton tool="select" />
     <InkToolButton tool="sketch" />
@@ -153,10 +164,18 @@ import {
   createToolbarSeparator,
   createToolButton,
   createViewer,
+  drawTool,
+  freetextTool,
+  shapeTool,
+  sketchTool,
 } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
-const viewer = createViewer(el, { source: file, assets })
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  tools: [sketchTool(), drawTool(), shapeTool(), freetextTool()],
+})
 
 const tools = createToolbar()
 tools.append(
