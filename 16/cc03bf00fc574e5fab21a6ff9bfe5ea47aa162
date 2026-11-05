@@ -1,0 +1,21 @@
+src/content/docs/docs/guides/sidebars.mdx
+  s_1effe0625d7c7b::t_e428a82e3f815f 154
+  s_1effe0625d7c7b::t_65518df59dd10c 258
+  s_1effe0625d7c7b::t_8f08a43bfda6a5 181
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "16cc03bf00fc574e5fab21a6ff9bfe5ea47aa162",
+  "prompts": {},
+  "sessions": {
+    "s_1effe0625d7c7b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3adafbc8-4f4c-4ced-a223-6be21f4f163c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
