@@ -1,0 +1,277 @@
+---
+title: Sidebars
+description: Put panels beside the pages, fill them with thumbnails, search results or your own markup, and list a plugin's records as cards.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+A sidebar holds panels. Each panel shows content you give it: a list of page thumbnails, search results, the cards of a plugin's records, or markup of your own. Inkbar places nothing for you. Put a sidebar on either side of the viewport with your own flex or grid layout.
+
+## A sidebar of panels
+
+Each panel has an `id`, a `label`, an optional `icon` (an `IconNode` from `@inkbar/icons`) and an optional `badge`, a number or short string that stays hidden when it is empty or 0.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { MessageSquare, Square } from '@inkbar/icons'
+import { InkPanel, InkRoot, InkSidebar, InkThumbnails, InkViewport } from '@inkbar/vue'
+import { assets } from 'virtual:inkbar-assets'
+import { ref } from 'vue'
+
+import MyNotes from './MyNotes.vue'
+
+defineProps<{ file: File }>()
+
+const open = ref<string | null>('pages')
+const noteCount = ref(3)
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets">
+    <div class="app">
+      <InkSidebar side="left" layout="rail" v-model:open="open">
+        <InkPanel id="pages" label="Pages" :icon="Square">
+          <InkThumbnails />
+        </InkPanel>
+        <InkPanel id="notes" label="Notes" :icon="MessageSquare" :badge="noteCount">
+          <MyNotes />
+        </InkPanel>
+      </InkSidebar>
+      <InkViewport />
+    </div>
+  </InkRoot>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { MessageSquare, Square } from '@inkbar/icons'
+import { InkPanel, InkRoot, InkSidebar, InkThumbnails, InkViewport } from '@inkbar/react'
+import { assets } from 'virtual:inkbar-assets'
+import { useState } from 'react'
+
+import { MyNotes } from './MyNotes'
+
+export function Viewer({ file }: { file: File }) {
+  const [open, setOpen] = useState<string | null>('pages')
+  const noteCount = 3
+
+  return (
+    <InkRoot src={file} assets={assets}>
+      <div className="app">
+        <InkSidebar side="left" layout="rail" open={open} onOpenChange={setOpen}>
+          <InkPanel id="pages" label="Pages" icon={Square}>
+            <InkThumbnails />
+          </InkPanel>
+          <InkPanel id="notes" label="Notes" icon={MessageSquare} badge={noteCount}>
+            <MyNotes />
+          </InkPanel>
+        </InkSidebar>
+        <InkViewport />
+      </div>
+    </InkRoot>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { MessageSquare, Square } from '@inkbar/icons'
+  import {
+    InkPanel,
+    InkRoot,
+    InkSidebar,
+    InkThumbnails,
+    InkViewport,
+  } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+  import MyNotes from './MyNotes.svelte'
+
+  let { file }: { file: File } = $props()
+
+  let open = $state<string | null>('pages')
+  const noteCount = 3
+</script>
+
+<InkRoot src={file} {assets}>
+  <div class="app">
+    <InkSidebar side="left" layout="rail" bind:open>
+      <InkPanel id="pages" label="Pages" icon={Square}>
+        <InkThumbnails />
+      </InkPanel>
+      <InkPanel id="notes" label="Notes" icon={MessageSquare} badge={noteCount}>
+        <MyNotes />
+      </InkPanel>
+    </InkSidebar>
+    <InkViewport />
+  </div>
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { createSidebar, createThumbnails, createViewer } from '@inkbar/core/dom'
+import { MessageSquare, Square } from '@inkbar/icons'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, { source: file, assets })
+
+const { element, controller } = createSidebar({
+  layout: 'rail',
+  side: 'left',
+  panels: [
+    { id: 'pages', label: 'Pages', icon: Square },
+    { id: 'notes', label: 'Notes', icon: MessageSquare, badge: 3 },
+  ],
+  content: { pages: createThumbnails(viewer), notes: notesElement },
+  onOpenChange: (open) => console.log(open),
+})
+shell.prepend(element)
+```
+
+`createSidebar` needs no viewer, so it works anywhere you can append an element. Call `controller.destroy()` when you remove the sidebar.
+
+  </TabItem>
+</Tabs>
+
+In the framework packages, panels take their place in the order they appear in your markup, including one added later with a conditional. The sidebar needs no document and works outside `InkRoot`. During server rendering it draws its frame with the open panel showing. Rail and tab buttons appear once it has mounted.
+
+## Layouts
+
+`layout` is one of three:
+
+- `rail` (the default) is a strip of icon buttons on the outer edge, with each label as a tooltip. One panel is open at a time, and pressing the open panel's button closes it, leaving only the rail.
+- `tabs` shows labelled tabs across the top with one panel open.
+- `stack` shows every panel as a section with a header button, one under another. Any number can be expanded.
+
+`side` is `left` by default and decides which edge the rail and the border sit on. You can change `layout` at any time, and each panel keeps its content when you do.
+
+A closed panel stays in the page, hidden. Its content keeps its state and scroll position, so a half-typed note is still there when the panel opens again.
+
+## Open and closed
+
+`open` is the id of the open panel (or `null`) for rail and tabs, and the list of expanded ids for stack. Left out, the sidebar starts with its first panel open and keeps its own state. Pass `null` to collapse a tabs sidebar, from a toolbar button of your own for instance.
+
+Pass it and you control the sidebar: a click reports the new value and nothing changes until you set it. The prop to use is `v-model:open` in Vue, `open` with `onOpenChange` in React (or `defaultOpen` to set only where it starts), `bind:open` in Svelte, and `open` with `onOpenChange` and `controller.update({ open })` in plain DOM. When the open panel goes away, rail and tabs open the first one left and stack drops it, and you get the new value the same way.
+
+## Keyboard
+
+Rail and tabs follow the tabs pattern. The sidebar is one Tab stop. On a rail the Up and Down arrows move between buttons, and in tabs the Left and Right arrows do. Home and End go to the first and last, and Enter or Space opens a panel.
+
+Stack headers follow the accordion pattern. Each header is its own Tab stop with `aria-expanded`. Up and Down move between headers, and Enter or Space expands or collapses a section.
+
+## Size
+
+`@inkbar/theme` sizes the sidebar with two variables. Override either for one sidebar with CSS:
+
+| Variable                   | Default | Used for          |
+| -------------------------- | ------- | ----------------- |
+| `--ink-sidebar-width`      | `280px` | The panel's width |
+| `--ink-sidebar-rail-width` | `44px`  | The rail's width  |
+
+## Lists of records
+
+`InkRecordList` (`createRecordList` in plain DOM) lists a plugin's records as cards. They are the cards the records' marks open, with the same actions. Name the records `<plugin>.<name>`, as [Writing a plugin](/docs/guides/writing-a-plugin/#records) names them. The list fills its parent's height and scrolls, so put it in a panel.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkPanel id="suggestions" label="Suggestions" :icon="MessageSquare" :badge="count">
+  <InkRecordList records="review.suggestions" @update:count="count = $event">
+    <template #empty>No suggestions left.</template>
+  </InkRecordList>
+</InkPanel>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkPanel id="suggestions" label="Suggestions" icon={MessageSquare} badge={count}>
+  <InkRecordList
+    records="review.suggestions"
+    onCountChange={setCount}
+    empty="No suggestions left."
+  />
+</InkPanel>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkPanel id="suggestions" label="Suggestions" icon={MessageSquare} badge={count}>
+  <InkRecordList records="review.suggestions" bind:count>
+    {#snippet empty()}No suggestions left.{/snippet}
+  </InkRecordList>
+</InkPanel>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { createRecordList } from '@inkbar/core/dom'
+
+panel.append(createRecordList(viewer, { records: 'review.suggestions' }))
+```
+
+  </TabItem>
+</Tabs>
+
+Each record takes its card from the first `plugin.marks` call over those records whose `where` it passes, and the list shows only the records that pass one. A record that no `marks` call covers is listed with its id as the title and no actions. To choose for yourself, pass `where`, `card` or `sort`. Actions on a card you pass run in one undo step too. The default order is by page, then top to bottom and left to right by the mark's box.
+
+A new function rebuilds the list, so define `card`, `where` and `sort` once, outside the template or component. In React, wrap them in `useCallback`.
+
+### Selection
+
+The list and the marks share one selection for each set of records, so every list over the same records agrees with the marks.
+
+- Clicking a card, or pressing Enter on it, selects the record, marks its mark with `data-selected` and scrolls the viewer to it. Focus stays in the list and no popover opens.
+- Activating a mark selects its card and scrolls every list over those records to it, without moving the page. A list in a closed panel scrolls when it shows.
+- Escape in the list clears the selection. So does removing the record or undoing it away.
+
+The list is one Tab stop. Arrow keys move between cards, and Home and End go to the first and last. When the focused card goes, after an action or an undo for instance, focus moves to the next card, then the previous one, then the list. A polite live region says "3 items" when an action or your app adds or removes cards. It stays quiet on undo and redo. An empty list reads "Nothing here yet."
+
+The count is ready for a panel badge: `@update:count` in Vue, `onCountChange` in React and `bind:count` in Svelte.
+
+### Search results
+
+`InkSearchResults` (`createSearchResults` in plain DOM) is the same list over the viewer's search: one card for each match, titled with its page ("Page 2"), with its place on the page ("Match 3") and the text around it. Choosing a card makes its match the current one, as next and previous in the find bar do.
+
+It has its own field, labelled "Find in document", and the match count. The field and the [find bar](/docs/guides/search/) share one search state, so they never disagree. When a find bar is on the page, leave the field out: `:field="false"` in Vue, `field={false}` in React and Svelte, `{ field: false }` in plain DOM. Unlike other lists, Escape in the results does not clear the current match.
+
+### Your own list
+
+To read and write a plugin's records from your own component, use `useRecords<T>(name)`. It returns the live `records` and a `handle` to read and write them, and each write is one undo step. `useRecordSelection(name)` returns `selected` and `select(id | null)`. Both need `InkRoot`. Plugins are set up once the root has mounted, so until then `handle` is null, `records` is empty and nothing is selected.
+
+In plain DOM, `viewer.records<T>(key)` gives the same handle for a key such as `review.suggestions`. Its `list` emits as the records change.
+
+```ts
+const suggestions = viewer.records<Suggestion>('review.suggestions')
+suggestions.list.subscribe((items) => render(items))
+suggestions.batch(() => {
+  suggestions.update('s1', { status: 'accepted' })
+  suggestions.remove('s2')
+})
+```
+
+To list something that is not a record set, pass a `source` in place of `records`. `recordsSource` and `searchSource` from `@inkbar/core/dom` build one, and a source of your own gets the same cards, keys and selection.
+
+To render your own cards, pass a source to `createRecordListController(source)`. Its `rows` give each item, its card and whether it is selected, and `count` and `announcement` give the count and the live-region text. Render each row as an element with `data-ink-record` set to the item's id, call `attach(element)` on the element holding them, and call `act(id, label)` from each action button. `choose(id)` selects and reveals an item from code. Call `destroy()` when you are done.
+
+## Theming
+
+`@inkbar/theme` styles the list with `.ink-records`, `.ink-record-list`, `.ink-record` and `.ink-record-list-empty`. The selected card has `aria-current="true"`, so style that to change how selection looks. The cards use the same `.ink-card-*` classes as the cards that marks open.

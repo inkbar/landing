@@ -178,6 +178,8 @@ The theme styles the card through these classes, which are yours to restyle:
 
 For anything richer, use `onActivate` with your own popover, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) describes.
 
+Records that pass a `marks` call's `where` also appear in a record list, each as the same card with the same actions in the same undo step, so the cards you wrote for the marks give you a sidebar list with no further code. The app places it with `InkRecordList records="<plugin>.<name>"`, as [Sidebars](/docs/guides/sidebars/#lists-of-records) shows. Records that no `marks` call covers still list, with their id as the title and no actions.
+
 ## Linked annotations
 
 `records.annotates(type, spec)` links records to the annotations of `type` made from them. Call it in `setup`.
