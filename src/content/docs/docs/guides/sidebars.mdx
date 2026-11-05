@@ -151,7 +151,7 @@ In the framework packages, panels take their place in the order they appear in y
 
 `layout` is one of three:
 
-- `rail` (the default) is a strip of icon buttons on the outer edge, with each label as a tooltip. One panel is open at a time, and pressing the open panel's button closes it, leaving only the rail.
+- `rail` (the default) is a strip of icon buttons on the inner edge, beside the document, with each label as a tooltip. One panel is open at a time, and pressing the open panel's button closes it, leaving only the rail.
 - `tabs` shows labelled tabs across the top with one panel open.
 - `stack` shows every panel as a section with a header button, one under another. Any number can be expanded.
 
@@ -178,7 +178,7 @@ Stack headers follow the accordion pattern. Each header is its own Tab stop with
 | Variable                   | Default | Used for          |
 | -------------------------- | ------- | ----------------- |
 | `--ink-sidebar-width`      | `280px` | The panel's width |
-| `--ink-sidebar-rail-width` | `44px`  | The rail's width  |
+| `--ink-sidebar-rail-width` | `48px`  | The rail's width  |
 
 ## Lists of records
 
@@ -255,7 +255,7 @@ The count is ready for a panel badge: `@update:count` in Vue, `onCountChange` in
 
 `InkSearchResults` (`createSearchResults` in plain DOM) is the same list over the viewer's search: one card for each match, titled with its page ("Page 2"), with its place on the page ("Match 3") and the text around it. Choosing a card makes its match the current one, as next and previous in the find bar do.
 
-It has its own field, labelled "Find in document", and the match count. The field and the [find bar](/docs/guides/search/) share one search state, so they never disagree. When a find bar is on the page, leave the field out: `:field="false"` in Vue, `field={false}` in React and Svelte, `{ field: false }` in plain DOM. Unlike other lists, Escape in the results does not clear the current match.
+It has its own field, labelled "Find in document", with the match count under it. Before a search it reads "Search to list every match." The field and the [find bar](/docs/guides/search/) share one search state, so they never disagree. When a find bar is on the page, leave the field out: `:field="false"` in Vue, `field={false}` in React and Svelte, `{ field: false }` in plain DOM. Unlike other lists, Escape in the results does not clear the current match.
 
 ### Your own list
 
