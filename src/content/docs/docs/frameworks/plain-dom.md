@@ -15,9 +15,14 @@ Install `@inkbar/core` and `@inkbar/theme`, and set up the assets as [Loading as
 
 `createViewer` opens a document and renders it into an element, with a thread popover for notes and text markup. You build the toolbars from controls that use the same markup as the framework packages, so `@inkbar/theme` styles them.
 
+A viewer registers only the `select-text` and `select` tools until you pass `tools`. Import the creation tools you offer from `@inkbar/core/dom`, or pass `allTools()` for all eight. [Choosing tools](/docs/guides/toolbars/#choosing-tools) lists them.
+
 ```ts
 import {
   createViewer,
+  highlightTool,
+  redactAreaTool,
+  noteTool,
   createToolbar,
   createToolButton,
   createToolbarSeparator,
@@ -32,7 +37,12 @@ import {
 import { assets } from 'virtual:inkbar-assets'
 import '@inkbar/theme/theme.css'
 
-const viewer = createViewer(el, { source: file, assets, zoom: 'fit-width' })
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  zoom: 'fit-width',
+  tools: [highlightTool(), redactAreaTool(), noteTool()],
+})
 
 const tools = createToolbar()
 tools.append(
@@ -63,23 +73,23 @@ viewer.open(lockedFile, { password }) // this password applies to this load only
 viewer.destroy()
 ```
 
-Each control disables itself while no document is ready and lives as long as its viewer. `createZoomIn` and `createZoomOut` are there too. `createToolButton` takes `{ label }` as a third argument to rename a tool.
+Each control disables itself while no document is ready and lives as long as its viewer. `createZoomIn` and `createZoomOut` are there too. `createToolButton` takes `{ label }` as a third argument to rename a tool. For a tool the viewer doesn't have, `createToolButton` and the highlight, shape and signature menus log `InkError('UnknownTool')`. The button renders disabled and hidden, and the menus render nothing.
 
 Buttons show an icon from `@inkbar/icons`; replace their children with your own icon and the accessible name stays. `createIcon` draws any `@inkbar/icons` icon for your own buttons.
 
-`createToolbar` gives one Tab stop to all its buttons, with arrow keys between them. A button you append joins that order. An input, select or textarea you add keeps its arrow keys and its own `tabindex`: it is a Tab stop unless you give it `tabindex="-1"`.
+`createToolbar` gives one Tab stop to all its buttons, with arrow keys between them. A button you append joins that order, so your own buttons need no wrapper. An input, select or textarea you add keeps its arrow keys and its own `tabindex`: it is a Tab stop unless you give it `tabindex="-1"`.
 
-`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `plugins`, `onReady` and `onError`. Set `threads` to `false` to leave threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. `viewer.activated` is a readable too: the id of the annotation the user last clicked or activated with Enter or Space, or `null`. `viewer.setActivated(id)` activates one from your code without calling `onActivate`. It ignores an id the document doesn't have, and `setActivated(null)` clears it. A password you pass to `open` replaces the `createViewer` one for that load.
+`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `defaults`, `history`, `annotations`, `fields`, `plugins`, `onReady` and `onError`. Set `threads` to `false` to leave threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. `viewer.activated` is a readable too: the id of the annotation the user last clicked or activated with Enter or Space, or `null`. `viewer.setActivated(id)` activates one from your code without calling `onActivate`. It ignores an id the document doesn't have, and `setActivated(null)` clears it. A password you pass to `open` replaces the `createViewer` one for that load.
 
-`plugins` takes plugins from `definePlugin`, set up once for the viewer's life. Place a plugin command with `createCommandButton(viewer, 'review.suggest')` and a plugin tool with `createToolButton(viewer, 'review.box')`. `viewer.commands.get(id)` returns a command for a control of your own. [Plugins](/docs/guides/plugins/) has the details.
+`plugins` takes plugins from `definePlugin`, set up once for the viewer's life. Their tools join the viewer's without `tools`. Place a plugin command with `createCommandButton(viewer, 'review.suggest')` and a plugin tool with `createToolButton(viewer, 'review.box')`. `viewer.commands.get(id)` returns a command for a control of your own. [Plugins](/docs/guides/plugins/) has the details.
 
 `createSearchButton(viewer)` opens the find bar from `createFindBar(viewer)`, which you append to `[data-ink-viewport-root]`. `viewer.search` holds the search state and actions. [Search](/docs/guides/search/) has the details.
 
-`createShapeMenu`, `createLineStyleMenu`, `createColorMenu` and `createTextStyleMenu` add the drawing controls, and `viewer.engine.get()?.toolStyle` reads and sets the style they show. [Drawing](/docs/guides/drawing/) has the details.
+`createShapeMenu`, `createLineStyleMenu`, `createColorMenu` and `createTextStyleMenu` add the drawing controls (the shape menu needs `shapeTool()` in `tools`), and `viewer.engine.get()?.toolStyle` reads and sets the style they show. [Drawing](/docs/guides/drawing/) has the details.
 
 The viewer fills the PDF's form fields and runs the form's scripts. `viewer.form` is a readable that holds the open document's form, or `null` before one is ready. `onFormAction` receives each submit, link, mail and print request, since the form never acts on them itself. `formHighlight: false` turns off the field tint, and `viewer.setFormHighlight(on)` changes it later. [Forms](/docs/guides/forms/) has the details.
 
-`createSignatureMenu(viewer)` lists the saved signatures and turns on the `signature` tool with the chosen one. Pass `signatures` and `signatureFonts` to `createViewer` to say where templates live and which handwriting fonts the dialog offers. [Signatures](/docs/guides/signatures/) has the details.
+`createSignatureMenu(viewer)` lists the saved signatures and turns on the `signature` tool with the chosen one. It needs `signatureTool()` in `tools`. The signature dialog and signature form fields work without it; the dialog then only saves the signature. Pass `signatures` and `signatureFonts` to `createViewer` to say where templates live and which handwriting fonts the dialog offers. [Signatures](/docs/guides/signatures/) has the details.
 
 `createViewer` reads the theme's colours from the element you pass, so that element needs to be in the page when you call it. Like the framework packages, the viewer fills its parent, so give the element a height.
 
@@ -89,7 +99,7 @@ The viewer fills the PDF's form fields and runs the form's scripts. `viewer.form
 
 ```ts
 import { openDocument } from '@inkbar/core'
-import { mountViewer } from '@inkbar/core/dom'
+import { mountViewer, highlightTool } from '@inkbar/core/dom'
 
 const doc = await openDocument(file, { assets })
 await doc.ready
@@ -98,6 +108,7 @@ const engine = mountViewer({
   container, // a focusable, scrollable element
   document: doc,
   zoom: 'fit-width',
+  tools: [highlightTool()],
   onPageError: (page, error) => console.warn(page, error),
 })
 engine.tools.set('highlight')
@@ -110,6 +121,7 @@ engine.destroy()
 Options:
 
 - `container` and `document`, both required.
+- `tools`: the creation tools to register, from `allTools()` or the factories in `@inkbar/core/dom`. `select-text` and `select` are always present.
 - `zoom` (a number, `'fit-width'` or `'fit-page'`; default `'fit-width'`), `page`, `mode` (`'continuous'` or `'single'`), `rotation` (0, 90, 180 or 270) and `tool` set the starting view. Change them later through `engine.viewport` and `engine.tools`.
 - `gap`, `buffer` and `customAnnotations` are fixed for a build. Change them with `engine.rebuild`.
 - `decorateAnnotation(annotation)` returns your own `data`, `classes` and `description` for an annotation's element, or `undefined`. `{ data: { 'my-flag': 'on' } }` writes `data-my-flag="on"`, and `description` becomes the element's `aria-description`. Data keys are lower-case kebab case. Inkbar applies them again whenever the annotations change. Call `engine.redecorate()` when they depend on anything else. Core's own attributes and `ink-` classes always win.

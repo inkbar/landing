@@ -341,7 +341,7 @@ class BoxTool {
 ctx.tools.add(new BoxTool())
 ```
 
-The host places it with a tool button (`tool="review.box"`), which shows the tool's own `label` and `icon`. Its methods run on your own object, so inside them `this.id` is the id you gave (`box`), and a class instance keeps its `#private` fields.
+The host places it with a tool button (`tool="review.box"`), which shows the tool's own `label` and `icon`. It joins the viewer's tools on its own, so the host leaves it out of `tools`. Its methods run on your own object, so inside them `this.id` is the id you gave (`box`), and a class instance keeps its `#private` fields.
 
 `ctx.decorate(fn)` works like the host's `decorateAnnotation`, which [Plain DOM](/docs/frameworks/plain-dom/#your-own-chrome) describes. Decorations apply after the host's own and earlier plugins', and the earlier ones win on a data key or description. They re-apply when the annotations change. Call `ctx.redecorate()` when one reads state of your own that changed.
 

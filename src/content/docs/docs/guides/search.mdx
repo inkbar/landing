@@ -24,13 +24,16 @@ import {
   InkToolButton,
   InkViewport,
 } from '@inkbar/vue'
+import { highlightTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
 defineProps<{ file: File }>()
+
+const tools = [highlightTool()]
 </script>
 
 <template>
-  <InkRoot :src="file" :assets="assets">
+  <InkRoot :src="file" :assets="assets" :tools="tools">
     <InkToolbar>
       <InkToolButton tool="highlight" />
       <InkSearchButton />
@@ -53,11 +56,14 @@ import {
   InkToolButton,
   InkViewport,
 } from '@inkbar/react'
+import { highlightTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
+
+const tools = [highlightTool()]
 
 export function Viewer({ file }: { file: File }) {
   return (
-    <InkRoot src={file} assets={assets}>
+    <InkRoot src={file} assets={assets} tools={tools}>
       <InkToolbar>
         <InkToolButton tool="highlight" />
         <InkSearchButton />
@@ -82,12 +88,15 @@ export function Viewer({ file }: { file: File }) {
     InkToolButton,
     InkViewport,
   } from '@inkbar/svelte'
+  import { highlightTool } from '@inkbar/core/dom'
   import { assets } from 'virtual:inkbar-assets'
 
   let { file }: { file: File } = $props()
+
+  const tools = [highlightTool()]
 </script>
 
-<InkRoot src={file} {assets}>
+<InkRoot src={file} {assets} {tools}>
   <InkToolbar>
     <InkToolButton tool="highlight" />
     <InkSearchButton />
@@ -107,10 +116,11 @@ import {
   createToolbar,
   createToolButton,
   createViewer,
+  highlightTool,
 } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
-const viewer = createViewer(el, { source: file, assets })
+const viewer = createViewer(el, { source: file, assets, tools: [highlightTool()] })
 
 const tools = createToolbar()
 tools.append(createToolButton(viewer, 'highlight'), createSearchButton(viewer))

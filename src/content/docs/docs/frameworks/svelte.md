@@ -28,6 +28,7 @@ Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/c
     InkZoomSelect,
     InkThreadPopover,
   } from '@inkbar/svelte'
+  import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
   import type { Annotation } from '@inkbar/core'
   import { assets } from 'virtual:inkbar-assets'
   import '@inkbar/theme/theme.css'
@@ -35,9 +36,10 @@ Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/c
   let { signedUrl, documentId }: { signedUrl: string; documentId: string } = $props()
 
   let annotations = $state.raw<Annotation[]>([])
+  const tools = [highlightTool(), redactAreaTool(), noteTool()]
 </script>
 
-<InkRoot src={{ url: signedUrl, key: documentId }} {assets} bind:annotations>
+<InkRoot src={{ url: signedUrl, key: documentId }} {assets} {tools} bind:annotations>
   <InkToolbar>
     <InkToolButton tool="select-text" />
     <InkToolButton tool="select" />
@@ -60,7 +62,9 @@ Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/c
 </InkRoot>
 ```
 
-Each control is a separate component, so put them in any order or leave some out. Buttons show icons from `@inkbar/icons`. Pass your own as `children` to replace one, and use `InkIcon` to put the same icons on your own buttons. [Toolbars](/docs/guides/toolbars/) lists every control.
+`select-text` and `select` are always there. Every other tool is opt-in: pass the ones you offer through `tools`, from the tool factories in `@inkbar/core/dom`, or `allTools()` for all of them. A button for a tool you did not pass renders disabled and hidden, a tool menu renders nothing, and each logs an `InkError('UnknownTool')` to the console once. If the active tool leaves `tools`, the viewer switches to `select-text` and reports it through `onToolChange`.
+
+Each control is a separate component, so put them in any order or leave some out. Buttons show icons from `@inkbar/icons`. Pass your own as `children` to replace one, and use `InkIcon` to put the same icons on your own buttons. For a button of your own, such as `<InkToolbarButton onclick={download}>Download</InkToolbarButton>`, use `InkToolbarButton`: it joins the toolbar's arrow-key focus and looks like the other buttons. [Toolbars](/docs/guides/toolbars/) lists every control.
 
 `bind:annotations` makes your list the source of truth. Declare it with `$state.raw`, since Inkbar replaces the list whole. Leave the binding off and Inkbar keeps the state itself, with undo and redo. [Controlled mode](/docs/guides/controlled-mode/) covers the details.
 
@@ -74,7 +78,7 @@ Each control is a separate component, so put them in any order or leave some out
 
 ## Signatures
 
-`InkSignatureMenu` lists the saved signatures, turns on the `signature` tool with the chosen one, and opens `InkSignatureDialog` to draw, type or upload a new one. These are marks on the page, not cryptographic signatures. Pass `signatures` to `InkRoot` to keep them somewhere: `createLocalSignatureStore(key)` from `@inkbar/core` uses `localStorage`, and without it they last until reload. `signatureFonts` lists the handwriting fonts the Type tab offers. Load them with `@font-face`. [Signatures](/docs/guides/signatures/) has the details.
+`InkSignatureMenu` lists the saved signatures, turns on the `signature` tool with the chosen one, and opens `InkSignatureDialog` to draw, type or upload a new one. The menu needs `signatureTool()` in `tools`. The dialog and signature form fields work without it; the dialog then only saves the signature. These are marks on the page, not cryptographic signatures. Pass `signatures` to `InkRoot` to keep them somewhere: `createLocalSignatureStore(key)` from `@inkbar/core` uses `localStorage`, and without it they last until reload. `signatureFonts` lists the handwriting fonts the Type tab offers. Load them with `@font-face`. [Signatures](/docs/guides/signatures/) has the details.
 
 ## Thread popover
 
@@ -105,7 +109,7 @@ Slots are snippets. `InkViewport` takes `loading`, `empty`, `error`, `annotation
 
 For your own card next to an annotation, read `activated`, `setActivated` and `rootEl` from `useInkContext` and use them with `createFocusReturn` and `createPopover`, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) shows. The context's `setActivated` calls `onActivate` for an id; `viewer.setActivated` in plain DOM does not.
 
-`InkRoot`, `InkToolbar`, `InkToolButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take a `child` snippet to render your own element. Spread the `props` it gives you on that element. The snippet type is exported as `ChildSnippet`.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take a `child` snippet to render your own element. Spread the `props` it gives you on that element. The snippet type is exported as `ChildSnippet`.
 
 ```svelte
 <InkToolbar>
@@ -117,7 +121,7 @@ For your own card next to an annotation, read `activated`, `setActivated` and `r
 
 ## Plugins
 
-Pass plugins to `InkRoot` as `plugins`. The list is read once, when the root mounts. Nothing a plugin adds shows until you place it: a command with `InkCommand id="<plugin>.<id>"`, a tool with `InkToolButton tool="<plugin>.<id>"`. For a control of your own, `useCommand(id)` returns the command's `run`, `enabled`, `busy`, `status`, `label` and `icon`. [Plugins](/docs/guides/plugins/) covers placing commands, saving plugin records and undo, and [Writing a plugin](/docs/guides/writing-a-plugin/) covers building one.
+Pass plugins to `InkRoot` as `plugins`. The list is read once, when the root mounts. A plugin's tools join the viewer's on their own, without `tools`. Nothing a plugin adds shows until you place it: a command with `InkCommand id="<plugin>.<id>"`, a tool with `InkToolButton tool="<plugin>.<id>"`. For a control of your own, `useCommand(id)` returns the command's `run`, `enabled`, `busy`, `status`, `label` and `icon`. [Plugins](/docs/guides/plugins/) covers placing commands, saving plugin records and undo, and [Writing a plugin](/docs/guides/writing-a-plugin/) covers building one.
 
 ## Keyboard
 

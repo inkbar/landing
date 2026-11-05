@@ -11,6 +11,8 @@ A signature in Inkbar is a mark on the page: a drawing, a name typed in a handwr
 
 `InkSignatureMenu` is a split button. The main button, Sign, turns on the `signature` tool with the chosen signature, or opens the menu if none is chosen yet. The arrow beside it, Choose signature, lists the saved signatures, each with a remove button, then Create signature, which opens the dialog.
 
+The menu needs `signatureTool()` from `@inkbar/core/dom` in the root's `tools`. Without it, the menu renders nothing. The signature dialog and signature fields work without it; the dialog then only saves the signature.
+
 Pass `signatures` to `InkRoot` to say where the templates live, and `signatureFonts` for the handwriting fonts the dialog offers. Both are optional: without them, signatures last until the page reloads and the dialog offers the browser's `cursive` font.
 
 <Tabs syncKey="framework">
@@ -26,10 +28,12 @@ import {
   InkToolButton,
   InkViewport,
 } from '@inkbar/vue'
+import { signatureTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
 defineProps<{ file: File }>()
 
+const tools = [signatureTool()]
 const signatures = createLocalSignatureStore('my-app-signatures')
 </script>
 
@@ -37,6 +41,7 @@ const signatures = createLocalSignatureStore('my-app-signatures')
   <InkRoot
     :src="file"
     :assets="assets"
+    :tools="tools"
     :signatures="signatures"
     :signature-fonts="['Dancing Script']"
   >
@@ -61,14 +66,22 @@ import {
   InkToolButton,
   InkViewport,
 } from '@inkbar/react'
+import { signatureTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
+const tools = [signatureTool()]
 const signatures = createLocalSignatureStore('my-app-signatures')
 const fonts = ['Dancing Script']
 
 export function Viewer({ file }: { file: File }) {
   return (
-    <InkRoot src={file} assets={assets} signatures={signatures} signatureFonts={fonts}>
+    <InkRoot
+      src={file}
+      assets={assets}
+      tools={tools}
+      signatures={signatures}
+      signatureFonts={fonts}
+    >
       <InkToolbar>
         <InkToolButton tool="select" />
         <InkSignatureMenu />
@@ -92,14 +105,16 @@ export function Viewer({ file }: { file: File }) {
     InkToolButton,
     InkViewport,
   } from '@inkbar/svelte'
+  import { signatureTool } from '@inkbar/core/dom'
   import { assets } from 'virtual:inkbar-assets'
 
   let { file }: { file: File } = $props()
 
+  const tools = [signatureTool()]
   const signatures = createLocalSignatureStore('my-app-signatures')
 </script>
 
-<InkRoot src={file} {assets} {signatures} signatureFonts={['Dancing Script']}>
+<InkRoot src={file} {assets} {tools} {signatures} signatureFonts={['Dancing Script']}>
   <InkToolbar>
     <InkToolButton tool="select" />
     <InkSignatureMenu />
@@ -118,12 +133,14 @@ import {
   createToolbar,
   createToolButton,
   createViewer,
+  signatureTool,
 } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
 const viewer = createViewer(el, {
   source: file,
   assets,
+  tools: [signatureTool()],
   signatures: createLocalSignatureStore('my-app-signatures'),
   signatureFonts: ['Dancing Script'],
 })

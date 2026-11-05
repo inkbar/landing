@@ -14,6 +14,7 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 | `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                           |
 | `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                               |
 | `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                        |
+| `InkToolbarButton`           | Your own button, in the toolbar's arrow-key order. See [Your own buttons](#your-own-buttons)                   |
 | `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                  |
 | `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                    |
 | `InkPageInput`               | The current page number, which the user can type into                                                          |
@@ -31,15 +32,196 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 | `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                                                   |
 | `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                       |
 
-`tool` is one of `select-text`, `select`, `highlight`, `redact-area`, `sketch`, `draw`, `shape`, `freetext`, `signature` and `note`. Their accessible names are Select text, Rectangle select, Highlight, Mark for redaction, Sketch, Draw, Shape, Text, Sign and Add note. Pass `label` to change one. To rename any other button, pass `aria-label` and `title`.
+`tool` is `select-text`, `select`, or one of the creation tools you pass to the root (see [Choosing tools](#choosing-tools)). The first two are named Select text and Rectangle select. Pass `label` to change a tool button's name. To rename any other button, pass `aria-label` and `title`.
 
 Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history. History is on by default; in controlled mode, turn it on with `history`. The page number field and the zoom select keep their own Tab stops.
 
 Ctrl or Cmd with Z undoes, and Ctrl or Cmd with Shift and Z, or Ctrl with Y, redoes. Both work on every platform. The keys do what `InkUndo` and `InkRedo` do, from anywhere inside `InkRoot`, toolbars included. In a text field, a select or editable content, they act on that element instead.
 
+## Choosing tools
+
+`select-text` and `select` are always there. Every creation tool is opt-in: import its factory from `@inkbar/core/dom` and pass it to `InkRoot` as `tools`. Only the tools you import end up in your bundle.
+
+| Factory            | Tool          | Button name        |
+| ------------------ | ------------- | ------------------ |
+| `highlightTool()`  | `highlight`   | Highlight          |
+| `redactAreaTool()` | `redact-area` | Mark for redaction |
+| `sketchTool()`     | `sketch`      | Sketch             |
+| `drawTool()`       | `draw`        | Draw               |
+| `shapeTool()`      | `shape`       | Shape              |
+| `freetextTool()`   | `freetext`    | Text box           |
+| `signatureTool()`  | `signature`   | Signature          |
+| `noteTool()`       | `note`        | Add note           |
+
+Pass the tools your toolbar offers:
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { highlightTool, noteTool } from '@inkbar/core/dom'
+import { InkRoot, InkToolbar, InkToolButton, InkViewport } from '@inkbar/vue'
+import { assets } from 'virtual:inkbar-assets'
+
+defineProps<{ file: File }>()
+
+const tools = [highlightTool(), noteTool()]
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets" :tools="tools">
+    <InkToolbar>
+      <InkToolButton tool="select-text" />
+      <InkToolButton tool="highlight" />
+      <InkToolButton tool="note" />
+    </InkToolbar>
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { highlightTool, noteTool } from '@inkbar/core/dom'
+import { InkRoot, InkToolbar, InkToolButton, InkViewport } from '@inkbar/react'
+import { assets } from 'virtual:inkbar-assets'
+
+const tools = [highlightTool(), noteTool()]
+
+export function Viewer({ file }: { file: File }) {
+  return (
+    <InkRoot src={file} assets={assets} tools={tools}>
+      <InkToolbar>
+        <InkToolButton tool="select-text" />
+        <InkToolButton tool="highlight" />
+        <InkToolButton tool="note" />
+      </InkToolbar>
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { highlightTool, noteTool } from '@inkbar/core/dom'
+  import { InkRoot, InkToolbar, InkToolButton, InkViewport } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+
+  const tools = [highlightTool(), noteTool()]
+</script>
+
+<InkRoot src={file} {assets} {tools}>
+  <InkToolbar>
+    <InkToolButton tool="select-text" />
+    <InkToolButton tool="highlight" />
+    <InkToolButton tool="note" />
+  </InkToolbar>
+  <InkViewport />
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import {
+  createToolbar,
+  createToolButton,
+  createViewer,
+  highlightTool,
+  noteTool,
+} from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  tools: [highlightTool(), noteTool()],
+})
+
+const tools = createToolbar()
+tools.append(
+  createToolButton(viewer, 'select-text'),
+  createToolButton(viewer, 'highlight'),
+  createToolButton(viewer, 'note')
+)
+viewer.element.prepend(tools)
+```
+
+  </TabItem>
+</Tabs>
+
+To offer every tool, pass `allTools()`, which returns a fresh instance of each of the eight:
+
+```ts
+import { allTools } from '@inkbar/core/dom'
+
+const tools = allTools()
+```
+
+A button for a tool you did not pass renders disabled and hidden. `InkHighlightMenu`, `InkShapeMenu` and `InkSignatureMenu` render nothing without their tool. Each logs an `InkError('UnknownTool')` to the console once. If the active tool leaves `tools`, the viewer switches to `select-text` and reports it through `onToolChange` (`update:tool` in Vue). A [plugin's](/docs/guides/plugins/) tools join the viewer's on their own.
+
+## Your own buttons
+
+`InkToolbarButton` is a button of your own inside an `InkToolbar`. It joins the toolbar's arrow-key focus and takes the theme's toolbar button styles. What it shows and does is up to you.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkToolbarButton @click="download">Download</InkToolbarButton>
+```
+
+Button attributes such as `aria-label`, and listeners, pass through to the button. It takes `as-child` and `disabled`.
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkToolbarButton onClick={download}>Download</InkToolbarButton>
+```
+
+It takes the props of a `<button>`, with `type="button"` by default, and `asChild`.
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkToolbarButton onclick={download}>Download</InkToolbarButton>
+```
+
+It takes the attributes of a `<button>` and a `child` snippet.
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+const download = document.createElement('button')
+download.type = 'button'
+download.textContent = 'Download'
+download.onclick = save
+toolbar.append(download)
+```
+
+No wrapper is needed. `createToolbar()` gives any `<button>` you append the same arrow-key focus, and the theme styles it like the toolbar's own buttons.
+
+  </TabItem>
+</Tabs>
+
+`InkIcon` (`createIcon` in plain DOM) draws an `@inkbar/icons` icon on such a button, as the next section shows.
+
 ## Icons and labels
 
-Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. The accessible name stays the same either way.
+Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. The accessible name stays the same either way. This bar goes inside an `InkRoot` whose `tools` include `redactAreaTool()`.
 
 <Tabs syncKey="framework">
   <TabItem label="Vue">
@@ -47,7 +229,13 @@ Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/
 ```vue
 <script setup lang="ts">
 import { Check } from '@inkbar/icons'
-import { InkIcon, InkToolbar, InkToolButton, InkUndo } from '@inkbar/vue'
+import {
+  InkIcon,
+  InkToolbar,
+  InkToolbarButton,
+  InkToolButton,
+  InkUndo,
+} from '@inkbar/vue'
 import { Eraser } from 'your-icon-library'
 </script>
 
@@ -57,9 +245,9 @@ import { Eraser } from 'your-icon-library'
       <Eraser />
     </InkToolButton>
     <InkUndo />
-    <button type="button" aria-label="Finish review" @click="finish">
+    <InkToolbarButton aria-label="Finish review" @click="finish">
       <InkIcon :icon="Check" />
-    </button>
+    </InkToolbarButton>
   </InkToolbar>
 </template>
 ```
@@ -69,7 +257,13 @@ import { Eraser } from 'your-icon-library'
 
 ```tsx
 import { Check } from '@inkbar/icons'
-import { InkIcon, InkToolbar, InkToolButton, InkUndo } from '@inkbar/react'
+import {
+  InkIcon,
+  InkToolbar,
+  InkToolbarButton,
+  InkToolButton,
+  InkUndo,
+} from '@inkbar/react'
 import { Eraser } from 'your-icon-library'
 
 export function ReviewBar({ finish }: { finish: () => void }) {
@@ -79,9 +273,9 @@ export function ReviewBar({ finish }: { finish: () => void }) {
         <Eraser />
       </InkToolButton>
       <InkUndo />
-      <button type="button" aria-label="Finish review" onClick={finish}>
+      <InkToolbarButton aria-label="Finish review" onClick={finish}>
         <InkIcon icon={Check} />
-      </button>
+      </InkToolbarButton>
     </InkToolbar>
   )
 }
@@ -93,7 +287,13 @@ export function ReviewBar({ finish }: { finish: () => void }) {
 ```svelte
 <script lang="ts">
   import { Check } from '@inkbar/icons'
-  import { InkIcon, InkToolbar, InkToolButton, InkUndo } from '@inkbar/svelte'
+  import {
+    InkIcon,
+    InkToolbar,
+    InkToolbarButton,
+    InkToolButton,
+    InkUndo,
+  } from '@inkbar/svelte'
   import { Eraser } from 'your-icon-library'
 
   let { finish }: { finish: () => void } = $props()
@@ -104,9 +304,9 @@ export function ReviewBar({ finish }: { finish: () => void }) {
     <Eraser />
   </InkToolButton>
   <InkUndo />
-  <button type="button" aria-label="Finish review" onclick={finish}>
+  <InkToolbarButton aria-label="Finish review" onclick={finish}>
     <InkIcon icon={Check} />
-  </button>
+  </InkToolbarButton>
 </InkToolbar>
 ```
 
@@ -117,11 +317,11 @@ Install `@inkbar/icons` only if you want its icons on your own buttons. The cont
 
 ## Rendering your own element
 
-`InkRoot`, `InkToolbar`, `InkToolButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
 
 ## Without a framework
 
-`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`.
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
 
 ## Styling
 
