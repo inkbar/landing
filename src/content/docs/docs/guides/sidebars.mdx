@@ -212,6 +212,10 @@ Stack headers follow the accordion pattern. Each header is its own Tab stop with
   <TabItem label="Svelte">
 
 ```svelte
+<script lang="ts">
+  let count = $state(0)
+</script>
+
 <InkPanel id="suggestions" label="Suggestions" icon={MessageSquare} badge={count}>
   <InkRecordList records="review.suggestions" bind:count>
     {#snippet empty()}No suggestions left.{/snippet}
@@ -231,7 +235,7 @@ panel.append(createRecordList(viewer, { records: 'review.suggestions' }))
   </TabItem>
 </Tabs>
 
-Each record takes its card from the first `plugin.marks` call over those records whose `where` it passes, and the list shows only the records that pass one. A record that no `marks` call covers is listed with its id as the title and no actions. To choose for yourself, pass `where`, `card` or `sort`. Actions on a card you pass run in one undo step too. The default order is by page, then top to bottom and left to right by the mark's box.
+Each record takes its card from the first `plugin.marks` call over those records whose `where` it passes, and the list shows only the records that pass one. When no `marks` call exists for those records, every record is listed, titled with its id and with no actions. A mark with no `card` titles its record with the mark's label. To choose for yourself, pass `where`, `card` or `sort`. Actions on a card you pass run in one undo step too. The default order is by page, then top to bottom and left to right by the mark's box.
 
 A new function rebuilds the list, so define `card`, `where` and `sort` once, outside the template or component. In React, wrap them in `useCallback`.
 
@@ -255,7 +259,9 @@ It has its own field, labelled "Find in document", and the match count. The fiel
 
 ### Your own list
 
-To read and write a plugin's records from your own component, use `useRecords<T>(name)`. It returns the live `records` and a `handle` to read and write them, and each write is one undo step. `useRecordSelection(name)` returns `selected` and `select(id | null)`. Both need `InkRoot`. Plugins are set up once the root has mounted, so until then `handle` is null, `records` is empty and nothing is selected.
+To read and write a plugin's records from your own component, use `useRecords<T>(name)`. It returns the live `records` and a `handle` to read and write them, and each write is one undo step. `useRecordSelection(name)` returns `selected` and `select(id | null)`. `select` does nothing for an id that has no mark. Both need `InkRoot`. Plugins are set up once the root has mounted, so until then `handle` is null, `records` is empty and nothing is selected.
+
+What the values look like depends on the framework. In Vue, `records`, `handle` and `selected` are refs. In React they are plain values. In Svelte the hooks return an object with getters, so keep the object and read `suggestions.records` or `selection.selected`. Destructuring a Svelte hook loses reactivity.
 
 In plain DOM, `viewer.records<T>(key)` gives the same handle for a key such as `review.suggestions`. Its `list` emits as the records change.
 
@@ -268,7 +274,7 @@ suggestions.batch(() => {
 })
 ```
 
-To list something that is not a record set, pass a `source` in place of `records`. `recordsSource` and `searchSource` from `@inkbar/core/dom` build one, and a source of your own gets the same cards, keys and selection.
+To list something that is not a record set, build a source with `recordsSource` or `searchSource` from `@inkbar/core/dom`, or write one of your own. In the framework packages, pass it as `source` in place of `records`; in plain DOM use `createRecordListController(source)`. It gets the same cards, keys and selection. `card`, `where` and `sort` do not apply to a `source`. With both `source` and `records` given, `source` wins and a development build warns.
 
 To render your own cards, pass a source to `createRecordListController(source)`. Its `rows` give each item, its card and whether it is selected, and `count` and `announcement` give the count and the live-region text. Render each row as an element with `data-ink-record` set to the item's id, call `attach(element)` on the element holding them, and call `act(id, label)` from each action button. `choose(id)` selects and reveals an item from code. Call `destroy()` when you are done.
 

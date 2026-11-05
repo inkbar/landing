@@ -301,6 +301,8 @@ const { records, handle } = useRecords<Suggestion>('review.suggestions')
 import { useRecords } from '@inkbar/svelte'
 
 const suggestions = useRecords<Suggestion>('review.suggestions')
+// Keep the object: it holds getters, and destructuring loses reactivity
+console.log(suggestions.records.length, suggestions.handle)
 ```
 
   </TabItem>

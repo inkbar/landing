@@ -57,7 +57,7 @@ panel.append(createThumbnails(viewer, { pages: [0, 3, 7] }))
   </TabItem>
 </Tabs>
 
-`pages` lists only those pages, in that order, from 0. Without it every page is listed. `width`, `annotations` and `marks` work as they do for one thumbnail.
+`pages` lists only those pages, in that order, from 0. Without it every page is listed. A page that does not exist and a repeat are dropped. `width`, `annotations` and `marks` work as they do for one thumbnail.
 
 The current page has `aria-current="page"` and scrolls into view in the list when it changes, unless you scrolled the list by hand in the last second. The list is one Tab stop. Arrow keys move between pages, Home and End go to the first and last, and Enter or Space opens one.
 
@@ -105,7 +105,7 @@ An item's height is worked out from its page alone, so position what you add abs
 
 ## One thumbnail
 
-`InkThumbnail` (`createThumbnail` in plain DOM) draws a single page. This dialog lets the user tick pages, with a thumbnail inside each checkbox label:
+`InkThumbnail` (`createThumbnail` in plain DOM) draws a single page. A page picker in a dialog lets the user tick pages, with a thumbnail inside each checkbox label:
 
 <Tabs syncKey="framework">
   <TabItem label="Vue">
