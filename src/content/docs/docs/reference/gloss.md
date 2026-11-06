@@ -31,7 +31,7 @@ Gloss accepts more than Inkbar imports. A document that validates against Gloss 
 ## What Inkbar adds or leaves out
 
 - **Embedded annotations stay in the file.** Annotations that came from the PDF never appear in an export.
-- **Viewer state stays out.** In memory, every annotation carries `source` (`session` or `pdf`) and sometimes `locked`. The export drops them, and import ignores them.
+- **Viewer state stays out.** In memory, every annotation carries `source` (`session` or `pdf`), and embedded ones carry `locked` and `hasAppearance`. The export drops them, and import ignores them.
 - **Import is stricter than Gloss.** Every annotation needs `rect`, `color`, `opacity`, `createdAt` and `modifiedAt`, a free-text box needs `defaultStyle` with its `color`, and a redaction needs `interiorColor`. Gloss leaves these optional. An item without them comes back in the result's `errors`, and the rest of the document still imports. Inkbar's own exports always include them.
 - **Unknown fields are dropped.** On a type Inkbar knows, import keeps the fields Gloss defines and drops the rest. Put your own data in `custom`, which Inkbar keeps as it is, apart from [`custom.inkbar`](#what-inkbar-writes-under-custominkbar).
 - **Unknown types are kept.** An item with a type Inkbar doesn't know, a string `id` and a numeric `page` comes back in the result's `unknown` list, and the next export writes it out unchanged. Pass `unknown` to `exportAnnotations` yourself when you call it on a store directly.
