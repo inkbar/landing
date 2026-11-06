@@ -1,0 +1,21 @@
+package.json
+  s_1effe0625d7c7b::t_df8ea9957696f2 58
+pnpm-lock.yaml
+  s_1effe0625d7c7b::t_2e25672ad22ae7 185-186,944-945,4283
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "be3c948508d54cab20fec745af9e1f0c9dc6c3ae",
+  "prompts": {},
+  "sessions": {
+    "s_1effe0625d7c7b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3adafbc8-4f4c-4ced-a223-6be21f4f163c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
