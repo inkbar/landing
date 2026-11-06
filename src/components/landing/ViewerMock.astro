@@ -3,12 +3,12 @@ import {
   ChevronDown,
   ChevronLeft,
   ChevronRight,
-  Hand,
   Highlighter,
   MessageSquare,
-  MousePointer2,
   Redo2,
   Square,
+  SquareDashedMousePointer,
+  TextCursor,
   Undo2,
 } from '@inkbar/icons'
 
@@ -24,11 +24,11 @@ import Icon from '../site/Icon.astro'
   <div class="viewer">
     <div class="toolbar" role="toolbar" aria-label="PDF tools">
       <div class="group">
-        <button type="button" class="tool" aria-label="View">
-          <Icon icon={Hand} />
+        <button type="button" class="tool" aria-label="Select text">
+          <Icon icon={TextCursor} />
         </button>
-        <button type="button" class="tool" aria-label="Select">
-          <Icon icon={MousePointer2} />
+        <button type="button" class="tool" aria-label="Rectangle select">
+          <Icon icon={SquareDashedMousePointer} />
         </button>
         <button type="button" class="tool" aria-label="Highlight" aria-pressed="true">
           <Icon icon={Highlighter} />
