@@ -271,6 +271,57 @@ const plugins = [
 
 Undo and redo arrive as one `replace` with reason `history`. Save the whole `list` then, or use the ids to save only what changed. The records are frozen: copy one before you change it.
 
+## Reading records from your app
+
+Your app can read and write a plugin's records too, to show a count, a custom list or a summary. Name them `<plugin>.<name>`, as in `review.suggestions`. The handle follows the open document, and each write is one undo step, like the plugin's own.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```ts
+import { useRecords } from '@inkbar/vue'
+
+const { records, handle } = useRecords<Suggestion>('review.suggestions')
+// records.value is the live list; handle.value reads and writes it
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { useRecords } from '@inkbar/react'
+
+const { records, handle } = useRecords<Suggestion>('review.suggestions')
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```ts
+import { useRecords } from '@inkbar/svelte'
+
+const suggestions = useRecords<Suggestion>('review.suggestions')
+// Keep the object: it holds getters, and destructuring loses reactivity
+console.log(suggestions.records.length, suggestions.handle)
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+const suggestions = viewer.records<Suggestion>('review.suggestions')
+suggestions.list.subscribe((items) => render(items))
+suggestions.batch(() => {
+  suggestions.update('s1', { status: 'accepted' })
+  suggestions.remove('s2')
+})
+```
+
+  </TabItem>
+</Tabs>
+
+The handle is the plugin's own less `annotates`. `batch(fn)` makes several writes one undo step. In the framework packages the hook needs `InkRoot`, and until the plugins are set up `handle` is null and `records` is empty. An unknown key gives an empty handle that ignores writes and logs a warning once. To list the records as cards without writing the list yourself, see [Lists of records](/docs/guides/sidebars/#lists-of-records).
+
 ## Undo with annotations
 
 Plugin records share the viewer's undo history with annotations. A plugin can make a record change and an annotation edit one step, so a single undo takes back both. Accepting a suggestion, for example, marks the suggestion accepted and adds a redaction; undo puts the suggestion back and removes the redaction.

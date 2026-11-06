@@ -51,6 +51,21 @@ The theme gives each toolbar a background and padding and styles the controls in
 }
 ```
 
+## Your own controls
+
+Two classes give your own controls the look of the built-in ones. Add `ink-select` to a `<select>` to give it the zoom select's box and chevron. To put an icon in a field, wrap the input in `ink-input-group` and add an `ink-input-accessory` before it for an icon at the start, or after it for one at the end. The icon lets clicks through to the field, and the input makes room for it. The find bar and the search results field use this for their search icon.
+
+```html
+<select class="ink-select">
+  …
+</select>
+
+<div class="ink-input-group">
+  <span class="ink-input-accessory"><svg aria-hidden="true">…</svg></span>
+  <input type="text" aria-label="Filter notes" />
+</div>
+```
+
 ## Annotation colours
 
 The annotation colours have their own variables, such as `--ink-highlight` and `--ink-redact`. The theme declares them on the root element, so set yours there too:

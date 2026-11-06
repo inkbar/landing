@@ -8,19 +8,55 @@ import * as icons from '@inkbar/icons'
 import Icon from '../site/Icon.astro'
 
 const entries: [name: keyof typeof icons, usedBy: string][] = [
-  ['Hand', 'View tool'],
-  ['MousePointer2', 'Select tool'],
-  ['Highlighter', 'Highlight tool'],
-  ['Square', 'Mark for redaction tool'],
+  ['TextCursor', 'Select text tool'],
+  ['SquareDashedMousePointer', 'Rectangle select tool'],
+  ['Highlighter', 'Highlight tool, and the highlight menu'],
+  ['Underline', 'Highlight menu, and the text style menu'],
+  ['Strikethrough', 'Highlight menu'],
+  ['SpellCheck2', 'Highlight menu, for squiggly'],
+  ['Square', 'Mark for redaction tool, and the rectangle shape'],
   ['MessageSquare', 'Add note tool'],
+  ['MessageSquareText', 'Note icon on the page'],
+  ['Shapes', 'Shape tool'],
+  ['Slash', 'Line shape'],
+  ['MoveUpRight', 'Arrow shape'],
+  ['RectangleHorizontal', 'Rounded rectangle shape'],
+  ['Circle', 'Ellipse shape'],
+  ['MessageCircle', 'Speech bubble shape'],
+  ['Star', 'Star shape'],
+  ['Hexagon', 'Polygon shape'],
+  ['Search', 'Loupe shape, the Find button and search fields'],
+  ['SquareDashed', 'Mask shape'],
+  ['CircleDashed', 'Oval mask shape'],
+  ['Type', 'Text box tool'],
+  ['PenLine', 'Draw tool'],
+  ['PenTool', 'Sketch tool'],
+  ['Signature', 'Signature tool and menu'],
+  ['Trash2', 'Signature menu, to delete a saved signature'],
+  ['Plus', 'Signature menu, to add one, and Increase font size'],
+  ['Minus', 'Line style menu, and Decrease font size'],
+  ['ALargeSmall', 'Text style menu'],
+  ['Bold', 'Text style menu'],
+  ['Italic', 'Text style menu'],
+  ['AlignLeft', 'Text style menu'],
+  ['AlignCenter', 'Text style menu'],
+  ['AlignRight', 'Text style menu'],
+  ['AlignJustify', 'Text style menu'],
   ['Undo2', 'Undo'],
   ['Redo2', 'Redo'],
   ['ZoomIn', 'Zoom in'],
   ['ZoomOut', 'Zoom out'],
   ['ChevronLeft', 'Previous page'],
   ['ChevronRight', 'Next page'],
-  ['ChevronDown', 'Zoom select, to open it'],
-  ['Check', 'Zoom select, beside the current level'],
+  ['ChevronDown', 'Menu triggers, the zoom select, and Next match'],
+  ['ChevronUp', 'Previous match'],
+  ['CaseSensitive', 'Match case'],
+  ['X', 'Close find'],
+  ['Check', 'Beside the chosen colour, line style or zoom level'],
+  ['Download', 'Download'],
+  ['Printer', 'Print'],
+  ['MoveRight', 'No control: for your own buttons'],
+  ['Info', 'No control: for your own buttons'],
 ]
 ---
 
@@ -60,8 +96,11 @@ const entries: [name: keyof typeof icons, usedBy: string][] = [
     margin-bottom: 6px;
     color: var(--sl-color-white);
   }
+  /* Long names such as SquareDashedMousePointer break rather than widen a phone's page. */
   code {
     align-self: flex-start;
+    max-width: 100%;
+    overflow-wrap: anywhere;
     font-size: var(--sl-text-sm);
   }
   span {

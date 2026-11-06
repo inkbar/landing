@@ -1,0 +1,208 @@
+---
+title: Thumbnails
+description: Draw pages as small images, list them as a page navigator, and use one thumbnail in a dialog or a card.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+A thumbnail draws one page of the open document as a small image, with its annotations and plugin marks on top. `InkThumbnails` lists them all as a page navigator. Put either anywhere: in a [sidebar](/docs/guides/sidebars/) panel, a dialog or a card.
+
+## A list of pages
+
+`InkThumbnails` (`createThumbnails` in plain DOM) lists the pages as thumbnails. Each is a button that scrolls the viewport to its page. It fills its parent's height and scrolls, so put it in a sidebar panel or any box with a height.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkSidebar>
+  <InkPanel id="pages" label="Pages" :icon="Square">
+    <InkThumbnails />
+  </InkPanel>
+</InkSidebar>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkSidebar>
+  <InkPanel id="pages" label="Pages" icon={Square}>
+    <InkThumbnails />
+  </InkPanel>
+</InkSidebar>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkSidebar>
+  <InkPanel id="pages" label="Pages" icon={Square}>
+    <InkThumbnails />
+  </InkPanel>
+</InkSidebar>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { createThumbnails } from '@inkbar/core/dom'
+
+panel.append(createThumbnails(viewer))
+```
+
+  </TabItem>
+</Tabs>
+
+The thumbnails fill the list's width, less a 16px gutter on each side, and resize with it, so the space around each page stays even at any panel width. Pass `width` to fix them at that many pixels instead.
+
+`pages` lists only those pages, in that order, from 0: `:pages="[0, 3, 7]"` in Vue, `pages={[0, 3, 7]}` in React and Svelte. Without it every page is listed. A page that does not exist and a repeat are dropped. `annotations` and `marks` work as they do for one thumbnail.
+
+The current page has `aria-current="page"` and scrolls into view in the list when it changes, unless you scrolled the list by hand in the last second. The list is one Tab stop. Arrow keys move between pages, Home and End go to the first and last, and Enter or Space opens one.
+
+Only the items near the visible part of the list are in the document, so a 500-page file stays cheap. When the list scrolls away from the focused item, focus moves to the first visible one without scrolling back.
+
+### Adding to each item
+
+You can add your own content to each item, after its page number. A page count, a status dot or a "reviewed" tick would go here.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkThumbnails>
+  <template #item="{ page, current }">
+    <span class="page-count">{{ counts[page] }}</span>
+  </template>
+</InkThumbnails>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkThumbnails
+  renderItem={({ page }) => <span className="page-count">{counts[page]}</span>}
+/>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkThumbnails>
+  {#snippet item({ page, current })}
+    <span class="page-count">{counts[page]}</span>
+  {/snippet}
+</InkThumbnails>
+```
+
+  </TabItem>
+</Tabs>
+
+An item's height is worked out from its page alone, so position what you add absolutely. It renders inside the item's `<button>`, so keep it non-interactive: no links, buttons or inputs. Plain DOM has no item slot. To render your own items, build the list on `createThumbnailsController` instead, as [below](#your-own-items).
+
+## One thumbnail
+
+`InkThumbnail` (`createThumbnail` in plain DOM) draws a single page. A page picker in a dialog lets the user tick pages, with a thumbnail inside each checkbox label:
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<ul>
+  <li v-for="page in pages" :key="page">
+    <label>
+      <input type="checkbox" :value="page" />
+      <InkThumbnail :page="page" :width="96" />
+      <span aria-hidden="true">{{ page + 1 }}</span>
+    </label>
+  </li>
+</ul>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<ul>
+  {pages.map((page) => (
+    <li key={page}>
+      <label>
+        <input type="checkbox" value={page} />
+        <InkThumbnail page={page} width={96} />
+        <span aria-hidden="true">{page + 1}</span>
+      </label>
+    </li>
+  ))}
+</ul>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<ul>
+  {#each pages as page (page)}
+    <li>
+      <label>
+        <input type="checkbox" value={page} />
+        <InkThumbnail {page} width={96} />
+        <span aria-hidden="true">{page + 1}</span>
+      </label>
+    </li>
+  {/each}
+</ul>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { createThumbnail } from '@inkbar/core/dom'
+
+const label = document.createElement('label')
+const box = document.createElement('input')
+box.type = 'checkbox'
+box.value = String(page)
+label.append(box, createThumbnail(viewer, { page, width: 96 }))
+```
+
+  </TabItem>
+</Tabs>
+
+| Option        | What it does                                                                 |
+| ------------- | ---------------------------------------------------------------------------- |
+| `page`        | The page, from 0                                                             |
+| `width`       | The width in CSS pixels. The height follows the page's shape                 |
+| `height`      | The height in CSS pixels. The width follows. `width` wins when you give both |
+| `annotations` | `false` leaves the annotations out. Default `true`                           |
+| `marks`       | `false` leaves plugin marks out. Default `true`                              |
+| `label`       | Replaces the accessible name. Default "Page 4" for page 3                    |
+
+With neither `width` nor `height`, a thumbnail is 120px wide. It follows the page's own `/Rotate`, and the viewer's rotation does not apply.
+
+A thumbnail is an image to assistive technology (`role="img"`). It has no focus and no click behaviour, so wrap it in a button or link when you need one. It renders once it comes within 200px of the visible area, and it shows a placeholder of the right size before then and while no document is open. Form fields show the values saved in the PDF. Annotations follow edits, undo and redo. Marks are drawn with the plugin's class and style but take no presses.
+
+Both components need `InkRoot` and render empty on the server.
+
+## Your own items
+
+To paint a thumbnail into an element of your own, call `createThumbnailPainter(element, { document, pluginHost }, options)` with readables of the document and, for marks, the plugin host. It adds the `ink-thumbnail` class, its role, name, size and layers, and leaves the element's own classes and children alone. `update(options)` applies new options, and `destroy()` removes everything it added. `thumbnailSize(pageInfo, { width, height })` gives the size and zoom a thumbnail of that page gets.
+
+To render the whole list yourself, use `createThumbnailsController({ document, pluginHost, viewport }, options)`. Its `state` gives:
+
+- `pages`, the pages listed
+- `current`, the current page, or -1 with no viewport
+- `window`, the range of indexes into `pages` to mount
+- `offsets`, the distance of each item from the top of the list. The last entry is the total height
+
+Render a spacer of the total height, and each item in the window at its offset. Each item is a button with `data-ink-thumbnail-item` set to its page and a painter inside, wrapped in an element with `itemAttrs(index)` spread on it. That gives it the `listitem` role, plus `aria-setsize` and `aria-posinset`, which you need because only the window is mounted. An item is as tall as its thumbnail plus 32px for its label and padding, as the theme draws it.
+
+Call `attach(scrollElement)` once the list is in the document. It follows scrolling, handles clicks and keys, and sets each item's `tabindex`. `activate(page)` scrolls the viewer to a page.
+
+## Lifetimes
+
+`createThumbnail`, `createThumbnails`, `createRecordList` and `createSearchResults` follow the viewer and stop when it is destroyed, not when you remove their element. For a short-lived use, such as a dialog or a popover, call `createThumbnailPainter` or `createRecordListController` and its `destroy()` when you close it. The framework components clean up when they unmount.

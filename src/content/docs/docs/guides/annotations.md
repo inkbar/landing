@@ -65,7 +65,7 @@ In a framework app, `useDocument()` returns `exportAnnotations()` and `importAnn
 
 ## Annotations from the PDF
 
-Annotations already in the file are drawn by PDF.js on the page canvas. Inkbar adds them to the list with `source: 'pdf'` and `locked: true`, so people can select and read them, but cannot move, resize or delete them. Exports leave out `source` and `locked`. `doc.embedded`, or `useEmbedded()`, counts them by subtype, including subtypes Inkbar does not model.
+Annotations already in the file are drawn by PDF.js on the page canvas. Inkbar adds them to the list with `source: 'pdf'` and `locked: true`, so people can select and read them, but cannot move, resize or delete them. `hasAppearance` says whether the file carries its own appearance for one. PDF.js draws a note only when it does, so Inkbar draws the icon of a note without one. Exports leave out `source`, `locked` and `hasAppearance`. `doc.embedded`, or `useEmbedded()`, counts them by subtype, including subtypes Inkbar does not model.
 
 ## Annotation changes
 
