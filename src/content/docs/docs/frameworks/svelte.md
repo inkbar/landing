@@ -70,6 +70,8 @@ Each control is a separate component, so put them in any order or leave some out
 
 `tool`, `page` and `zoom` are bindable too, and each has a callback prop such as `onToolChange` if you would rather not bind.
 
+`InkViewport` zooms the document on a two-finger pinch, a trackpad pinch or ctrl+wheel. With `pinchZoom={false}`, the browser handles pinches and zooms the whole page.
+
 ## Forms
 
 `InkViewport` fills the PDF's form fields and runs the form's scripts. `useForm()` returns the fields, their values, and `set` and `reset`. Use `bind:fields` to hold the values in your own state. The form never submits, opens a link, sends mail or prints: `onformaction` hands each request to you. `formHighlight={false}` turns off the field tint, and a change applies to the open document in place.
