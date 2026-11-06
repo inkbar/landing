@@ -1,0 +1,30 @@
+src/content/docs/docs/frameworks/react.md
+  s_bbae2197bdc5fa::t_cc93c8e8daed03 88-89
+src/content/docs/docs/frameworks/svelte.md
+  s_bbae2197bdc5fa::t_cc93c8e8daed03 77-78
+src/content/docs/docs/frameworks/vue.md
+  s_bbae2197bdc5fa::t_cc93c8e8daed03 83-84
+src/content/docs/docs/guides/writing-a-plugin.mdx
+  s_bbae2197bdc5fa::t_c067eb3b38a8cb 223-224,303-324
+  s_bbae2197bdc5fa::t_3ac0b2d43a9dba 325
+src/content/docs/docs/frameworks/plain-dom.md
+  s_bbae2197bdc5fa::t_c067eb3b38a8cb 126-127
+src/content/docs/docs/index.mdx
+  s_bbae2197bdc5fa::t_c067eb3b38a8cb 37
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "8b5a6845bb750163ed96e47060a93d53be00fc0d",
+  "prompts": {},
+  "sessions": {
+    "s_bbae2197bdc5fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6689b872-6bb0-43d6-ae15-c0abc346f21e",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
