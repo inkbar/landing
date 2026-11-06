@@ -96,8 +96,11 @@ const entries: [name: keyof typeof icons, usedBy: string][] = [
     margin-bottom: 6px;
     color: var(--sl-color-white);
   }
+  /* Long names such as SquareDashedMousePointer break rather than widen a phone's page. */
   code {
     align-self: flex-start;
+    max-width: 100%;
+    overflow-wrap: anywhere;
     font-size: var(--sl-text-sm);
   }
   span {

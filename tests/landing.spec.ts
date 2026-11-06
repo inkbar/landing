@@ -36,8 +36,8 @@ test('the viewer mock exposes a labelled toolbar', async ({ page }) => {
   const toolbar = page.getByRole('toolbar', { name: 'PDF tools' })
   await expect(toolbar).toBeVisible()
   for (const name of [
-    'View',
-    'Select',
+    'Select text',
+    'Rectangle select',
     'Highlight',
     'Mark for redaction',
     'Add note',
@@ -108,6 +108,7 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
     'Annotations as data',
     'Undo and redo',
     'Keyboard and screen readers',
+    'Print and download',
   ])
   await expect(page.locator('#features .next li')).toHaveCount(1)
 })
