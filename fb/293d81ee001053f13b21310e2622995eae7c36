@@ -1,0 +1,28 @@
+src/components/landing/ViewerMock.astro
+  s_1effe0625d7c7b::t_fd1070e52f982f 10-11,27-28,30-31
+src/content/docs/docs/reference/icons.mdx
+  s_1effe0625d7c7b::t_fd1070e52f982f 3,9
+src/components/landing/Theming.astro
+  s_1effe0625d7c7b::t_fd1070e52f982f 2,23,52,91
+src/components/landing/Features.astro
+  s_1effe0625d7c7b::t_fd1070e52f982f 2,127
+src/components/docs/IconGrid.astro
+  s_1effe0625d7c7b::t_4fcf28498be3eb 36-37,51,55
+  s_1effe0625d7c7b::t_fd1070e52f982f 11-17,19-35,38-44,52-54,56-59
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "fb293d81ee001053f13b21310e2622995eae7c36",
+  "prompts": {},
+  "sessions": {
+    "s_1effe0625d7c7b": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3adafbc8-4f4c-4ced-a223-6be21f4f163c",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
