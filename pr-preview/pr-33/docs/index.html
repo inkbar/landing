@@ -95,6 +95,10 @@
 <td>Undo and redo with grouped steps, from the toolbar or Ctrl/Cmd+Z, whether Inkbar or your app holds the annotations. Field edits undo too</td>
 </tr>
 <tr>
+<td>Files</td>
+<td>Download and print the open PDF, from a button or Ctrl/Cmd+S and +P. Until saving into the PDF ships, that is the file as it was opened</td>
+</tr>
+<tr>
 <td>Toolbars</td>
 <td>Composable controls for tools, undo and redo, pages and zoom, with icons you can swap for your own</td>
 </tr>
@@ -111,7 +115,7 @@
 <li><strong>Applying redactions.</strong> A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. Inkbar will remove content once saving into the PDF ships.</li>
 <li><strong>Saving field values into the PDF.</strong> Values stay in memory. Export them with the annotations as Gloss, as <a href="/pr-preview/pr-33/docs/guides/forms/#save-values-as-gloss">Forms</a> shows.</li>
 <li><strong>XFA forms.</strong> A form built only in XFA shows as a static page.</li>
-<li><strong>Thumbnails, outline, print and download.</strong> Not built.</li>
+<li><strong>Outline.</strong> Not built.</li>
 <li><strong>Touch gestures.</strong> Pinch zoom and long press are not handled.</li>
 <li><strong>Translations.</strong> The controls and popovers are in English. Pass <code dir="auto">label</code> to a tool button, or <code dir="auto">aria-label</code> and <code dir="auto">title</code> to the other buttons, to rename them. <code dir="auto">InkPageCount</code> always reads “of N”. Render the popovers with your own components to translate them.</li>
 <li><strong>Password prompt.</strong> Pass <code dir="auto">password</code> yourself. Without it, a protected file fails with <code dir="auto">PasswordRequired</code>.</li>
