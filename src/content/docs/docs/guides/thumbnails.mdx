@@ -17,7 +17,7 @@ A thumbnail draws one page of the open document as a small image, with its annot
 ```vue
 <InkSidebar>
   <InkPanel id="pages" label="Pages" :icon="Square">
-    <InkThumbnails :width="96" />
+    <InkThumbnails />
   </InkPanel>
 </InkSidebar>
 ```
@@ -28,7 +28,7 @@ A thumbnail draws one page of the open document as a small image, with its annot
 ```tsx
 <InkSidebar>
   <InkPanel id="pages" label="Pages" icon={Square}>
-    <InkThumbnails width={96} />
+    <InkThumbnails />
   </InkPanel>
 </InkSidebar>
 ```
@@ -39,7 +39,7 @@ A thumbnail draws one page of the open document as a small image, with its annot
 ```svelte
 <InkSidebar>
   <InkPanel id="pages" label="Pages" icon={Square}>
-    <InkThumbnails width={96} />
+    <InkThumbnails />
   </InkPanel>
 </InkSidebar>
 ```
@@ -50,14 +50,15 @@ A thumbnail draws one page of the open document as a small image, with its annot
 ```ts
 import { createThumbnails } from '@inkbar/core/dom'
 
-panel.append(createThumbnails(viewer, { width: 96 }))
-panel.append(createThumbnails(viewer, { pages: [0, 3, 7] }))
+panel.append(createThumbnails(viewer))
 ```
 
   </TabItem>
 </Tabs>
 
-`pages` lists only those pages, in that order, from 0. Without it every page is listed. A page that does not exist and a repeat are dropped. `width`, `annotations` and `marks` work as they do for one thumbnail.
+The thumbnails fill the list's width, less a 16px gutter on each side, and resize with it, so the space around each page stays even at any panel width. Pass `width` to fix them at that many pixels instead.
+
+`pages` lists only those pages, in that order, from 0: `:pages="[0, 3, 7]"` in Vue, `pages={[0, 3, 7]}` in React and Svelte. Without it every page is listed. A page that does not exist and a repeat are dropped. `annotations` and `marks` work as they do for one thumbnail.
 
 The current page has `aria-current="page"` and scrolls into view in the list when it changes, unless you scrolled the list by hand in the last second. The list is one Tab stop. Arrow keys move between pages, Home and End go to the first and last, and Enter or Space opens one.
 
