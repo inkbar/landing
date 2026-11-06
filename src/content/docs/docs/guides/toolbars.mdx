@@ -16,6 +16,8 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 | `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                        |
 | `InkToolbarButton`           | Your own button, in the toolbar's arrow-key order. See [Your own buttons](#your-own-buttons)                   |
 | `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                  |
+| `InkDownloadButton`          | Downloads the open PDF. `filename` names the file                                                              |
+| `InkPrintButton`             | Prints the open PDF with the browser's print dialog                                                            |
 | `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                    |
 | `InkPageInput`               | The current page number, which the user can type into                                                          |
 | `InkPageCount`               | "of N", the page count                                                                                         |
@@ -37,6 +39,8 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history. History is on by default; in controlled mode, turn it on with `history`. The page number field and the zoom select keep their own Tab stops.
 
 Ctrl or Cmd with Z undoes, and Ctrl or Cmd with Shift and Z, or Ctrl with Y, redoes. Both work on every platform. The keys do what `InkUndo` and `InkRedo` do, from anywhere inside `InkRoot`, toolbars included. In a text field, a select or editable content, they act on that element instead.
+
+Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file's name, or the last part of its URL, or `document.pdf`. Printing opens the browser's print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. Until saving into the PDF ships, both give the file as it was opened, without this session's annotations.
 
 ## Choosing tools
 
@@ -317,11 +321,11 @@ Install `@inkbar/icons` only if you want its icons on your own buttons. The cont
 
 ## Rendering your own element
 
-`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkDownloadButton`, `InkPrintButton`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
 
 ## Without a framework
 
-`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createDownloadButton`, `createPrintButton`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
 
 ## Styling
 

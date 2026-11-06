@@ -21,6 +21,7 @@ To see it before you install anything, open the [sandbox](https://sandbox.inkbar
 | Drawing     | Freehand ink, shapes, lines, arrows, speech bubbles, loupes, masks and text boxes, with colour and line style menus. See [Drawing](/docs/guides/drawing/) |
 | Annotations | JSON export and import, and the PDF's own annotations shown as locked                                                                                     |
 | History     | Undo and redo with grouped steps, from the toolbar or Ctrl/Cmd+Z, whether Inkbar or your app holds the annotations. Field edits undo too                  |
+| Files       | Download and print the open PDF, from a button or Ctrl/Cmd+S and +P. Until saving into the PDF ships, that is the file as it was opened                   |
 | Toolbars    | Composable controls for tools, undo and redo, pages and zoom, with icons you can swap for your own                                                        |
 | Keyboard    | Zoom, page and annotation shortcuts, and `Enter` to apply the active tool. See [Tools and keyboard](/docs/guides/annotations/#tools-and-keyboard)         |
 
@@ -32,7 +33,7 @@ You build the toolbars from Inkbar's controls and place them where they fit your
 - **Applying redactions.** A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. Inkbar will remove content once saving into the PDF ships.
 - **Saving field values into the PDF.** Values stay in memory. Export them with the annotations as Gloss, as [Forms](/docs/guides/forms/#save-values-as-gloss) shows.
 - **XFA forms.** A form built only in XFA shows as a static page.
-- **Thumbnails, outline, print and download.** Not built.
+- **Outline.** Not built.
 - **Touch gestures.** Pinch zoom and long press are not handled.
 - **Translations.** The controls and popovers are in English. Pass `label` to a tool button, or `aria-label` and `title` to the other buttons, to rename them. `InkPageCount` always reads "of N". Render the popovers with your own components to translate them.
 - **Password prompt.** Pass `password` yourself. Without it, a protected file fails with `PasswordRequired`.
