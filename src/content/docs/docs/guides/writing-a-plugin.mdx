@@ -336,7 +336,7 @@ Replacing every mark on each render drops focus when a mark redraws. To keep it,
 
 ### Tools and decorations
 
-`ctx.tools.add(tool)` adds a tool under `<plugin>.<id>`. A tool has an `id`, a `cursor`, `activate(toolCtx)` and `deactivate()`, and optional `label`, `icon`, `kind` (`'sticky'`, the default, or `'one-shot'`) and pointer and key handlers. `toolCtx` gives it the annotation `store`, the `viewport` and more. The press handlers receive the page `hit`, whose `user` is the point in user space.
+`ctx.tools.add(tool)` adds a tool under `<plugin>.<id>`. A tool has an `id`, a `cursor`, `activate(toolCtx)` and `deactivate()`, and optional `label`, `icon`, `kind` (`'sticky'`, the default, or `'one-shot'`), `claimsTouch` and pointer and key handlers. `toolCtx` gives it the annotation `store`, the `viewport` and more. The press handlers receive the page `hit`, whose `user` is the point in user space. Set `claimsTouch: true` to receive one-finger drags; the host then gives up one-finger scrolling over the document while the tool is active, and two fingers still scroll and zoom.
 
 ```ts
 import type { PageHit, ToolContext } from '@inkbar/core/dom'
