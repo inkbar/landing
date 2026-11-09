@@ -1,0 +1,26 @@
+src/content/docs/docs/guides/annotations.md
+  s_bbae2197bdc5fa::t_1187fb04935107 112
+src/content/docs/docs/index.mdx
+  s_bbae2197bdc5fa::t_1187fb04935107 27
+  s_bbae2197bdc5fa::t_4564e40874cfd0 12-26
+src/content/docs/docs/guides/writing-a-plugin.mdx
+  s_bbae2197bdc5fa::t_1187fb04935107 339
+src/content/docs/docs/guides/drawing.mdx
+  s_bbae2197bdc5fa::t_1187fb04935107 203
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "c3588299b177ec9843da437a4c8cc84b8b90ea51",
+  "prompts": {},
+  "sessions": {
+    "s_bbae2197bdc5fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "6689b872-6bb0-43d6-ae15-c0abc346f21e",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
