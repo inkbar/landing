@@ -56,7 +56,7 @@
 <tbody>
 <tr>
 <td>Viewing</td>
-<td>Canvas rendering with a selectable text layer, zoom, fit to width or page, continuous or single-page layout, page navigation</td>
+<td>Canvas rendering with a selectable text layer, zoom, pinch zoom on touch screens and trackpads, fit to width or page, continuous or single-page layout, page navigation</td>
 </tr>
 <tr>
 <td>Search</td>
@@ -106,6 +106,10 @@
 <td>Keyboard</td>
 <td>Zoom, page and annotation shortcuts, and <code dir="auto">Enter</code> to apply the active tool. See <a href="/docs/guides/annotations/#tools-and-keyboard">Tools and keyboard</a></td>
 </tr>
+<tr>
+<td>Touch</td>
+<td>Pinch to zoom the document, not the page. One finger draws with the drawing tools and two fingers scroll. Plugins can listen for presses and long presses. See <a href="/docs/guides/writing-a-plugin/#presses">Presses</a></td>
+</tr>
 </tbody>
 </table>
 <p>You build the toolbars from Inkbar’s controls and place them where they fit your app. There are buttons for the tools, menus for shapes, highlights, signatures, colours, line style and text style, buttons for undo and redo, and previous and next page, plus a page number field, the page count and zoom controls. <a href="/docs/guides/toolbars/">Toolbars</a> lists them all.</p>
@@ -116,7 +120,6 @@
 <li><strong>Saving field values into the PDF.</strong> Values stay in memory. Export them with the annotations as Gloss, as <a href="/docs/guides/forms/#save-values-as-gloss">Forms</a> shows.</li>
 <li><strong>XFA forms.</strong> A form built only in XFA shows as a static page.</li>
 <li><strong>Outline.</strong> Not built.</li>
-<li><strong>Touch gestures.</strong> Pinch zoom and long press are not handled.</li>
 <li><strong>Translations.</strong> The controls and popovers are in English. Pass <code dir="auto">label</code> to a tool button, or <code dir="auto">aria-label</code> and <code dir="auto">title</code> to the other buttons, to rename them. <code dir="auto">InkPageCount</code> always reads “of N”. Render the popovers with your own components to translate them.</li>
 <li><strong>Password prompt.</strong> Pass <code dir="auto">password</code> yourself. Without it, a protected file fails with <code dir="auto">PasswordRequired</code>.</li>
 </ul>
