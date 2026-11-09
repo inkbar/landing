@@ -108,7 +108,7 @@
 </tr>
 <tr>
 <td>Touch</td>
-<td>Pinch to zoom the document, not the page. Plugins can listen for presses and long presses. See <a href="/pr-preview/pr-34/docs/guides/writing-a-plugin/#presses">Presses</a></td>
+<td>Pinch to zoom the document, not the page. One finger draws with the drawing tools and two fingers scroll. Plugins can listen for presses and long presses. See <a href="/pr-preview/pr-34/docs/guides/writing-a-plugin/#presses">Presses</a></td>
 </tr>
 </tbody>
 </table>
@@ -120,7 +120,6 @@
 <li><strong>Saving field values into the PDF.</strong> Values stay in memory. Export them with the annotations as Gloss, as <a href="/pr-preview/pr-34/docs/guides/forms/#save-values-as-gloss">Forms</a> shows.</li>
 <li><strong>XFA forms.</strong> A form built only in XFA shows as a static page.</li>
 <li><strong>Outline.</strong> Not built.</li>
-<li><strong>Drawing with a finger.</strong> A one-finger drag with a drawing tool scrolls the document. Draw with a pen, mouse or trackpad.</li>
 <li><strong>Translations.</strong> The controls and popovers are in English. Pass <code dir="auto">label</code> to a tool button, or <code dir="auto">aria-label</code> and <code dir="auto">title</code> to the other buttons, to rename them. <code dir="auto">InkPageCount</code> always reads “of N”. Render the popovers with your own components to translate them.</li>
 <li><strong>Password prompt.</strong> Pass <code dir="auto">password</code> yourself. Without it, a protected file fails with <code dir="auto">PasswordRequired</code>.</li>
 </ul>
