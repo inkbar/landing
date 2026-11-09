@@ -203,23 +203,25 @@ A plugin can also be a plain object, `definePlugin({ id, setup(ctx) { … } })`,
 
 ### The context
 
-| Member                 | What it does                                                                                             |
-| ---------------------- | -------------------------------------------------------------------------------------------------------- |
-| `id`                   | The plugin's id                                                                                          |
-| `document`             | A readable of the open `InkDocument`, or `null`                                                          |
-| `history.batch(fn)`    | Makes everything `fn` changes, annotations and records alike, one undo step                              |
-| `activated`            | A readable of the activated annotation's id, or `null`                                                   |
-| `setActivated(id)`     | Activates an annotation, or clears the activation with `null`. An id not in the open document is ignored |
-| `root`                 | A readable of the viewport's scroll container, or `null` while none is mounted                           |
-| `commands.add(spec)`   | Adds a command and returns it                                                                            |
-| `tools.add(tool)`      | Adds a tool                                                                                              |
-| `decorate(fn)`         | Adds `data`, `classes` and a `description` to annotation elements                                        |
-| `redecorate()`         | Runs every decoration again                                                                              |
-| `store(name, options)` | A readable of the record store for the open document, or `null`                                          |
-| `onDocument(fn)`       | Runs `fn(doc)` for each document that opens. The function it returns runs when that document closes      |
-| `onAnnotationEdit(fn)` | Runs `fn(edit)` for every user add, update and remove of an annotation, inside that edit's undo step     |
-| `layer(spec)`          | Adds a page layer and returns a handle with `invalidate(page?)`                                          |
-| `scrollTo(page, rect)` | Scrolls the viewer so `rect`, in user space on `page`, is in view. Moves no focus                        |
+| Member                 | What it does                                                                                                                          |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                   | The plugin's id                                                                                                                       |
+| `document`             | A readable of the open `InkDocument`, or `null`                                                                                       |
+| `history.batch(fn)`    | Makes everything `fn` changes, annotations and records alike, one undo step                                                           |
+| `activated`            | A readable of the activated annotation's id, or `null`                                                                                |
+| `setActivated(id)`     | Activates an annotation, or clears the activation with `null`. An id not in the open document is ignored                              |
+| `root`                 | A readable of the viewport's scroll container, or `null` while none is mounted                                                        |
+| `commands.add(spec)`   | Adds a command and returns it                                                                                                         |
+| `tools.add(tool)`      | Adds a tool                                                                                                                           |
+| `decorate(fn)`         | Adds `data`, `classes` and a `description` to annotation elements                                                                     |
+| `redecorate()`         | Runs every decoration again                                                                                                           |
+| `store(name, options)` | A readable of the record store for the open document, or `null`                                                                       |
+| `onDocument(fn)`       | Runs `fn(doc)` for each document that opens. The function it returns runs when that document closes                                   |
+| `onAnnotationEdit(fn)` | Runs `fn(edit)` for every user add, update and remove of an annotation, inside that edit's undo step                                  |
+| `layer(spec)`          | Adds a page layer and returns a handle with `invalidate(page?)`                                                                       |
+| `scrollTo(page, rect)` | Scrolls the viewer so `rect`, in user space on `page`, is in view. Moves no focus                                                     |
+| `onPress(fn)`          | Runs `fn(press)` for a press on a page that nothing in Inkbar acted on. Returns a function that stops listening                       |
+| `onLongPress(fn)`      | Runs `fn(press)` when a touch or pen is held still on a page that nothing in Inkbar acted on. Returns a function that stops listening |
 
 A readable has `get()` and `subscribe(fn)`, which returns a function that stops it. `writable` from `@inkbar/core` makes one you can `set`.
 
@@ -298,6 +300,29 @@ Keep your geometry in PDF user space: points, origin bottom-left, before the pag
 - `fromCss(point)`, `fromCssRect(cssRect)` and `fromCssLength(px)` go the other way.
 - `cssWidth`, `cssHeight`, `zoom` and `rotation` describe the page as drawn.
 
+### Presses
+
+`ctx.onPress(fn)` and `ctx.onLongPress(fn)` tell you about a press on a page that nothing in Inkbar acted on. Listeners are removed when the plugin is torn down.
+
+```ts
+import { definePlugin } from '@inkbar/core/dom'
+
+export const pressLog = definePlugin('press-log', (plugin) => {
+  plugin.onPress(({ page, point, pointerType }) => {
+    console.log('press', page, point, pointerType)
+  })
+  plugin.onLongPress(({ page, point }) => {
+    console.log('long press', page, point)
+  })
+})
+```
+
+The payload is a `PagePress`: `page` is a zero-based index, `point` is in user space on that page, and `pointerType` is `'mouse'`, `'touch'` or `'pen'`.
+
+A press is a pointer going down and up on a page without moving more than a few pixels. A mouse click is a press. A touch or pen held still for about half a second is a long press instead. It fires while the finger is still down, and the release reports nothing more. A mouse never long-presses. A touch that becomes part of a pinch before a long press fires is neither, and so is one that starts a scroll.
+
+Both fire only under the text and rectangle select tools; any other tool owns every press. They also stay quiet when something else took the press: an annotation, a resize handle, a link, a form field, a mark or a text editor. A press that commits an open text editor or closes a popover reports nothing either. Inkbar leaves the browser's own long-press behaviour alone, so text selection and context menus still work.
+
 ### Marks and the keyboard
 
 A mark is anything you put in a layer that the user can press or focus.
@@ -311,7 +336,7 @@ Replacing every mark on each render drops focus when a mark redraws. To keep it,
 
 ### Tools and decorations
 
-`ctx.tools.add(tool)` adds a tool under `<plugin>.<id>`. A tool has an `id`, a `cursor`, `activate(toolCtx)` and `deactivate()`, and optional `label`, `icon`, `kind` (`'sticky'`, the default, or `'one-shot'`) and pointer and key handlers. `toolCtx` gives it the annotation `store`, the `viewport` and more. The press handlers receive the page `hit`, whose `user` is the point in user space.
+`ctx.tools.add(tool)` adds a tool under `<plugin>.<id>`. A tool has an `id`, a `cursor`, `activate(toolCtx)` and `deactivate()`, and optional `label`, `icon`, `kind` (`'sticky'`, the default, or `'one-shot'`), `claimsTouch` and pointer and key handlers. `toolCtx` gives it the annotation `store`, the `viewport` and more. The press handlers receive the page `hit`, whose `user` is the point in user space. Set `claimsTouch: true` to receive one-finger drags; the host then gives up one-finger scrolling over the document while the tool is active, and two fingers still scroll and zoom.
 
 ```ts
 import type { PageHit, ToolContext } from '@inkbar/core/dom'

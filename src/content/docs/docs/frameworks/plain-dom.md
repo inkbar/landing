@@ -123,7 +123,8 @@ Options:
 - `container` and `document`, both required.
 - `tools`: the creation tools to register, from `allTools()` or the factories in `@inkbar/core/dom`. `select-text` and `select` are always present.
 - `zoom` (a number, `'fit-width'` or `'fit-page'`; default `'fit-width'`), `page`, `mode` (`'continuous'` or `'single'`), `rotation` (0, 90, 180 or 270) and `tool` set the starting view. Change them later through `engine.viewport` and `engine.tools`.
-- `gap`, `buffer` and `customAnnotations` are fixed for a build. Change them with `engine.rebuild`.
+- `gap`, `buffer`, `pinchZoom` and `customAnnotations` are fixed for a build. Change them with `engine.rebuild`.
+- `pinchZoom` (default `true`) zooms the document when two fingers pinch over the container, and on a trackpad pinch or ctrl+wheel. Set it to `false` to leave pinching to the browser, which then zooms the whole page.
 - `decorateAnnotation(annotation)` returns your own `data`, `classes` and `description` for an annotation's element, or `undefined`. `{ data: { 'my-flag': 'on' } }` writes `data-my-flag="on"`, and `description` becomes the element's `aria-description`. Data keys are lower-case kebab case. Inkbar applies them again whenever the annotations change. Call `engine.redecorate()` when they depend on anything else. Core's own attributes and `ink-` classes always win.
 - `onActivate(id)` fires when the user activates an annotation.
 - `onBuild(viewport, tools)` fires after every build, the first one included, before `mountViewer` returns. Subscribe to the new viewport and tool controller here.

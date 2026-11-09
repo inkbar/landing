@@ -109,6 +109,8 @@ To drive history from your own UI, `useHistory()` returns `canUndo`, `canRedo`, 
 | Annotation                   | `Delete` or `Backspace`                       | Removes it                                                                                          |
 | Annotation                   | `Escape`                                      | Clears the selection                                                                                |
 
+Pinching zooms the document around your fingers: two fingers on a touch screen, a trackpad pinch, or `Ctrl` + scroll wheel. Pages sharpen when the pinch ends. Two fingers also scroll the document, and under a drawing tool they are how you scroll, because one finger draws. The viewport handles pinching itself, and its `pinchZoom` option turns it off.
+
 The framework packages and `createViewer` install all of these. If you build on `createToolController` directly, it and the overlay handle the tool and annotation keys. The zoom and page keys come from `attachViewportKeys`, which the tool controller does not install. Attach it to the same container:
 
 ```ts
