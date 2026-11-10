@@ -61,6 +61,7 @@ export default defineConfig({
             { label: 'Search', slug: 'docs/guides/search' },
             { label: 'Sidebars', slug: 'docs/guides/sidebars' },
             { label: 'Thumbnails', slug: 'docs/guides/thumbnails' },
+            { label: 'Outline and links', slug: 'docs/guides/outline-and-links' },
             { label: 'Forms', slug: 'docs/guides/forms' },
             { label: 'Signatures', slug: 'docs/guides/signatures' },
             { label: 'Redaction', slug: 'docs/guides/redaction' },
