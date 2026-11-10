@@ -1,0 +1,26 @@
+src/content/docs/docs/guides/outline-and-links.mdx
+  s_b0e6b2d5bd6b31::t_e2aff04a80f2d8 1-274
+astro.config.mjs
+  s_b0e6b2d5bd6b31::t_f995442323574a 64
+src/content/docs/docs/reference/theme-tokens.md
+  s_b0e6b2d5bd6b31::t_e2aff04a80f2d8 71-76
+  s_b0e6b2d5bd6b31::t_f995442323574a 67-70,77
+src/content/docs/docs/index.mdx
+  s_b0e6b2d5bd6b31::t_e2aff04a80f2d8 12-28
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "b476c87f0819f67b7e40f56b5e1518e0dfafdf01",
+  "prompts": {},
+  "sessions": {
+    "s_b0e6b2d5bd6b31": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "d0c0efc0-e561-4d1e-a89e-c758b277f97e",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Edward Coleridge Smith <edcoleridgesmith@gmail.com>"
+    }
+  }
+}
