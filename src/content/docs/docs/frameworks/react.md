@@ -85,7 +85,7 @@ Each control is a separate component, so put them in any order or leave some out
 
 ## Forms
 
-`InkViewport` fills the PDF's form fields and runs the form's scripts. `useForm()` returns the fields, their values, and `set` and `reset`. Pass `fields` with `onFieldsChange` to hold the values in your own state. The form never submits, opens a link, sends mail or prints: `onFormAction` hands each request to you. `formHighlight={false}` turns off the field tint, and a change applies to the open document in place.
+`InkViewport` fills the PDF's form fields and runs the form's scripts. `useForm()` returns the fields, their values, and `set` and `reset`. Pass `fields` with `onFieldsChange` to hold the values in your own state. The form never submits, opens a link, sends mail or prints: `onAction` hands each request to you. `formHighlight={false}` turns off the field tint, and a change applies to the open document in place.
 
 [Forms](/docs/guides/forms/) covers controlled fields, form actions, scripts, signature fields and saving values as Gloss.
 

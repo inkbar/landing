@@ -71,23 +71,18 @@ Whether fields are controlled is fixed when a document opens. While you control 
 <script setup lang="ts">
 import { ref } from 'vue'
 import { InkRoot, InkViewport } from '@inkbar/vue'
-import type { FieldValues, FormAction } from '@inkbar/core'
+import type { FieldValues, ViewerAction } from '@inkbar/core'
 import { assets } from 'virtual:inkbar-assets'
 
 const fields = ref<FieldValues>({ 'applicant.name': 'Ada' })
 
-function onFormAction(action: FormAction) {
+function onAction(action: ViewerAction) {
   // See "Form actions" below.
 }
 </script>
 
 <template>
-  <InkRoot
-    v-model:fields="fields"
-    :src="file"
-    :assets="assets"
-    @form-action="onFormAction"
-  >
+  <InkRoot v-model:fields="fields" :src="file" :assets="assets" @action="onAction">
     <InkViewport />
   </InkRoot>
 </template>
@@ -101,13 +96,13 @@ function onFormAction(action: FormAction) {
 ```tsx
 import { useState } from 'react'
 import { InkRoot, InkViewport } from '@inkbar/react'
-import type { FieldValues, FormAction } from '@inkbar/core'
+import type { FieldValues, ViewerAction } from '@inkbar/core'
 import { assets } from 'virtual:inkbar-assets'
 
 export function Application({ file }: { file: File }) {
   const [fields, setFields] = useState<FieldValues>({ 'applicant.name': 'Ada' })
 
-  function onFormAction(action: FormAction) {
+  function onAction(action: ViewerAction) {
     // See "Form actions" below.
   }
 
@@ -115,7 +110,7 @@ export function Application({ file }: { file: File }) {
     <InkRoot
       fields={fields}
       onFieldsChange={(next) => setFields(next)}
-      onFormAction={onFormAction}
+      onAction={onAction}
       src={file}
       assets={assets}
     >
@@ -133,19 +128,19 @@ export function Application({ file }: { file: File }) {
 ```svelte
 <script lang="ts">
   import { InkRoot, InkViewport } from '@inkbar/svelte'
-  import type { FieldValues, FormAction } from '@inkbar/core'
+  import type { FieldValues, ViewerAction } from '@inkbar/core'
   import { assets } from 'virtual:inkbar-assets'
 
   let { file }: { file: File } = $props()
 
   let fields = $state.raw<FieldValues>({ 'applicant.name': 'Ada' })
 
-  function onformaction(action: FormAction) {
+  function onaction(action: ViewerAction) {
     // See "Form actions" below.
   }
 </script>
 
-<InkRoot bind:fields src={file} {assets} {onformaction}>
+<InkRoot bind:fields src={file} {assets} {onaction}>
   <InkViewport />
 </InkRoot>
 ```
@@ -175,7 +170,7 @@ const viewer = createViewer(el, {
       saveValues(next)
     },
   },
-  onFormAction: handleFormAction,
+  onAction: handleAction,
 })
 
 // Later, to change a value from your app:
@@ -186,7 +181,9 @@ viewer.form.get()?.setControlledValue({ ...values, agree: 'Yes' })
 
 ## Form actions
 
-A form can ask to submit its data, open a link, send mail or print. Inkbar does none of these itself. It turns each request into a `FormAction` and hands it to your app. If you do not handle an action, nothing happens.
+A form can ask to submit its data, open a link, send mail or print. Inkbar does none of these itself. It turns each request into a `ViewerAction` and hands it to your app. If you do not handle an action, nothing happens.
+
+The handler is `onAction` (`@action` in Vue, `onaction` in Svelte). It also receives links to a web address, as [Outline and links](/docs/guides/outline-and-links/#web-addresses) shows. The old name, `onFormAction` (`@form-action` in Vue, `onformaction` in Svelte), works until 0.13.0. `FormAction` is now `ViewerAction`, and the old type name also works until then.
 
 | `kind`     | Fields                                           | Comes from                                  |
 | ---------- | ------------------------------------------------ | ------------------------------------------- |
@@ -203,9 +200,9 @@ Every URL and mail address is limited to the `http`, `https`, `mailto` and `tel`
 The URL in a `submit` comes from the PDF, so treat it as untrusted. This handler posts the values to your own backend and only opens links after asking:
 
 ```ts
-import type { FormAction } from '@inkbar/core'
+import type { ViewerAction } from '@inkbar/core'
 
-async function handleFormAction(action: FormAction) {
+async function handleAction(action: ViewerAction) {
   switch (action.kind) {
     case 'submit':
       await fetch('/api/forms', {
@@ -234,7 +231,7 @@ async function handleFormAction(action: FormAction) {
 To hear actions from code, subscribe on the document's form. `on` returns a function that stops listening:
 
 ```ts
-const stop = doc.form.on('action', handleFormAction)
+const stop = doc.form.on('action', handleAction)
 ```
 
 ## Scripts

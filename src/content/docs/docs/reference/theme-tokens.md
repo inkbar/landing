@@ -64,6 +64,17 @@ Set these on `[data-ink-root]` to style fillable fields:
 
 Fields sit on the white page, so these change little in dark mode. To turn the tint off, pass `formHighlight: false`. See [Forms](/docs/guides/forms/#theming).
 
+## Outline and links
+
+Set these on `[data-ink-root]`. See [Outline and links](/docs/guides/outline-and-links/#theming):
+
+| Variable                    | Used for                                 |
+| --------------------------- | ---------------------------------------- |
+| `--ink-outline-indent`      | The indent for each level of the outline |
+| `--ink-outline-item-height` | The minimum height of an outline item    |
+| `--ink-outline-current-bg`  | The tint behind the current outline item |
+| `--ink-link-hover`          | The tint over a link under the pointer   |
+
 ## Annotation colours
 
 Set these variables on `[data-ink-root]` to change the default colour for new annotations:

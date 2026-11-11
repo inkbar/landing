@@ -1,0 +1,274 @@
+---
+title: Outline and links
+description: Show the document's bookmarks as a tree, follow links on the page, handle web addresses in your app and add Back and Forward buttons.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+`InkOutline` lists the document's bookmarks as a tree. Links in the PDF work on the page with no setup. Following a link or an outline item records where you were, and `InkBack` and `InkForward` move through those positions. Try it in the [sandbox](https://sandbox.inkbar.dev/#/react/outline).
+
+## An outline in a panel
+
+`InkOutline` (`createOutline` in plain DOM) fills its parent's height and scrolls, so put it in a [sidebar](/docs/guides/sidebars/) panel or any box with a height.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkSidebar>
+  <InkPanel id="outline" label="Outline" :icon="List">
+    <InkOutline empty-text="No sections" />
+  </InkPanel>
+</InkSidebar>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkSidebar>
+  <InkPanel id="outline" label="Outline" icon={List}>
+    <InkOutline emptyText="No sections" />
+  </InkPanel>
+</InkSidebar>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkSidebar>
+  <InkPanel id="outline" label="Outline" icon={List}>
+    <InkOutline emptyText="No sections" />
+  </InkPanel>
+</InkSidebar>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { createOutline } from '@inkbar/core/dom'
+
+panel.append(createOutline(viewer, { emptyText: 'No sections' }))
+```
+
+  </TabItem>
+</Tabs>
+
+A document with no outline shows "This document has no outline", or your `emptyText`. Both components need `InkRoot` and render empty on the server.
+
+Clicking an item, or pressing Enter on it, goes to its destination without changing the zoom. The chevron expands and collapses an item without following it. Items start expanded or collapsed as the file says, and bold and italic titles keep their style. The file's colours are ignored. An item Inkbar cannot follow, such as one that points into another file, is greyed out and has `aria-disabled`.
+
+### The current section
+
+The item the reader has reached has `aria-current="location"` and scrolls into view, unless focus is inside the tree. It is the last item whose destination is at or above a line one third of the way down the view. Once the view is scrolled to the end, it is the last item, so the final sections can be reached.
+
+An item you choose stays marked until you scroll away from it. When it sits inside a collapsed parent, the parent is marked instead.
+
+### Keyboard
+
+The tree follows the WAI-ARIA tree pattern and is one Tab stop.
+
+- Up and Down move between visible items.
+- Right expands an item, then moves to its first child.
+- Left collapses an item, then moves to its parent.
+- Home and End go to the first and last items.
+- `*` expands the item's siblings.
+- Typing jumps to the next title that starts with what you typed.
+- Enter follows the item.
+
+### Adding to each item
+
+You can replace an item's title with your own content. The slot gets the item, whether it is the current one and whether it is expanded.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkOutline>
+  <template #item="{ item, current, expanded }">
+    <span :class="{ 'is-current': current }">{{ item.title }}</span>
+  </template>
+</InkOutline>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkOutline
+  renderItem={(item, { current, expanded }) => (
+    <span className={current ? 'is-current' : undefined}>{item.title}</span>
+  )}
+/>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkOutline>
+  {#snippet item(item, { current, expanded })}
+    <span class:is-current={current}>{item.title}</span>
+  {/snippet}
+</InkOutline>
+```
+
+  </TabItem>
+</Tabs>
+
+Keep what you add non-interactive: no links, buttons or inputs. Plain DOM has no item slot. To render your own tree, build it on `createOutlineController`, as [below](#your-own-tree).
+
+## Links on the page
+
+Links in the PDF work without any setup.
+
+- A click or tap follows a link under the Select text and Rectangle select tools.
+- A drag that starts on a link selects text and does not follow it.
+- A click with a modifier key held does not follow a link.
+- Drawing tools work over links, and a press with one of them does not follow a link.
+- Tab reaches each link and each form field in reading order, and Enter follows the focused link. Every link has an accessible name.
+- A link Inkbar cannot follow, such as one to another file, does nothing.
+
+### Web addresses
+
+Inkbar never opens a web address on its own. A link or an outline item with a URL calls `onAction` with `{ kind: 'open-url', url, newWindow }`. Only http, https, mailto and tel addresses get that far. Open them in a way that suits your app. This one opens a new tab with `noopener`:
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import type { ViewerAction } from '@inkbar/core'
+
+function onAction(action: ViewerAction) {
+  if (action.kind === 'open-url') window.open(action.url, '_blank', 'noopener')
+}
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets" @action="onAction">
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+function onAction(action: ViewerAction) {
+  if (action.kind === 'open-url') window.open(action.url, '_blank', 'noopener')
+}
+
+;<InkRoot src={file} assets={assets} onAction={onAction}>
+  <InkViewport />
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import type { ViewerAction } from '@inkbar/core'
+
+  function onaction(action: ViewerAction) {
+    if (action.kind === 'open-url') window.open(action.url, '_blank', 'noopener')
+  }
+</script>
+
+<InkRoot src={file} {assets} {onaction}>
+  <InkViewport />
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+createViewer(el, {
+  source: file,
+  assets,
+  onAction: (action) => {
+    if (action.kind === 'open-url') window.open(action.url, '_blank', 'noopener')
+  },
+})
+```
+
+  </TabItem>
+</Tabs>
+
+`onAction` also receives the form requests described in [Forms](/docs/guides/forms/#form-actions). It replaces `onFormAction`, which works until 0.13.0.
+
+## Back and Forward
+
+Following a link or an outline item records where you were. `InkBack` and `InkForward` (`createBack` and `createForward` in plain DOM) move through those positions. Each is disabled until there is somewhere to go.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkToolbar>
+  <InkBack />
+  <InkForward />
+</InkToolbar>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkToolbar>
+  <InkBack />
+  <InkForward />
+</InkToolbar>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkToolbar>
+  <InkBack />
+  <InkForward />
+</InkToolbar>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { createBack, createForward } from '@inkbar/core/dom'
+
+toolbar.append(createBack(viewer), createForward(viewer))
+```
+
+  </TabItem>
+</Tabs>
+
+To render your own buttons, use `as-child` in Vue, `asChild` in React and a `child` snippet in Svelte. In plain DOM, `viewer.back()` and `viewer.forward()` move, and `canGoBack` and `canGoForward` say whether they can.
+
+Scrolling and the page buttons record nothing. The history keeps 50 positions and clears when another document opens. Inkbar adds no keyboard shortcuts for it, so Alt+Left stays the browser's.
+
+## Your own tree
+
+`doc.outline()` gives the outline as data. Each `OutlineItem` has an `id` (its path, such as `"1.0"`), `title`, `target`, `bold`, `italic`, `open` and `children`. The first call reads it and later calls reuse the result.
+
+To render a tree yourself, use `createOutlineController({ document, viewport, navigation })` with readables of the document, the viewport and the navigation. Spread `treeAttrs()` on the tree (a `ul`) and `itemAttrs(id)` on each item (an `li`). Each item holds a row with `rowAttrs(id)`, which holds the chevron and the title. The title gets `titleAttrs(id)` and names the item. The item's children follow in a `role="group"` list that shows only while `expanded` has its id.
+
+Pass `onKeydown` to the tree's keydown, call `activate(id)` on a row click and `toggle(id)` from the chevron, and call `bindScroll(scrollElement)` to keep the current item in view. The controller's JSDoc has the full markup.
+
+## Theming
+
+`@inkbar/theme` styles the tree with `.ink-outline`, `.ink-outline-item`, `.ink-outline-row`, `.ink-outline-toggle`, `.ink-outline-title` and `.ink-outline-empty`. A row is indented by `--ink-outline-level`, which the markup sets for you. The toggle is a 44px column, so it stays a full touch target. Set these on `[data-ink-root]`:
+
+| Variable                    | Default                  | Used for                               |
+| --------------------------- | ------------------------ | -------------------------------------- |
+| `--ink-outline-indent`      | `16px`                   | The indent for each level              |
+| `--ink-outline-item-height` | `44px`                   | The minimum height of an item          |
+| `--ink-outline-current-bg`  | The accent colour at 10% | The tint behind the current item       |
+| `--ink-link-hover`          | `transparent`            | The tint over a link under the pointer |
+
+Links show no box on hover by default, as desktop readers do not. Set `--ink-link-hover` to a translucent colour to add one.
