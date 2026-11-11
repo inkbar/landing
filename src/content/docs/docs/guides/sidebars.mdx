@@ -251,14 +251,71 @@ Rail and tabs follow the tabs pattern. The sidebar is one Tab stop. On a rail th
 
 Stack headers follow the accordion pattern. Each header is its own Tab stop with `aria-expanded`. Up and Down move between headers, and Enter or Space expands or collapses a section.
 
-## Size
+## Width
 
-`@inkbar/theme` sizes the sidebar with two variables. Override either for one sidebar with CSS:
+Every sidebar has a resize handle on its inner edge, beside the document. Drag it with a mouse, pen or finger. From the keyboard, Tab to it and use Left and Right to move it 16px at a time, Home for the narrowest and End for the widest. The arrows follow the edge, so on a right-hand sidebar Left makes it wider. Enter or a double-click puts the default width back. The handle hides while no panel is open.
 
-| Variable                   | Default | Used for          |
-| -------------------------- | ------- | ----------------- |
-| `--ink-sidebar-width`      | `280px` | The panel's width |
-| `--ink-sidebar-rail-width` | `48px`  | The rail's width  |
+A sidebar starts 320px wide and stays between 240px and 480px. It never takes more than half its container, so the document keeps room on a small screen. When the container shrinks, the sidebar narrows with it and goes back to the chosen width when there's room again. Change the numbers with `defaultWidth`, `minWidth` and `maxWidth`.
+
+### Keeping the width
+
+Inside the root, a sidebar saves its width in the root's [`storage`](/docs/guides/storage/) under `sidebar.<name>.width`, so it comes back on the next visit when the store keeps it. `name` defaults to the side, so give two sidebars on one side different names. A sidebar outside the root, or one that should use another store, takes its own `storage`. The sidebar reads `storage` and `name` once, when it is created.
+
+### Controlling the width
+
+To hold the width yourself, bind it the way you bind `open`: `v-model:width` in Vue, `width` with `onWidthChange` in React, `bind:width` in Svelte, and `width` with `onWidthChange` and `controller.update({ width })` in plain DOM. The handle then only reports the new width, and the sidebar neither reads nor saves it.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkSidebar name="tools" side="right" :default-width="360" v-model:width="toolsWidth">
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkSidebar
+  name="tools"
+  side="right"
+  defaultWidth={360}
+  width={toolsWidth}
+  onWidthChange={setToolsWidth}
+>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkSidebar name="tools" side="right" defaultWidth={360} bind:width={toolsWidth}>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+const { element, controller } = createSidebar({
+  side: 'right',
+  name: 'tools',
+  storage,
+  defaultWidth: 360,
+  panels,
+  content,
+})
+```
+
+  </TabItem>
+</Tabs>
+
+In Vue and React, a width that starts `undefined` takes control after the first drag and stops saving. Svelte can't tell an unbound `width` from one bound to `undefined`, so there the sidebar keeps saving until you bind a number.
+
+During server rendering the sidebar draws at its default width with the handle in place. A saved width applies once it mounts.
+
+### In CSS
+
+The sidebar sets `--ink-sidebar-width` on itself, so a CSS override of that variable no longer changes it. Pass `defaultWidth` instead. The rail's width is still yours to set in CSS with `--ink-sidebar-rail-width` (48px by default). While someone drags the handle, the sidebar has `data-resizing`.
 
 ## Lists of records
 
