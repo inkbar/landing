@@ -13,14 +13,14 @@ A signature in Inkbar is a mark on the page: a drawing, a name typed in a handwr
 
 The menu needs `signatureTool()` from `@inkbar/core/dom` in the root's `tools`. Without it, the menu renders nothing. The signature dialog and signature fields work without it; the dialog then only saves the signature.
 
-Pass `signatures` to `InkRoot` to say where the templates live, and `signatureFonts` for the handwriting fonts the dialog offers. Both are optional: without them, signatures last until the page reloads and the dialog offers the browser's `cursive` font.
+Inkbar keeps the templates in the root's [`storage`](/docs/guides/storage/). Pass a store that lasts, such as `createLocalStorage()`, and `signatureFonts` for the handwriting fonts the dialog offers. Both are optional: without them, signatures last until the page reloads and the dialog offers the browser's `cursive` font.
 
 <Tabs syncKey="framework">
   <TabItem label="Vue">
 
 ```vue
 <script setup lang="ts">
-import { createLocalSignatureStore } from '@inkbar/core'
+import { createLocalStorage } from '@inkbar/core'
 import {
   InkRoot,
   InkSignatureMenu,
@@ -34,7 +34,7 @@ import { assets } from 'virtual:inkbar-assets'
 defineProps<{ file: File }>()
 
 const tools = [signatureTool()]
-const signatures = createLocalSignatureStore('my-app-signatures')
+const storage = createLocalStorage('my-app')
 </script>
 
 <template>
@@ -42,7 +42,7 @@ const signatures = createLocalSignatureStore('my-app-signatures')
     :src="file"
     :assets="assets"
     :tools="tools"
-    :signatures="signatures"
+    :storage="storage"
     :signature-fonts="['Dancing Script']"
   >
     <InkToolbar>
@@ -58,7 +58,7 @@ const signatures = createLocalSignatureStore('my-app-signatures')
   <TabItem label="React">
 
 ```tsx
-import { createLocalSignatureStore } from '@inkbar/core'
+import { createLocalStorage } from '@inkbar/core'
 import {
   InkRoot,
   InkSignatureMenu,
@@ -70,7 +70,7 @@ import { signatureTool } from '@inkbar/core/dom'
 import { assets } from 'virtual:inkbar-assets'
 
 const tools = [signatureTool()]
-const signatures = createLocalSignatureStore('my-app-signatures')
+const storage = createLocalStorage('my-app')
 const fonts = ['Dancing Script']
 
 export function Viewer({ file }: { file: File }) {
@@ -79,7 +79,7 @@ export function Viewer({ file }: { file: File }) {
       src={file}
       assets={assets}
       tools={tools}
-      signatures={signatures}
+      storage={storage}
       signatureFonts={fonts}
     >
       <InkToolbar>
@@ -97,7 +97,7 @@ export function Viewer({ file }: { file: File }) {
 
 ```svelte
 <script lang="ts">
-  import { createLocalSignatureStore } from '@inkbar/core'
+  import { createLocalStorage } from '@inkbar/core'
   import {
     InkRoot,
     InkSignatureMenu,
@@ -111,10 +111,10 @@ export function Viewer({ file }: { file: File }) {
   let { file }: { file: File } = $props()
 
   const tools = [signatureTool()]
-  const signatures = createLocalSignatureStore('my-app-signatures')
+  const storage = createLocalStorage('my-app')
 </script>
 
-<InkRoot src={file} {assets} {tools} {signatures} signatureFonts={['Dancing Script']}>
+<InkRoot src={file} {assets} {tools} {storage} signatureFonts={['Dancing Script']}>
   <InkToolbar>
     <InkToolButton tool="select" />
     <InkSignatureMenu />
@@ -127,7 +127,7 @@ export function Viewer({ file }: { file: File }) {
   <TabItem label="Plain DOM">
 
 ```ts
-import { createLocalSignatureStore } from '@inkbar/core'
+import { createLocalStorage } from '@inkbar/core'
 import {
   createSignatureMenu,
   createToolbar,
@@ -141,7 +141,7 @@ const viewer = createViewer(el, {
   source: file,
   assets,
   tools: [signatureTool()],
-  signatures: createLocalSignatureStore('my-app-signatures'),
+  storage: createLocalStorage('my-app'),
   signatureFonts: ['Dancing Script'],
 })
 
@@ -192,43 +192,25 @@ Each entry in `signatureFonts` is a CSS font family name. Inkbar does not load f
 
 ## Where signatures are kept
 
-Your app owns the templates. A `SignatureStore` has three methods, each returning a promise:
+Your app owns the templates. Inkbar keeps them as an array in the root's [`storage`](/docs/guides/storage/) under the key `signatures`, so they go wherever your store puts them:
+
+- With the default memory store they last until the page reloads.
+- `createLocalStorage(prefix)` keeps them in `localStorage` under `<prefix>:signatures`. Where the browser blocks storage, it keeps them in memory for the page's life.
+- A [store of your own](/docs/guides/storage/#writing-your-own) can keep them on your server.
+
+When the store can't save, because `localStorage` is full or your server says no, the dialog tells the person their signature wasn't saved. Inkbar skips any stored template it can't read and keeps it on the next write.
+
+A signature belongs to one person, so key the store by user when people share a browser.
+
+`createLocalSignatureStore(key)` and the root's `signatures` option still work, and `signatures` wins over `storage` when you pass both. Both are deprecated: move to `storage`. A template saved by `createLocalSignatureStore('my-app-signatures')` sits under that exact key, so copy it to the new key once if you want people to keep their saved signatures:
 
 ```ts
-interface SignatureStore {
-  list(): Promise<SignatureTemplate[]>
-  save(template: SignatureTemplate): Promise<void> // adds, or replaces the one with its id
-  remove(id: string): Promise<void>
+const old = localStorage.getItem('my-app-signatures')
+if (old !== null && localStorage.getItem('my-app:signatures') === null) {
+  localStorage.setItem('my-app:signatures', old)
+  localStorage.removeItem('my-app-signatures')
 }
 ```
-
-`@inkbar/core` ships two:
-
-- `createMemorySignatureStore()` is the default. It forgets everything on reload.
-- `createLocalSignatureStore(key)` keeps the templates in `localStorage` under `key`. Where the browser blocks storage, it keeps them in memory for the page's life. When storage is full, `save` rejects and the dialog says the signature was not saved.
-
-A signature belongs to a person, so key the store by user, or keep the templates on your server with your own store:
-
-```ts
-import type { SignatureStore } from '@inkbar/core'
-
-async function ok(res: Response) {
-  if (!res.ok) throw new Error(`Signature request failed: ${res.status}`)
-}
-
-const signatures: SignatureStore = {
-  list: () => fetch('/api/signatures').then((res) => res.json()),
-  save: (template) =>
-    fetch(`/api/signatures/${template.id}`, {
-      method: 'PUT',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(template),
-    }).then(ok),
-  remove: (id) => fetch(`/api/signatures/${id}`, { method: 'DELETE' }).then(ok),
-}
-```
-
-Reject from `save` or `remove` when the request fails, so the dialog and menu can say so. Inkbar skips any template from `list` it cannot read.
 
 A template is plain JSON. A drawn one holds its strokes in a unit box, and an image holds a data URL:
 

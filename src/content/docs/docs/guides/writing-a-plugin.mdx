@@ -216,6 +216,7 @@ A plugin can also be a plain object, `definePlugin({ id, setup(ctx) { … } })`,
 | `decorate(fn)`         | Adds `data`, `classes` and a `description` to annotation elements                                                                     |
 | `redecorate()`         | Runs every decoration again                                                                                                           |
 | `store(name, options)` | A readable of the record store for the open document, or `null`                                                                       |
+| `storage`              | Settings kept between visits under `plugin.<id>.`, in the root's [storage](/docs/guides/storage/#in-a-plugin)                         |
 | `onDocument(fn)`       | Runs `fn(doc)` for each document that opens. The function it returns runs when that document closes                                   |
 | `onAnnotationEdit(fn)` | Runs `fn(edit)` for every user add, update and remove of an annotation, inside that edit's undo step                                  |
 | `layer(spec)`          | Adds a page layer and returns a handle with `invalidate(page?)`                                                                       |
