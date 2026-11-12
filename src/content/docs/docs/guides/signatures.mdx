@@ -198,11 +198,13 @@ Your app owns the templates. Inkbar keeps them as an array in the root's [`stora
 - `createLocalStorage(prefix)` keeps them in `localStorage` under `<prefix>:signatures`. Where the browser blocks storage, it keeps them in memory for the page's life.
 - A [store of your own](/docs/guides/storage/#writing-your-own) can keep them on your server.
 
-When the store can't save, because `localStorage` is full or your server says no, the dialog tells the person their signature wasn't saved. Inkbar skips any stored template it can't read and keeps it on the next write.
+When the store can't save, the dialog tells the person their signature wasn't saved. It says browser storage is full only when that's the reason; a refusal from your server gets a general message. Saves run one at a time, so two quick saves to a slow store both land. Inkbar skips any stored template it can't read and keeps it on the next write.
 
 A signature belongs to one person, so key the store by user when people share a browser.
 
-`createLocalSignatureStore(key)` and the root's `signatures` option still work, and `signatures` wins over `storage` when you pass both. Both are deprecated: move to `storage`. A template saved by `createLocalSignatureStore('my-app-signatures')` sits under that exact key, so copy it to the new key once if you want people to keep their saved signatures:
+### Moving from `createLocalSignatureStore`
+
+0.13.0 removed `createLocalSignatureStore` and the root's `signatures` option. A template saved by `createLocalSignatureStore('my-app-signatures')` sits under that exact key, so copy it to the new key once if you want people to keep their saved signatures:
 
 ```ts
 const old = localStorage.getItem('my-app-signatures')
@@ -211,6 +213,8 @@ if (old !== null && localStorage.getItem('my-app:signatures') === null) {
   localStorage.removeItem('my-app-signatures')
 }
 ```
+
+### Templates
 
 A template is plain JSON. A drawn one holds its strokes in a unit box, and an image holds a data URL:
 

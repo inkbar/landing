@@ -80,7 +80,7 @@ Each control is a separate component, so put them in any order or leave some out
 
 ## Signatures
 
-`InkSignatureMenu` lists the saved signatures, turns on the `signature` tool with the chosen one, and opens `InkSignatureDialog` to draw, type or upload a new one. The menu needs `signatureTool()` in `tools`. The dialog and signature form fields work without it; the dialog then only saves the signature. These are marks on the page, not cryptographic signatures. Pass `signatures` to `InkRoot` to keep them somewhere: `createLocalSignatureStore(key)` from `@inkbar/core` uses `localStorage`, and without it they last until reload. `signatureFonts` lists the handwriting fonts the Type tab offers. Load them with `@font-face`. [Signatures](/docs/guides/signatures/) has the details.
+`InkSignatureMenu` lists the saved signatures, turns on the `signature` tool with the chosen one, and opens `InkSignatureDialog` to draw, type or upload a new one. The menu needs `signatureTool()` in `tools`. The dialog and signature form fields work without it; the dialog then only saves the signature. These are marks on the page, not cryptographic signatures. `InkRoot` keeps them in its [`storage`](/docs/guides/storage/): `createLocalStorage(prefix)` from `@inkbar/core` uses `localStorage`, and the default store forgets them on reload. `signatureFonts` lists the handwriting fonts the Type tab offers. Load them with `@font-face`. [Signatures](/docs/guides/signatures/) has the details.
 
 ## Thread popover
 
