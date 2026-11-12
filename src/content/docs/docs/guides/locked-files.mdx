@@ -1,0 +1,337 @@
+---
+title: Locked files
+description: Ask for the password of an encrypted PDF with the built-in dialog, replace the panel behind it, or run your own flow.
+---
+
+import { TabItem, Tabs } from '@astrojs/starlight/components'
+
+A PDF can need a password to open. Inkbar asks for it. When a locked file opens, a "Password required" dialog appears, and the reader types the password. There is nothing to set up. Try it in the [sandbox](https://sandbox.inkbar.dev/#/react/locked), where the password is `inkbar`.
+
+## What the reader sees
+
+The dialog has a labelled password field, Open and Cancel.
+
+- A wrong password keeps the dialog open and says "Incorrect password. Try again."
+- Open is disabled while the field is empty and while a try is running.
+- Cancel closes the dialog and leaves a panel that says the document is password protected, with an "Enter password" button. The button opens the dialog again.
+- Opening another file closes the dialog and starts fresh.
+
+A `password` you pass to the root still applies first. If it is wrong, the dialog opens with the incorrect message already showing.
+
+## The locked status
+
+While the file is locked, the status is `{ state: 'locked', incorrect: boolean }`. `incorrect` is true after a wrong password. The root and viewport carry `data-state="locked"`.
+
+The `error` event, or `onError`, still fires with a `PasswordRequired` error for each failed open, prompt or not.
+
+The typed password is used for that one load and dropped. It does not reach the status, the error, an event or storage.
+
+## Turning the prompt off
+
+Pass `passwordPrompt` as `false` to handle locked files yourself. A locked file is then `{ state: 'error', error }`, and `error.code` is `PasswordRequired`.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<script setup lang="ts">
+import { InkRoot, InkViewport } from '@inkbar/vue'
+import { assets } from 'virtual:inkbar-assets'
+
+defineProps<{ file: File }>()
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets" :password-prompt="false">
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+import { InkRoot, InkViewport } from '@inkbar/react'
+import { assets } from 'virtual:inkbar-assets'
+
+export function Viewer({ file }: { file: File }) {
+  return (
+    <InkRoot src={file} assets={assets} passwordPrompt={false}>
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<script lang="ts">
+  import { InkRoot, InkViewport } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+</script>
+
+<InkRoot src={file} {assets} passwordPrompt={false}>
+  <InkViewport />
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+import { createViewer } from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  passwordPrompt: false,
+})
+```
+
+  </TabItem>
+</Tabs>
+
+## Replacing the locked panel
+
+The panel behind the dialog is the `locked` part of `InkViewport`. Fill it to show your own. It receives `{ incorrect, promptPassword }`, and `promptPassword` opens the dialog again.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkViewport>
+  <template #locked="{ incorrect, promptPassword }">
+    <p v-if="incorrect">That password did not work.</p>
+    <button @click="promptPassword">Unlock this file</button>
+  </template>
+</InkViewport>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkViewport
+  locked={({ incorrect, promptPassword }) => (
+    <>
+      {incorrect && <p>That password did not work.</p>}
+      <button onClick={promptPassword}>Unlock this file</button>
+    </>
+  )}
+/>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkViewport>
+  {#snippet locked({ incorrect, promptPassword })}
+    {#if incorrect}<p>That password did not work.</p>{/if}
+    <button onclick={promptPassword}>Unlock this file</button>
+  {/snippet}
+</InkViewport>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+The plain DOM viewer draws the panel itself, with the classes `ink-status ink-locked`. Style it with the theme, or turn the prompt off and build the flow below.
+
+  </TabItem>
+</Tabs>
+
+## Your own flow
+
+To ask for the password your way, turn the prompt off and place the dialog yourself. `InkPasswordDialog` in each framework package and `createPasswordDialog` in `@inkbar/core/dom` are the same dialog the built-in flow uses, with the same markup and theme. It holds no password. Open hands the typed value to your code.
+
+The flow has four steps. A failed open reports `PasswordRequired`, and `error.details.incorrect` is true after a wrong password. Show the dialog with that value. On submit, retry with the typed password and mark the dialog pending. Close the dialog when the document is ready.
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+`InkRoot` retries when its `password` prop changes. `InkPasswordDialog` takes `v-model:open`, `incorrect` and `pending`, and emits `submit` with the password.
+
+```vue
+<script setup lang="ts">
+import type { InkError } from '@inkbar/core'
+import { InkPasswordDialog, InkRoot, InkViewport } from '@inkbar/vue'
+import { ref } from 'vue'
+import { assets } from 'virtual:inkbar-assets'
+
+defineProps<{ file: File }>()
+
+const password = ref<string>()
+const open = ref(false)
+const incorrect = ref(false)
+const pending = ref(false)
+
+function onError(error: InkError) {
+  if (error.code !== 'PasswordRequired') return
+  incorrect.value = error.details.incorrect === true
+  pending.value = false
+  open.value = true
+}
+
+function onSubmit(typed: string) {
+  // The same text as the try that just failed would not reload.
+  if (typed === password.value) return
+  pending.value = true
+  password.value = typed
+}
+</script>
+
+<template>
+  <InkRoot
+    :src="file"
+    :assets="assets"
+    :password="password"
+    :password-prompt="false"
+    @error="onError"
+    @ready="open = false"
+  >
+    <InkViewport />
+    <InkPasswordDialog
+      v-model:open="open"
+      :incorrect="incorrect"
+      :pending="pending"
+      @submit="onSubmit"
+    />
+  </InkRoot>
+</template>
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+`InkRoot` retries when its `password` prop changes. `InkPasswordDialog` takes `open`, `onOpenChange`, `incorrect`, `pending` and `onSubmit`.
+
+```tsx
+import type { InkError } from '@inkbar/core'
+import { InkPasswordDialog, InkRoot, InkViewport } from '@inkbar/react'
+import { useState } from 'react'
+import { assets } from 'virtual:inkbar-assets'
+
+export function Viewer({ file }: { file: File }) {
+  const [password, setPassword] = useState<string>()
+  const [open, setOpen] = useState(false)
+  const [incorrect, setIncorrect] = useState(false)
+  const [pending, setPending] = useState(false)
+
+  function onError(error: InkError) {
+    if (error.code !== 'PasswordRequired') return
+    setIncorrect(error.details.incorrect === true)
+    setPending(false)
+    setOpen(true)
+  }
+
+  return (
+    <InkRoot
+      src={file}
+      assets={assets}
+      password={password}
+      passwordPrompt={false}
+      onError={onError}
+      onReady={() => setOpen(false)}
+    >
+      <InkViewport />
+      <InkPasswordDialog
+        open={open}
+        onOpenChange={setOpen}
+        incorrect={incorrect}
+        pending={pending}
+        onSubmit={(typed) => {
+          // The same text as the try that just failed would not reload.
+          if (typed === password) return
+          setPending(true)
+          setPassword(typed)
+        }}
+      />
+    </InkRoot>
+  )
+}
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+`InkRoot` retries when its `password` option changes. `InkPasswordDialog` takes `open` (bindable), `onOpenChange`, `incorrect`, `pending` and `onSubmit`.
+
+```svelte
+<script lang="ts">
+  import type { InkError } from '@inkbar/core'
+  import { InkPasswordDialog, InkRoot, InkViewport } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+
+  let password = $state<string>()
+  let open = $state(false)
+  let incorrect = $state(false)
+  let pending = $state(false)
+
+  function onError(error: InkError) {
+    if (error.code !== 'PasswordRequired') return
+    incorrect = error.details.incorrect === true
+    pending = false
+    open = true
+  }
+
+  function onSubmit(typed: string) {
+    // The same text as the try that just failed would not reload.
+    if (typed === password) return
+    pending = true
+    password = typed
+  }
+</script>
+
+<InkRoot
+  src={file}
+  {assets}
+  {password}
+  passwordPrompt={false}
+  {onError}
+  onReady={() => (open = false)}
+>
+  <InkViewport />
+  <InkPasswordDialog bind:open {incorrect} {pending} {onSubmit} />
+</InkRoot>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+`createPasswordDialog` takes `onSubmit` and `onCancel`. `open({ incorrect })` shows or updates it, `setPending` disables Open during a try, and `close` and `destroy` end it. `viewer.open(file, { password })` retries with a password for that load only.
+
+```ts
+import { createPasswordDialog, createViewer } from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, { source: file, assets, passwordPrompt: false })
+
+const dialog = createPasswordDialog({
+  onSubmit: (password) => {
+    dialog.setPending(true)
+    viewer.open(file, { password })
+  },
+  onCancel: () => undefined,
+})
+
+viewer.status.subscribe((s) => {
+  if (s.state === 'error' && s.error.code === 'PasswordRequired') {
+    dialog.open({ incorrect: s.error.details.incorrect === true })
+    dialog.setPending(false)
+  } else if (s.state === 'ready') {
+    dialog.close()
+  }
+})
+```
+
+  </TabItem>
+</Tabs>
