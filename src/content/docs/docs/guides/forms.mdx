@@ -183,7 +183,7 @@ viewer.form.get()?.setControlledValue({ ...values, agree: 'Yes' })
 
 A form can ask to submit its data, open a link, send mail or print. Inkbar does none of these itself. It turns each request into a `ViewerAction` and hands it to your app. If you do not handle an action, nothing happens.
 
-The handler is `onAction` (`@action` in Vue, `onaction` in Svelte). It also receives links to a web address, as [Outline and links](/docs/guides/outline-and-links/#web-addresses) shows. The old name, `onFormAction` (`@form-action` in Vue, `onformaction` in Svelte), works until 0.13.0. `FormAction` is now `ViewerAction`, and the old type name also works until then.
+The handler is `onAction` (`@action` in Vue, `onaction` in Svelte). It also receives links to a web address, as [Outline and links](/docs/guides/outline-and-links/#web-addresses) shows.
 
 | `kind`     | Fields                                           | Comes from                                  |
 | ---------- | ------------------------------------------------ | ------------------------------------------- |

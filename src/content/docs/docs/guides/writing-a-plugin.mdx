@@ -373,6 +373,34 @@ The host places it with a tool button (`tool="review.box"`), which shows the too
 
 `ctx.decorate(fn)` works like the host's `decorateAnnotation`, which [Plain DOM](/docs/frameworks/plain-dom/#your-own-chrome) describes. Decorations apply after the host's own and earlier plugins', and the earlier ones win on a data key or description. They re-apply when the annotations change. Call `ctx.redecorate()` when one reads state of your own that changed.
 
+### Publishing a plugin
+
+A plugin you publish lists `@inkbar/core` under `peerDependencies`, so the app and every plugin share one copy. Add it under `devDependencies` too, for your own build and tests. Never list it under `dependencies`: a second copy would give your plugin its own `InkError` and `Readable` classes.
+
+```json
+{
+  "name": "@acme/inkbar-review",
+  "version": "1.0.0",
+  "type": "module",
+  "peerDependencies": {
+    "@inkbar/core": "^0.13.0"
+  },
+  "devDependencies": {
+    "@inkbar/core": "^0.13.0"
+  }
+}
+```
+
+The peer range says which Inkbar versions your plugin works with, and the package manager warns an app that installs it next to another. Import `definePlugin` from `@inkbar/core/dom`, and every type with `import type`, so the types add nothing to your bundle. Every type reachable from `InkPlugin`, `PluginContext`, `PluginApi` and `PluginOptions` is exported from `@inkbar/core` or `@inkbar/core/dom`, and Inkbar's tests keep it that way. Export the factory your users call:
+
+```ts
+import { definePlugin } from '@inkbar/core/dom'
+
+export const review = definePlugin('review', (plugin) => {
+  // …
+})
+```
+
 ### Things to know
 
 - The framework packages run `setup` once the viewer has mounted in the browser, never during server rendering. Until then the plugin's commands are disabled, and anything `setup` creates, such as a store, does not exist yet.

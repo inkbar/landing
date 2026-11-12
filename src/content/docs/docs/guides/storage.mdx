@@ -95,7 +95,7 @@ The root reads `storage` once, when it is created. Signatures, sidebars inside t
 `@inkbar/core` has two:
 
 - `createMemoryStorage(initial?)` is the default. It forgets everything on reload. Pass `initial`, an object of keys and values, to start it with something in it.
-- `createLocalStorage(prefix = 'inkbar')` writes JSON to `localStorage` under `<prefix>:<key>`. It reads `localStorage` on every call, so a change made in another tab shows. Where the browser blocks storage, as some private windows do, it keeps values in memory for the page's life. When storage is full, `set` rejects with an `Error` whose `cause` is the browser's, and the old value stays.
+- `createLocalStorage(prefix = 'inkbar')` writes JSON to `localStorage` under `<prefix>:<key>`. It reads `localStorage` on every call, so a change made in another tab shows. Where the browser blocks storage, as some private windows do, or there's no `localStorage` at all, as during server rendering, it keeps values in memory for the page's life. When storage is full, `set` rejects with an `Error` whose `cause` is the browser's, and the old value stays.
 
 Give each app its own prefix, so two apps on one origin keep their values apart. Key it by user too when people share a browser, since a saved signature belongs to one person.
 

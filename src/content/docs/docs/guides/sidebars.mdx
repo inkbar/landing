@@ -253,9 +253,60 @@ Stack headers follow the accordion pattern. Each header is its own Tab stop with
 
 ## Width
 
-Every sidebar has a resize handle on its inner edge, beside the document. Drag it with a mouse, pen or finger. From the keyboard, Tab to it and use Left and Right to move it 16px at a time, Home for the narrowest and End for the widest. The arrows follow the edge, so on a right-hand sidebar Left makes it wider. Enter or a double-click puts the default width back. The handle hides while no panel is open.
+Every sidebar has a resize handle on its inner edge, beside the document. Drag it with a mouse, pen or finger. From the keyboard, Tab to it and use Left and Right to move it 16px at a time, Home for the narrowest and End for the widest. The arrows follow the edge, so on a right-hand sidebar Left makes it wider. Enter or a double-click puts the default width back. The handle hides while no panel is open. Screen readers hear it as "Resize left sidebar" or "Resize right sidebar"; pass `handleLabel` (`handle-label` in Vue) to name it yourself.
 
-A sidebar starts 320px wide and stays between 240px and 480px. It never takes more than half its container, so the document keeps room on a small screen. When the container shrinks, the sidebar narrows with it and goes back to the chosen width when there's room again. Change the numbers with `defaultWidth`, `minWidth` and `maxWidth`.
+A sidebar starts 320px wide and stays between 240px and 480px. Change the numbers with `defaultWidth`, `minWidth` and `maxWidth`.
+
+### When there's no room
+
+Sidebars that share a parent element make room for the document together. While they sit beside it, the document keeps at least 480px. When it would get narrower, because the window shrank, a sidebar opened or someone dragged a handle, a rail sidebar's panel floats over the pages instead, like a drawer. Its rail stays in place, so the buttons that close and reopen the panel never move. When there's room again, the panel goes back beside the document.
+
+With two rail sidebars open, the one being resized floats first, then the one opened most recently. Tabs and stack sidebars never float: they narrow toward `minWidth` so the document keeps its room. Floating never changes the width: the saved width, and the one you hear about, stay the width the reader chose.
+
+A floating panel closes the way a drawer does:
+
+- A tap or click on the pages closes it, and does nothing else. No tool draws, no link opens and no field takes focus.
+- `Escape` closes it, unless a menu, popover or editor has used the key first.
+- Opening the find bar closes it, so the panel never hides the bar.
+
+A scroll, swipe or pinch on the pages leaves it open. When it closes, focus goes back to the rail button, unless the reader was typing somewhere else. A controlled sidebar only reports the close; it stays open until you set `open`.
+
+A sidebar with no room when it first mounts starts with its panel closed, so a phone doesn't open every document under a drawer. That only applies when you haven't set `open` or `defaultOpen`. On the server, sidebars render beside the document; floating and starting closed are decided in the browser.
+
+Set the document's minimum width with `minDocumentWidth`, in CSS pixels. Pass it to the root for every sidebar inside it, or to one sidebar, whose own wins:
+
+<Tabs syncKey="framework">
+  <TabItem label="Vue">
+
+```vue
+<InkRoot :src="src" :assets="assets" :min-document-width="600">
+```
+
+  </TabItem>
+  <TabItem label="React">
+
+```tsx
+<InkRoot src={src} assets={assets} minDocumentWidth={600}>
+```
+
+  </TabItem>
+  <TabItem label="Svelte">
+
+```svelte
+<InkRoot {src} {assets} minDocumentWidth={600}>
+```
+
+  </TabItem>
+  <TabItem label="Plain DOM">
+
+```ts
+const { element, controller } = createSidebar({ minDocumentWidth: 600, panels, content })
+```
+
+  </TabItem>
+</Tabs>
+
+The sidebar reads it once, when it is created.
 
 ### Keeping the width
 
@@ -315,7 +366,7 @@ During server rendering the sidebar draws at its default width with the handle i
 
 ### In CSS
 
-The sidebar sets `--ink-sidebar-width` on itself, so a CSS override of that variable no longer changes it. Pass `defaultWidth` instead. The rail's width is still yours to set in CSS with `--ink-sidebar-rail-width` (48px by default). While someone drags the handle, the sidebar has `data-resizing`.
+The sidebar sets `--ink-sidebar-width` on itself, so a CSS override of that variable no longer changes it. Pass `defaultWidth` instead. The rail's width is still yours to set in CSS with `--ink-sidebar-rail-width` (48px by default). While someone drags the handle, the sidebar has `data-resizing`. A floating sidebar has `data-overlay`: `@inkbar/theme` gives its panel a shadow and puts it above the pages, below menus, popovers and dialogs. Restyle it with `.ink-sidebar[data-overlay] .ink-sidebar-panels`.
 
 ## Lists of records
 
