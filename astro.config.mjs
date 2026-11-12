@@ -64,6 +64,7 @@ export default defineConfig({
             { label: 'Outline and links', slug: 'docs/guides/outline-and-links' },
             { label: 'Forms', slug: 'docs/guides/forms' },
             { label: 'Signatures', slug: 'docs/guides/signatures' },
+            { label: 'Locked files', slug: 'docs/guides/locked-files' },
             { label: 'Redaction', slug: 'docs/guides/redaction' },
             { label: 'Controlled mode', slug: 'docs/guides/controlled-mode' },
             { label: 'Plugins', slug: 'docs/guides/plugins' },
