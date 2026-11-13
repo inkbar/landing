@@ -13,7 +13,12 @@ const groups = [...new Set(messages.map((m) => m.group))].map((group) => ({
     <h3 id={`messages-${group}`}>
       <code>{group}</code>
     </h3>
-    <div class="table-wrap">
+    <div
+      class="table-wrap"
+      tabindex="0"
+      role="region"
+      aria-label={`Message keys: ${group}`}
+    >
       <table>
         <thead>
           <tr>
