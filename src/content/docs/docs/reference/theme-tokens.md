@@ -81,7 +81,7 @@ Set these on `[data-ink-root]`. See [Outline and links](/docs/guides/outline-and
 | ----------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | `--ink-sidebar-width`         | `320px`                         | The open sidebar's width. The sidebar sets it on itself, so pass `defaultWidth` to change it. See [Sidebars](/docs/guides/sidebars/#in-css) |
 | `--ink-sidebar-rail-width`    | `48px`                          | The width of a sidebar's rail                                                                                                               |
-| `--ink-thumbnail-width`       | `120px`                         | The width of a thumbnail when you pass no `width`. Inkbar does not read the variable, so pass `width` to change it                          |
+| `--ink-thumbnail-width`       | `120px`                         | The width of a thumbnail when you pass no `width`                                                                                           |
 | `--ink-thumbnail-shadow`      | A hairline edge and a soft lift | The shadow around thumbnails and search result cards                                                                                        |
 | `--ink-mark-selected-outline` | `2px solid #2740f5`             | The outline on the mark of a plugin record selected in a list, on the page or by your app                                                   |
 
