@@ -182,8 +182,8 @@ importers:
         specifier: ^5.3.0
         version: 5.3.0
       '@inkbar/icons':
-        specifier: ^0.10.0
-        version: 0.10.0
+        specifier: ^0.14.0
+        version: 0.14.0
       astro:
         specifier: ^7.3.8
         version: 7.3.8(@types/node@24.19.2)(jiti@2.7.0)(yaml@2.9.1)
@@ -941,8 +941,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@inkbar/icons@0.10.0':
-    resolution: {integrity: sha512-gyzkhS2fZc5NpecBzZPLAXCnFa1Ozr+kAsRfMc26Fv+8sL9Z1enT1lUAysOkEfN+UaHxjEh6Nue0YQEqTpZEdg==}
+  '@inkbar/icons@0.14.0':
+    resolution: {integrity: sha512-GUhDoiGXtMo8tomHp768WDV6aH8KgMk3EkDBq+lo5Bs+89aQVdqOXci3X2LG/5qckK5cJXxRJxJaMMCF+Ckzrw==}
 
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
@@ -4280,7 +4280,7 @@ snapshots:
   '@img/sharp-win32-x64@0.35.5':
     optional: true
 
-  '@inkbar/icons@0.10.0': {}
+  '@inkbar/icons@0.14.0': {}
 
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
