@@ -41,7 +41,7 @@ The stylesheet maps those names onto its own tokens. Set these on `[data-ink-roo
 | `--ink-page-shadow`    |                        | The shadow under each page                        |
 | `--ink-text-selection` |                        | Text selection on the page                        |
 
-The thread popover renders outside the root, so it reads the same tokens from `[data-ink-thread-popover]`, and so does a panel from `createPopover`, from `[data-ink-popover]`. The zoom select's list does the same from `[data-ink-select-content]`.
+The thread popover renders outside the root, so it reads the same tokens from `[data-ink-thread-popover]`, and so does a panel from `createPopover`, from `[data-ink-popover]`. The zoom select's list does the same from `[data-ink-select-content]`, and so do the sidebars, the signature and password dialogs and form alerts.
 
 ## Control sizes
 
