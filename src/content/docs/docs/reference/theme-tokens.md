@@ -41,7 +41,7 @@ The stylesheet maps those names onto its own tokens. Set these on `[data-ink-roo
 | `--ink-page-shadow`    |                        | The shadow under each page                        |
 | `--ink-text-selection` |                        | Text selection on the page                        |
 
-The thread popover renders outside the root, so it reads the same tokens from `[data-ink-thread-popover]`, and so does a panel from `createPopover`, from `[data-ink-popover]`. The zoom select's list does the same from `[data-ink-select-content]`.
+Some parts can render outside the root, so they read the same tokens from their own element: the thread popover from `[data-ink-thread-popover]`, a panel from `createPopover` from `[data-ink-popover]`, the zoom select's list from `[data-ink-select-content]`, the signature and password dialogs from `[data-ink-signature-dialog]` and `[data-ink-password-dialog]`, and form alerts from `[data-ink-form-alert]`. Sidebars read them from `[data-ink-sidebar]` too.
 
 ## Control sizes
 
@@ -74,6 +74,16 @@ Set these on `[data-ink-root]`. See [Outline and links](/docs/guides/outline-and
 | `--ink-outline-item-height` | The minimum height of an outline item    |
 | `--ink-outline-current-bg`  | The tint behind the current outline item |
 | `--ink-link-hover`          | The tint over a link under the pointer   |
+
+## Sidebars, thumbnails and marks
+
+| Variable                      | Default                         | Used for                                                                                                                                                                                          |
+| ----------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `--ink-sidebar-width`         | `320px`                         | The open sidebar's width. The sidebar sets it on itself, so pass `defaultWidth` to change it. See [Sidebars](/docs/guides/sidebars/#in-css)                                                       |
+| `--ink-sidebar-rail-width`    | `48px`                          | The width of a sidebar's rail                                                                                                                                                                     |
+| `--ink-thumbnail-width`       | Unset                           | A thumbnail's width in px when you pass no `width`. A thumbnail list caps it at its own width less a 16px gutter on each side. Unset, a list fills its width and a single thumbnail is 120px wide |
+| `--ink-thumbnail-shadow`      | A hairline edge and a soft lift | The shadow around thumbnails and search result cards                                                                                                                                              |
+| `--ink-mark-selected-outline` | `2px solid #2740f5`             | The outline on the mark of a plugin record selected in a list, on the page or by your app                                                                                                         |
 
 ## Annotation colours
 
