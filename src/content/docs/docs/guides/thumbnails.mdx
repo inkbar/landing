@@ -198,6 +198,7 @@ To render the whole list yourself, use `createThumbnailsController({ document, p
 - `current`, the current page, or -1 with no viewport
 - `window`, the range of indexes into `pages` to mount
 - `offsets`, the distance of each item from the top of the list. The last entry is the total height
+- `width`, the width each thumbnail is drawn at: your `width` option, or the width that fits the list
 
 Render a spacer of the total height, and each item in the window at its offset. Each item is a button with `data-ink-thumbnail-item` set to its page and a painter inside, wrapped in an element with `itemAttrs(index)` spread on it. That gives it the `listitem` role, plus `aria-setsize` and `aria-posinset`, which you need because only the window is mounted. An item is as tall as its thumbnail plus 38px for its label and padding, as the theme draws it.
 
