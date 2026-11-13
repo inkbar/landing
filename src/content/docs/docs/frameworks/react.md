@@ -151,4 +151,6 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 ## Hooks
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch`, `useForm`, `useToolOptions` and `useToolStyle` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch`, `useForm`, `useToolOptions`, `useToolStyle`, `useRecords` and `useRecordSelection` read the state of the nearest `InkRoot`. Build your own controls or side panel from them. [Lists of records](/docs/guides/sidebars/#lists-of-records) covers `useRecords` and `useRecordSelection`.
+
+`useReadable(readable, fallback)` follows any core readable and returns its value, or `fallback` while there is none. Keep `fallback` a stable reference, such as a module constant.
