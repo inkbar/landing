@@ -9,7 +9,7 @@ A sidebar holds panels. Each panel shows content you give it: a list of page thu
 
 ## A sidebar of panels
 
-Each panel has an `id`, a `label`, an optional `icon` (an `IconNode` from `@inkbar/icons`) and an optional `badge`, a number or short string that stays hidden when it is empty or 0.
+Each panel has an `id`, a `label` (a string, or a function that returns one, see [Translations](/docs/guides/translations/#labels-you-supply)), an optional `icon` (an `IconNode` from `@inkbar/icons`) and an optional `badge`, a number or short string that stays hidden when it is empty or 0.
 
 <Tabs syncKey="framework">
   <TabItem label="Vue">
@@ -253,7 +253,7 @@ Stack headers follow the accordion pattern. Each header is its own Tab stop with
 
 ## Width
 
-Every sidebar has a resize handle on its inner edge, beside the document. Drag it with a mouse, pen or finger. From the keyboard, Tab to it and use Left and Right to move it 16px at a time, Home for the narrowest and End for the widest. The arrows follow the edge, so on a right-hand sidebar Left makes it wider. Enter or a double-click puts the default width back. The handle hides while no panel is open. Screen readers hear it as "Resize left sidebar" or "Resize right sidebar"; pass `handleLabel` (`handle-label` in Vue) to name it yourself.
+Every sidebar has a resize handle on its inner edge, beside the document. Drag it with a mouse, pen or finger. From the keyboard, Tab to it and use Left and Right to move it 16px at a time, Home for the narrowest and End for the widest. The arrows follow the edge, so on a right-hand sidebar Left makes it wider. Enter or a double-click puts the default width back. The handle hides while no panel is open. Screen readers hear it as "Resize left sidebar" or "Resize right sidebar"; pass `handleLabel` (`handle-label` in Vue) to name it yourself. Like a panel's `label`, it takes a string or a function.
 
 A sidebar starts 320px wide and stays between 240px and 480px. Change the numbers with `defaultWidth`, `minWidth` and `maxWidth`.
 
