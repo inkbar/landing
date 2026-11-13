@@ -18,6 +18,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "og": "node scripts/make-og.mjs",
+    "messages:table": "node scripts/messages-table.mjs",
     "prepare": "husky"
   },
   "lint-staged": {
