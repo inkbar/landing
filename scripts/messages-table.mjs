@@ -6,7 +6,8 @@
  * at build time. To regenerate it after core's English messages change:
  *
  *   pnpm --filter @inkbar/core build      # in the inkbar repo, if packages/core/dist is missing
- *   node scripts/messages-table.mjs [path/to/packages/core/dist/locales/en.mjs]
+ *   pnpm messages:table [path/to/packages/core/dist/locales/en.mjs]
+ *   (the same as: node scripts/messages-table.mjs [path])
  *
  * The default path is ../inkbar/packages/core/dist/locales/en.mjs. Commit the result.
  * A function message shows its template, or its plural forms, from the function's `source`.
