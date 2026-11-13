@@ -101,7 +101,7 @@ A root note with no text and no replies is removed when its popover closes, or w
 
 ## Custom rendering
 
-Slots are render props. `InkViewport` takes `loading`, `empty`, `error`, `renderAnnotation` and `renderPageError`; `InkThreadPopover` takes a function as `children`; `InkToolButton` takes a node or a function of `{ active, label }`; `InkCommand` a node or a function of `{ label, busy }`. The props each receives are typed as `AnnotationSlotProps` and `ThreadPopoverSlotProps`, the same types the Vue and Svelte packages export.
+Slots are render props. `InkViewport` takes `loading`, `empty`, `error`, `locked`, `renderAnnotation` and `renderPageError`; `InkThreadPopover` takes a function as `children`; `InkToolButton` takes a node or a function of `{ active, label }`; `InkCommand` a node or a function of `{ label, busy }`. The props each receives are typed as `AnnotationSlotProps` and `ThreadPopoverSlotProps`, the same types the Vue and Svelte packages export.
 
 `InkRoot` takes `decorateAnnotation`, which returns your own `data`, `classes` and `description` for an annotation's element, as `mountViewer` describes in [Your own chrome](/docs/frameworks/plain-dom/#your-own-chrome). Pass a new function when its output depends on your own state, and Inkbar applies it on the next render.
 
