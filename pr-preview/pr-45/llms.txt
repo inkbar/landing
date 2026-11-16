@@ -1,0 +1,22 @@
+# Inkbar
+
+> Inkbar is an open-source PDF viewer and editor for the browser, with form filling, highlights, note threads, drawing, signatures and redaction marks. It is written in TypeScript, has bindings for Vue, React and Svelte, and is free under the MIT licence.
+
+- Install it from npm: `@inkbar/core` and `@inkbar/theme`, plus `@inkbar/vue`, `@inkbar/react` or `@inkbar/svelte`. The plain DOM API in `@inkbar/core/dom` needs no framework.
+- Every editing tool is opt-in: pass the tool factories your toolbar offers as `tools`.
+- Inkbar renders documents in the browser and sends them nowhere.
+
+## Documentation Sets
+
+- [Abridged documentation](https://inkbar.dev/pr-preview/pr-45/llms-small.txt): a compact version of the documentation for Inkbar, with non-essential content removed
+- [Complete documentation](https://inkbar.dev/pr-preview/pr-45/llms-full.txt): the full documentation for Inkbar
+
+## Notes
+
+- The complete documentation includes all content from the official documentation
+- The content is automatically generated from the same source as the official documentation
+
+## Optional
+
+- [Source code](https://github.com/inkbar/inkbar): the TypeScript source, issues and releases
+- [Sandbox](https://sandbox.inkbar.dev): the viewers running on a sample document

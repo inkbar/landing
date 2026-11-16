@@ -1,0 +1,328 @@
+# Plugins
+
+> For AI agents: the full Inkbar documentation index is at https://inkbar.dev/pr-preview/pr-45/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/pr-preview/pr-45/docs/quickstart/ becomes https://inkbar.dev/pr-preview/pr-45/docs/quickstart.md.
+
+Add a plugin to a viewer, place its commands and tools, load and save its records, and share undo with annotations.
+
+A plugin adds features to a viewer without changing Inkbar. It can bring:
+
+- commands, actions with a label that you place as buttons
+- tools, which you place with a tool button like the built-in ones
+- decorations on annotation elements
+- page layers, drawn over every page above the annotations, such as marks that open a card
+- record stores, a list of its own records for each open document
+
+A plugin is written once with `definePlugin` from `@inkbar/core/dom` and runs in every framework package and in `createViewer`. Everything it adds is named under its id: command `suggest` of plugin `review` is `review.suggest`. This page is for the app that uses a plugin. To build one, see [Writing a plugin](https://inkbar.dev/pr-preview/pr-45/docs/guides/writing-a-plugin.md).
+
+## Adding a plugin
+
+Call a factory-style plugin with its options, and pass a plugin written as an object as it is; the plugin's docs say which. Pass the result to `InkRoot` as `plugins`, or to `createViewer`. The list is read once, when the root mounts: a later change to it is not applied, so make the plugins once rather than on every render.
+
+Nothing a plugin registers shows by itself. Place each command with `InkCommand` and each tool with `InkToolButton`, inside an `InkToolbar`, as you place the built-in controls. A plugin's tools join the viewer's on their own, so `tools` lists only the built-in tools you offer:
+
+**Vue**
+
+```vue
+<script setup lang="ts">
+import { InkCommand, InkRoot, InkToolbar, InkToolButton, InkViewport } from '@inkbar/vue'
+import { redactAreaTool } from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+import { review } from './review-plugin'
+
+defineProps<{ file: File }>()
+
+const tools = [redactAreaTool()]
+const plugins = [review()]
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets" :tools="tools" :plugins="plugins">
+    <InkToolbar>
+      <InkToolButton tool="redact-area" />
+      <InkToolButton tool="review.stamp" />
+      <InkCommand id="review.suggest" />
+    </InkToolbar>
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+**React**
+
+```tsx
+import {
+  InkCommand,
+  InkRoot,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/react'
+import { redactAreaTool } from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+import { review } from './review-plugin'
+
+const tools = [redactAreaTool()]
+const plugins = [review()]
+
+export function Review({ file }: { file: File }) {
+  return (
+    <InkRoot src={file} assets={assets} tools={tools} plugins={plugins}>
+      <InkToolbar>
+        <InkToolButton tool="redact-area" />
+        <InkToolButton tool="review.stamp" />
+        <InkCommand id="review.suggest" />
+      </InkToolbar>
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+**Svelte**
+
+```svelte
+<script lang="ts">
+  import {
+    InkCommand,
+    InkRoot,
+    InkToolbar,
+    InkToolButton,
+    InkViewport,
+  } from '@inkbar/svelte'
+  import { redactAreaTool } from '@inkbar/core/dom'
+  import { assets } from 'virtual:inkbar-assets'
+
+  import { review } from './review-plugin'
+
+  let { file }: { file: File } = $props()
+
+  const tools = [redactAreaTool()]
+  const plugins = [review()]
+</script>
+
+<InkRoot src={file} {assets} {tools} {plugins}>
+  <InkToolbar>
+    <InkToolButton tool="redact-area" />
+    <InkToolButton tool="review.stamp" />
+    <InkCommand id="review.suggest" />
+  </InkToolbar>
+  <InkViewport />
+</InkRoot>
+```
+
+**Plain DOM**
+
+```ts
+import {
+  createCommandButton,
+  createToolbar,
+  createToolButton,
+  createViewer,
+  redactAreaTool,
+} from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+import { review } from './review-plugin'
+
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  tools: [redactAreaTool()],
+  plugins: [review()],
+})
+
+const tools = createToolbar()
+tools.append(
+  createToolButton(viewer, 'redact-area'),
+  createToolButton(viewer, 'review.stamp'),
+  createCommandButton(viewer, 'review.suggest')
+)
+viewer.element.prepend(tools)
+```
+
+A plugin's decorations and page layers apply to every document without being placed.
+
+## Command buttons
+
+`InkCommand` (`createCommandButton` in plain DOM) renders a button with the command's status text beside it:
+
+- The button is named by the command's label, a string or a function that returns one. See [Translations](https://inkbar.dev/pr-preview/pr-45/docs/guides/translations.md#labels-you-supply). It shows the command's icon, or the label as text when the command has none.
+- It is disabled until a document is ready, unless the plugin sets its own condition.
+- While the command runs, the button keeps focus and carries `aria-busy="true"` and `aria-disabled="true"`, and pressing it does nothing. An async command stays busy until its promise settles, so a double click runs it once.
+- The status, a short progress or result message such as "4 suggestions", sits in a live region, so screen readers announce it.
+
+`InkCommand` takes `asChild` (`as-child` in Vue, the `child` snippet in Svelte) to render your own element, as [Toolbars](https://inkbar.dev/pr-preview/pr-45/docs/guides/toolbars.md#rendering-your-own-element) describes. Its slot, render prop or snippet receives `{ label, busy }`.
+
+### Your own control
+
+To build a control of your own, `useCommand(id)` returns `run`, `enabled`, `busy`, `status`, `label` and `icon`. In Vue they are refs, in React plain values, and in Svelte getters on the returned object, so read them through it rather than destructure. `run` never rejects and does nothing while the command is disabled or busy.
+
+**Vue**
+
+```vue
+<script setup lang="ts">
+import { useCommand } from '@inkbar/vue'
+
+const suggest = useCommand('review.suggest')
+</script>
+
+<template>
+  <button type="button" :disabled="!suggest.enabled.value" @click="suggest.run()">
+    {{ suggest.busy.value ? 'Checking…' : suggest.label.value }}
+  </button>
+</template>
+```
+
+**React**
+
+```tsx
+import { useCommand } from '@inkbar/react'
+
+export function SuggestButton() {
+  const suggest = useCommand('review.suggest')
+  return (
+    <button type="button" disabled={!suggest.enabled} onClick={() => void suggest.run()}>
+      {suggest.busy ? 'Checking…' : suggest.label}
+    </button>
+  )
+}
+```
+
+**Svelte**
+
+```svelte
+<script lang="ts">
+  import { useCommand } from '@inkbar/svelte'
+
+  const suggest = useCommand('review.suggest')
+</script>
+
+<button type="button" disabled={!suggest.enabled} onclick={() => suggest.run()}>
+  {suggest.busy ? 'Checking…' : suggest.label}
+</button>
+```
+
+**Plain DOM**
+
+`viewer.commands.get(id)` returns the command, or `undefined`. Its `enabled`, `busy` and `status` are readables. `commandLabel(command)` reads its label, a string or the result of a label function. It reads the label once, so read it again when `viewer.messages` changes:
+
+```ts
+import { commandLabel } from '@inkbar/core/dom'
+
+const suggest = viewer.commands.get('review.suggest')
+if (suggest) {
+  const label = () => (button.textContent = commandLabel(suggest))
+  label()
+  viewer.messages.subscribe(label)
+  suggest.enabled.subscribe((on) => (button.disabled = !on))
+  button.addEventListener('click', () => void suggest.run())
+}
+```
+
+Call `useCommand` inside `InkRoot`. Announce `status` yourself if your control shows it, for example in an element with `role="status"`.
+
+## Plugin tools
+
+A plugin tool's id is `<plugin>.<id>`, so tool `stamp` of plugin `review` is `review.stamp`. Pass that id to `InkToolButton` (`createToolButton` in plain DOM). The tool needs no entry in `tools`. The button takes the tool's own label and icon; pass `label` to change the name.
+
+## Loading and saving records
+
+A plugin can keep records of its own, such as suggestions, in a store that each open document gets. Inkbar keeps no plugin data. To load and save its records, give it two functions:
+
+- `initial(doc)` returns the records a document opens with. It runs once for each document that opens.
+- `onChange(list, change)` runs after every change, with the whole list as it now stands.
+
+Pass them in the plugin's `records` option, under the name of the plugin's records. The plugin's docs give the names; the review plugin calls its records `suggestions`:
+
+```ts
+const plugins = [
+  review({
+    records: {
+      suggestions: {
+        initial: (doc) => savedSuggestions.get(doc.key) ?? [],
+        onChange: (list) => saveSuggestions(list),
+      },
+    },
+  }),
+]
+```
+
+`change` says what happened:
+
+| `change.kind` | Carries                                                                                                                                                        |
+| ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `add`         | `record`, the record added                                                                                                                                     |
+| `update`      | `id`, and `before` and `after`, the record on each side of the change                                                                                          |
+| `remove`      | `record`, the record removed                                                                                                                                   |
+| `replace`     | `reason` (`history` for undo and redo, `reset` when the plugin starts over), and `added`, `updated` and `removed`: the ids each replace touched, in list order |
+
+Undo and redo arrive as one `replace` with reason `history`. Save the whole `list` then, or use the ids to save only what changed. The records are frozen: copy one before you change it.
+
+## Reading records from your app
+
+Your app can read and write a plugin's records too, to show a count, a custom list or a summary. Name them `<plugin>.<name>`, as in `review.suggestions`. The handle follows the open document, and each write is one undo step, like the plugin's own.
+
+**Vue**
+
+```ts
+import { useRecords } from '@inkbar/vue'
+
+const { records, handle } = useRecords<Suggestion>('review.suggestions')
+// records.value is the live list; handle.value reads and writes it
+```
+
+**React**
+
+```tsx
+import { useRecords } from '@inkbar/react'
+
+const { records, handle } = useRecords<Suggestion>('review.suggestions')
+```
+
+**Svelte**
+
+```ts
+import { useRecords } from '@inkbar/svelte'
+
+const suggestions = useRecords<Suggestion>('review.suggestions')
+// Keep the object: it holds getters, and destructuring loses reactivity
+console.log(suggestions.records.length, suggestions.handle)
+```
+
+**Plain DOM**
+
+```ts
+const suggestions = viewer.records<Suggestion>('review.suggestions')
+suggestions.list.subscribe((items) => render(items))
+suggestions.batch(() => {
+  suggestions.update('s1', { status: 'accepted' })
+  suggestions.remove('s2')
+})
+```
+
+The handle is the plugin's own less `annotates`. `batch(fn)` makes several writes one undo step. In the framework packages the hook needs `InkRoot`, and until the plugins are set up `handle` is null and `records` is empty. An unknown key gives an empty handle that ignores writes and logs a warning once. To list the records as cards without writing the list yourself, see [Lists of records](https://inkbar.dev/pr-preview/pr-45/docs/guides/sidebars.md#lists-of-records).
+
+## Undo with annotations
+
+Plugin records share the viewer's undo history with annotations. A plugin can make a record change and an annotation edit one step, so a single undo takes back both. Accepting a suggestion, for example, marks the suggestion accepted and adds a redaction; undo puts the suggestion back and removes the redaction.
+
+- **Uncontrolled.** The document's history covers both. `InkUndo` and `InkRedo` undo plugin steps like any other.
+- **Controlled.** With history on (`history`, or `:history="true"` in Vue), each undo step also snapshots the plugin stores. Undo puts the records back at once and proposes the earlier annotation list to you, as [Controlled mode](https://inkbar.dev/pr-preview/pr-45/docs/guides/controlled-mode.md) describes. With history off there is no undo, for records or annotations.
+
+## Server rendering
+
+The framework packages set plugins up once `InkRoot` has mounted in the browser, never on the server. Until then:
+
+- `InkCommand` renders its button disabled, with no label, and keeps it out of the accessibility tree (`aria-hidden`).
+- `useCommand` returns a disabled command with an empty `label` and no `icon`. They fill in once the plugins are set up.
+- Nothing `setup` creates, such as a store, exists yet.
+
+`createViewer` runs in the browser only, so it sets plugins up as it creates the viewer.
+
+## Errors
+
+Once the plugins are set up, `InkCommand`, `useCommand` and `createCommandButton` log an `UnknownCommand` error to the console for an id no plugin registered. The error names the id and the command ids the plugins did register. The control stays disabled and hidden, as it is before setup, and the rest of the viewer keeps working.
+
+Two plugins with the same id raise `DuplicatePlugin` when the viewer sets them up. A plugin whose own callbacks throw, such as a decoration or a page layer, has the error logged so the viewer and other plugins keep working. A command whose run fails logs the error and never rejects.
