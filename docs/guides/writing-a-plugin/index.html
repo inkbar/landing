@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en" dir="ltr" data-theme="dark" data-has-toc data-has-sidebar class="astro-v47377wl"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><title>Writing a plugin | Inkbar</title><link rel="canonical" href="https://inkbar.dev/docs/guides/writing-a-plugin/"/><link rel="sitemap" href="/sitemap-index.xml"/><link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml"/><meta name="generator" content="Astro v7.3.8"/><meta name="generator" content="Starlight v0.42.6"/><meta property="og:title" content="Writing a plugin"/><meta property="og:type" content="article"/><meta property="og:url" content="https://inkbar.dev/docs/guides/writing-a-plugin/"/><meta property="og:locale" content="en"/><meta property="og:description" content="Write an Inkbar plugin with records, commands, marks and cards, once for every framework."/><meta property="og:site_name" content="Inkbar"/><meta name="description" content="Write an Inkbar plugin with records, commands, marks and cards, once for every framework."/><meta property="og:image" content="https://inkbar.dev/og.png"/><meta name="twitter:card" content="summary_large_image"/><script>
   document.documentElement.dataset.theme = 'light'
-</script><link rel="stylesheet" href="/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/_astro/SiteHeader.DNNDxHSS.css"><link rel="stylesheet" href="/_astro/index.DMrC2DkI.css"><style>@layer starlight.components{svg:where(.astro-gorrgiec){color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
+</script><link rel="stylesheet" href="/_astro/print.ehPL0gv-.css" media="print"><link rel="stylesheet" href="/_astro/SiteHeader.DNNDxHSS.css"><link rel="stylesheet" href="/_astro/index.CHitAtzN.css"><style>@layer starlight.components{svg:where(.astro-gorrgiec){color:var(--sl-icon-color);font-size:var(--sl-icon-size,1em);width:1em;height:1em;overflow:visible}}
 </style><script type="module" src="/_astro/page.cNngjUgL.js"></script></head><body class="astro-v47377wl"><a class="sl-skip-link astro-qthxknfa" href="#_top">Skip to content</a><div class="page sl-flex astro-srkfmhu7"><header class="header astro-srkfmhu7"><div class="site-header astro-jae56hh5" data-variant="docs"><a class="home astro-jae56hh5" href="/" aria-label="Inkbar home"><span class="logo astro-ylqc276q" data-tone="light"><svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" class="astro-ylqc276q"><rect width="32" height="32" rx="8" fill="#0D1026" class="astro-ylqc276q"></rect><circle cx="16" cy="8.2" r="2.4" fill="#FFFFFF" class="astro-ylqc276q"></circle><rect x="13.8" y="12" width="4.4" height="7.5" fill="#FFFFFF" class="astro-ylqc276q"></rect><rect x="6" y="21" width="20" height="5" rx="1.5" fill="#E4FF4A" stroke="none" stroke-width="1" class="astro-ylqc276q"></rect></svg><span class="wordmark astro-ylqc276q">inkbar</span></span></a><div class="search astro-jae56hh5"><site-search class=" astro-fwaxdffe" data-translations="{&quot;placeholder&quot;:&quot;Search&quot;}"><button data-open-modal disabled aria-label="Search" aria-keyshortcuts="Control+K" class="astro-fwaxdffe"><svg aria-hidden="true" class="astro-fwaxdffe astro-gorrgiec" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><path d="M21.71 20.29 18 16.61A9 9 0 1 0 16.61 18l3.68 3.68a.999.999 0 0 0 1.42 0 1 1 0 0 0 0-1.39ZM11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14Z"/></svg><span class="sl-hidden md:sl-block astro-fwaxdffe" aria-hidden="true">Search</span><kbd class="sl-hidden md:sl-flex astro-fwaxdffe" style="display: none;"><kbd class="astro-fwaxdffe">Ctrl</kbd><kbd class="astro-fwaxdffe">K</kbd></kbd></button><dialog style="padding:0" aria-label="Search" class="astro-fwaxdffe"><div class="dialog-frame sl-flex astro-fwaxdffe"><button data-close-modal class="sl-flex md:sl-hidden astro-fwaxdffe">Cancel</button><div class="search-container astro-fwaxdffe"><div id="starlight__search" class="astro-fwaxdffe"></div></div></div></dialog></site-search><script>
 	(() => {
 		const openBtn = document.querySelector('button[data-open-modal]');
@@ -61,7 +61,7 @@
 <p>Calling the factory with the host’s options makes a plugin, and each call makes an independent one. <code dir="auto">setup(plugin, options)</code> runs once per viewer with the plugin API and those options. It can return a function, which runs when the viewer is destroyed. Type your own options with <code dir="auto">definePlugin&lt;Options&gt;(id, setup)</code>; every plugin also takes <code dir="auto">records</code>, below.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="records">Records</h2><a class="sl-anchor-link" href="#records"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Records”</span></a></div>
 <p><code dir="auto">plugin.records&lt;T&gt;(name)</code> returns a handle on the open document’s records, keyed <code dir="auto">&lt;plugin&gt;.&lt;name&gt;</code>. Each document that opens gets its own. The handle follows the open document, so keep it for the plugin’s lifetime: while no document is open it reads empty and its writes do nothing. A record is a plain object with a string <code dir="auto">id</code>.</p>
-<table tabindex="0">
+<div class="table-wrap" tabindex="0" role="region" aria-label="Records"><table>
 <thead>
 <tr>
 <th>Member</th>
@@ -114,7 +114,7 @@
 <td>The underlying record store, or <code dir="auto">null</code>, for anything the handle lacks</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Every records call is one undo step, and <code dir="auto">plugin.batch</code> makes several one step. <code dir="auto">addMissing</code> adds all its records in one step. <code dir="auto">plugin.batch(fn)</code> is <code dir="auto">history.batch</code>: everything <code dir="auto">fn</code> changes, annotations and records alike, undoes together. <code dir="auto">fn</code> must be synchronous.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="loading-and-saving">Loading and saving</h3><a class="sl-anchor-link" href="#loading-and-saving"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Loading and saving”</span></a></div>
 <p>Inkbar keeps no plugin data. The host hands each records name its <code dir="auto">initial</code> and <code dir="auto">onChange</code> through the factory’s <code dir="auto">records</code> option, and <code dir="auto">plugin.records(name)</code> picks them up by name, so the plugin passes nothing on:</p>
@@ -160,7 +160,7 @@
 </ul>
 <p>The card is a <code dir="auto">role="dialog"</code>. Its first action is the primary one and takes focus when the card opens. Each card action is one undo step. Actions must be synchronous: a write after an <code dir="auto">await</code> falls outside the action’s undo step. After an action, the card re-renders if the mark stays. If the mark goes, the card closes and focus moves to the next of this <code dir="auto">marks()</code> call’s marks, else the previous one, else the viewport. Escape or a press outside closes the card and returns focus to the mark.</p>
 <p>The theme styles the card through these classes, which are yours to restyle:</p>
-<table tabindex="0">
+<div class="table-wrap" tabindex="0" role="region" aria-label="Cards"><table>
 <thead>
 <tr>
 <th>Class</th>
@@ -197,7 +197,7 @@
 <td>The row of action buttons</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>For anything richer, use <code dir="auto">onActivate</code> with your own popover, as <a href="/docs/frameworks/plain-dom/#your-own-popovers">Your own popovers</a> describes.</p>
 <p>Records that pass a <code dir="auto">marks</code> call’s <code dir="auto">where</code> also appear in a record list, each as the same card with the same actions in the same undo step, so the cards you wrote for the marks give you a sidebar list with no further code. The app places it with <code dir="auto">InkRecordList records="&lt;plugin&gt;.&lt;name&gt;"</code>, as <a href="/docs/guides/sidebars/#lists-of-records">Sidebars</a> shows. When a plugin has no <code dir="auto">marks</code> call for these records, every record still lists, with its id as the title and no actions.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="linked-annotations">Linked annotations</h2><a class="sl-anchor-link" href="#linked-annotations"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Linked annotations”</span></a></div>
@@ -217,7 +217,7 @@
 <p>The <code dir="auto">plugin</code> that <code dir="auto">setup</code> receives is also the plugin’s context, with everything below. Use it for what the shorthands above do not cover: tools, decorations, page layers of your own, or stores without the handle.</p>
 <p>A plugin can also be a plain object, <code dir="auto">definePlugin({ id, setup(ctx) { … } })</code>, which checks the id and returns the plugin itself. The host passes it as it is, without a call.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="the-context">The context</h3><a class="sl-anchor-link" href="#the-context"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “The context”</span></a></div>
-<table tabindex="0">
+<div class="table-wrap" tabindex="0" role="region" aria-label="The context"><table>
 <thead>
 <tr>
 <th>Member</th>
@@ -302,7 +302,7 @@
 <td>Runs <code dir="auto">fn(press)</code> when a touch or pen is held still on a page that nothing in Inkbar acted on. Returns a function that stops listening</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>A readable has <code dir="auto">get()</code> and <code dir="auto">subscribe(fn)</code>, which returns a function that stops it. <code dir="auto">writable</code> from <code dir="auto">@inkbar/core</code> makes one you can <code dir="auto">set</code>.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="commandsadd"><code dir="auto">commands.add</code></h3><a class="sl-anchor-link" href="#commandsadd"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “commands.add”</span></a></div>
 <p><code dir="auto">ctx.commands.add(spec)</code> takes:</p>
@@ -323,7 +323,7 @@
 <li><code dir="auto">onChange(list, change)</code> runs after every change, with the list as it now stands.</li>
 </ul>
 <p>A store holds plain records, each with a string <code dir="auto">id</code>:</p>
-<table tabindex="0">
+<div class="table-wrap" tabindex="0" role="region" aria-label="Record stores"><table>
 <thead>
 <tr>
 <th>Member</th>
@@ -364,7 +364,7 @@
 <td>Calls <code dir="auto">fn(change)</code> after every change and returns a function that stops it</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Records are stored as frozen copies, so the object you pass to <code dir="auto">add</code> stays yours and a stored record never changes under you. Change one with <code dir="auto">update</code>.</p>
 <p>A change is one of <code dir="auto">add</code> (with <code dir="auto">record</code>), <code dir="auto">update</code> (<code dir="auto">id</code>, <code dir="auto">before</code> and <code dir="auto">after</code>), <code dir="auto">remove</code> (<code dir="auto">record</code>) or <code dir="auto">replace</code>. A <code dir="auto">replace</code> has a <code dir="auto">reason</code>, <code dir="auto">history</code> for undo and redo or <code dir="auto">reset</code>, and the ids it <code dir="auto">added</code>, <code dir="auto">updated</code> and <code dir="auto">removed</code>.</p>
 <div class="sl-heading-wrapper level-h3"><h3 id="one-undo-step">One undo step</h3><a class="sl-anchor-link" href="#one-undo-step"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “One undo step”</span></a></div>
@@ -423,7 +423,7 @@
 <li>An error thrown from your decoration, a layer’s <code dir="auto">render</code> or <code dir="auto">destroy</code>, or an <code dir="auto">onDocument</code> callback is logged, so one plugin cannot break the viewer or the others.</li>
 </ul>
 <div class="sl-heading-wrapper level-h3"><h3 id="errors">Errors</h3><a class="sl-anchor-link" href="#errors"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Errors”</span></a></div>
-<table tabindex="0">
+<div class="table-wrap" tabindex="0" role="region" aria-label="Errors"><table>
 <thead>
 <tr>
 <th>Code</th>
@@ -452,5 +452,5 @@
 <td>The host places a command id that no plugin registered. Logged, not thrown</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>Each is an <code dir="auto">InkError</code> from <code dir="auto">@inkbar/core</code>, with the code on <code dir="auto">error.code</code>.</p></div><footer class="sl-flex astro-m4gthy53"><div class="meta sl-flex astro-m4gthy53"><a href="https://github.com/inkbar/landing/edit/main/src/content/docs/docs/guides/writing-a-plugin.mdx" class="sl-flex print:hidden astro-duasm2kx"><svg aria-hidden="true" class="astro-duasm2kx astro-gorrgiec" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.2em;"><path d="M22 7.24a1 1 0 0 0-.29-.71l-4.24-4.24a1 1 0 0 0-1.1-.22 1 1 0 0 0-.32.22l-2.83 2.83L2.29 16.05a1 1 0 0 0-.29.71V21a1 1 0 0 0 1 1h4.24a1 1 0 0 0 .76-.29l10.87-10.93L21.71 8c.1-.1.17-.2.22-.33a1 1 0 0 0 0-.24v-.14l.07-.05ZM6.83 20H4v-2.83l9.93-9.93 2.83 2.83L6.83 20ZM18.17 8.66l-2.83-2.83 1.42-1.41 2.82 2.82-1.41 1.42Z"/></svg>Edit page</a></div><div class="pagination-links print:hidden astro-65gd2u6o" dir="ltr"><a href="/docs/guides/plugins/" rel="prev" class="astro-65gd2u6o"><svg aria-hidden="true" class="astro-65gd2u6o astro-gorrgiec" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span class="astro-65gd2u6o">Previous<br class="astro-65gd2u6o"><span class="link-title astro-65gd2u6o">Plugins</span></span></a><a href="/docs/guides/storage/" rel="next" class="astro-65gd2u6o"><svg aria-hidden="true" class="astro-65gd2u6o astro-gorrgiec" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span class="astro-65gd2u6o">Next<br class="astro-65gd2u6o"><span class="link-title astro-65gd2u6o">Storage</span></span></a></div></footer><footer class="foot astro-bddg4lij" data-variant="compact"><div class="inner astro-bddg4lij"><div class="bottom astro-bddg4lij"><span class="astro-bddg4lij">© 2026 Inkbar. Released under the MIT licence.</span><span class="astro-bddg4lij">From the team behind <a class="credit astro-bddg4lij" href="https://redactr.io">Redactr</a>.</span></div></div></footer></div></div></main></div></div></div></div></body></html>
