@@ -91,13 +91,16 @@ test('tables in the docs sit in a named frame that takes keyboard focus', async 
 
 test('docs tables fill the content column', async ({ page }) => {
   await page.goto('/docs/reference/theme-tokens/')
+  const column = await page
+    .locator('main .sl-markdown-content')
+    .evaluate((content) => Math.round(content.getBoundingClientRect().width))
   const widths = await page
     .locator('main .table-wrap')
     .evaluateAll((frames) =>
       frames.map((frame) => Math.round(frame.getBoundingClientRect().width))
     )
   expect(widths.length).toBeGreaterThan(1)
-  expect(new Set(widths).size).toBe(1)
+  for (const width of widths) expect(width).toBe(column)
 })
 
 test('the docs never mention the Pro tier', async ({ page }) => {
