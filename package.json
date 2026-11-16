@@ -14,7 +14,7 @@
     "preview": "astro preview --port 4321 --ignore-lock",
     "typecheck": "astro check",
     "test:browser": "playwright test",
-    "lint": "eslint . --no-error-on-unmatched-pattern",
+    "lint": "astro sync && eslint . --no-error-on-unmatched-pattern",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "og": "node scripts/make-og.mjs",
