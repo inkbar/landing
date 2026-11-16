@@ -21,6 +21,7 @@ export default defineConfig({
       description:
         'Documentation for Inkbar, the open-source PDF viewer and editor for the web.',
       disable404Route: true,
+      routeMiddleware: './src/route-data.ts',
       favicon: '/favicon.svg',
       components: {
         Header: './src/components/starlight/Header.astro',
