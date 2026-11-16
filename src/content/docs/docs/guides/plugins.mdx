@@ -218,12 +218,16 @@ export function SuggestButton() {
   </TabItem>
   <TabItem label="Plain DOM">
 
-`viewer.commands.get(id)` returns the command, or `undefined`. Its `enabled`, `busy` and `status` are readables:
+`viewer.commands.get(id)` returns the command, or `undefined`. Its `enabled`, `busy` and `status` are readables. `commandLabel(command)` reads its label, a string or the result of a label function. It reads the label once, so read it again when `viewer.messages` changes:
 
 ```ts
+import { commandLabel } from '@inkbar/core/dom'
+
 const suggest = viewer.commands.get('review.suggest')
 if (suggest) {
-  button.textContent = suggest.label
+  const label = () => (button.textContent = commandLabel(suggest))
+  label()
+  viewer.messages.subscribe(label)
   suggest.enabled.subscribe((on) => (button.disabled = !on))
   button.addEventListener('click', () => void suggest.run())
 }

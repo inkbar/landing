@@ -90,7 +90,7 @@ A root note with no text and no replies is removed when its popover closes, or w
 
 ## Custom rendering
 
-Slots are snippets. `InkViewport` takes `loading`, `empty`, `error`, `annotation` and `pageError`. `InkThreadPopover` takes `children` as a snippet that receives the popover's props. `InkToolButton` takes `children` as a snippet of `{ active, label }`, and `InkCommand` one of `{ label, busy }`. The props each receives are typed as `AnnotationSlotProps` and `ThreadPopoverSlotProps`, the same types the Vue and React packages export.
+Slots are snippets. `InkViewport` takes `loading`, `empty`, `error`, `locked`, `annotation` and `pageError`. `InkThreadPopover` takes `children` as a snippet that receives the popover's props. `InkToolButton` takes `children` as a snippet of `{ active, label }`, and `InkCommand` one of `{ label, busy }`. The props each receives are typed as `AnnotationSlotProps` and `ThreadPopoverSlotProps`, the same types the Vue and React packages export.
 
 `InkRoot` takes `decorateAnnotation`, which returns your own `data`, `classes` and `description` for an annotation's element, as `mountViewer` describes in [Your own chrome](/docs/frameworks/plain-dom/#your-own-chrome). Pass a new function when its output depends on your own state, and Inkbar applies it again.
 
@@ -152,6 +152,8 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 ## Hooks
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch`, `useForm`, `useToolOptions` and `useToolStyle` read the state of the nearest `InkRoot`. Call them during component initialisation, as you would `getContext`. Build your own controls or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch`, `useForm`, `useToolOptions`, `useToolStyle`, `useRecords` and `useRecordSelection` read the state of the nearest `InkRoot`. Call them during component initialisation, as you would `getContext`. Build your own controls or side panel from them. [Lists of records](/docs/guides/sidebars/#lists-of-records) covers `useRecords` and `useRecordSelection`.
+
+`useReadable(() => readable, fallback)` follows any core readable. It returns an object whose `current` holds the value, or `fallback` while there is none.
 
 Each hook returns an object whose reactive members are getters. Read `useZoom().zoom` in your template or an effect and it tracks. Destructure it (`const { zoom } = useZoom()`) and you copy the value once, so keep the object and read through it.

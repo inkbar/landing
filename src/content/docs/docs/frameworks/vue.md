@@ -96,7 +96,7 @@ A root note with no text and no replies is removed when its popover closes, or w
 
 ## Custom rendering
 
-Slots let you render parts yourself. `InkViewport` has `loading`, `empty`, `error`, `annotation` and `page-error` slots. `InkThreadPopover` has a scoped default slot that receives the popover's props, the default slot of `InkToolButton` receives `{ active, label }`, and that of `InkCommand` receives `{ label, busy }`. The props are typed as `AnnotationSlotProps` and `ThreadPopoverSlotProps`, the same types the React and Svelte packages export.
+Slots let you render parts yourself. `InkViewport` has `loading`, `empty`, `error`, `locked`, `annotation` and `page-error` slots. `InkThreadPopover` has a scoped default slot that receives the popover's props, the default slot of `InkToolButton` receives `{ active, label }`, and that of `InkCommand` receives `{ label, busy }`. The props are typed as `AnnotationSlotProps` and `ThreadPopoverSlotProps`, the same types the React and Svelte packages export.
 
 `InkRoot` takes `decorate-annotation`, a function that returns your own `data`, `classes` and `description` for an annotation's element, as `mountViewer` describes in [Your own chrome](/docs/frameworks/plain-dom/#your-own-chrome). Pass a new function when its output depends on your own state, and Inkbar applies it again.
 
@@ -152,4 +152,6 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 ## Composables
 
-`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch`, `useForm`, `useToolOptions` and `useToolStyle` read the state of the nearest `InkRoot`. Build your own controls or side panel from them.
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch`, `useForm`, `useToolOptions`, `useToolStyle`, `useRecords` and `useRecordSelection` read the state of the nearest `InkRoot`. Build your own controls or side panel from them. [Lists of records](/docs/guides/sidebars/#lists-of-records) covers `useRecords` and `useRecordSelection`.
+
+`useReadable(source, fallback)` follows any core readable, passed as is, as a ref or as a getter. It returns a read-only ref that holds `fallback` while there is none.

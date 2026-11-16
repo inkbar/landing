@@ -3,11 +3,12 @@ title: Plain DOM
 description: Use Inkbar without a framework package, with createViewer and its toolbar controls, or mountViewer for your own chrome.
 ---
 
-`@inkbar/core` has three entry points:
+`@inkbar/core` has these entry points:
 
 - `@inkbar/core` holds the document model and annotation store. It is safe to import during server rendering.
 - `@inkbar/core/dom` renders pages, text layers and annotation layers into the DOM.
 - `@inkbar/core/vite` is a Vite plugin that serves the PDF.js assets.
+- `@inkbar/core/locales/fr` and `@inkbar/core/locales/de` hold the French and German [translations](/docs/guides/translations/).
 
 Install `@inkbar/core` and `@inkbar/theme`, and set up the assets as [Loading assets](/docs/loading-assets/) describes.
 
@@ -89,7 +90,7 @@ Buttons show an icon from `@inkbar/icons`; replace their children with your own 
 
 The viewer fills the PDF's form fields and runs the form's scripts. `viewer.form` is a readable that holds the open document's form, or `null` before one is ready. `onAction` receives each submit, link, mail and print request, since the form never acts on them itself. `formHighlight: false` turns off the field tint, and `viewer.setFormHighlight(on)` changes it later. [Forms](/docs/guides/forms/) has the details.
 
-`createSignatureMenu(viewer)` lists the saved signatures and turns on the `signature` tool with the chosen one. It needs `signatureTool()` in `tools`. The signature dialog and signature form fields work without it; the dialog then only saves the signature. Pass `signatures` and `signatureFonts` to `createViewer` to say where templates live and which handwriting fonts the dialog offers. [Signatures](/docs/guides/signatures/) has the details.
+`createSignatureMenu(viewer)` lists the saved signatures and turns on the `signature` tool with the chosen one. It needs `signatureTool()` in `tools`. The signature dialog and signature form fields work without it; the dialog then only saves the signature. Pass `storage` and `signatureFonts` to `createViewer` to say where templates live and which handwriting fonts the dialog offers. [Signatures](/docs/guides/signatures/) has the details.
 
 `createViewer` reads the theme's colours from the element you pass, so that element needs to be in the page when you call it. Like the framework packages, the viewer fills its parent, so give the element a height.
 
@@ -176,7 +177,7 @@ Style the marks from the attributes you set, for example `[data-annotation][data
 - `placePanel(panel, rect)` positions a fixed panel below a `DOMRect`, or above it when only that fits, inside the window. Use it for a panel anchored to something other than an annotation.
 - `observeAnnotationElement(root, id, onChange)` calls `onChange` with the element for annotation `id` now and whenever it changes, and returns a function that stops observing. `createPopover` uses it to follow the anchor.
 
-For a complete example extension, see the sandbox's [review card](https://github.com/inkbar/inkbar/blob/main/apps/sandbox/src/shared/suggestion-card.ts). It builds on these APIs and keeps its own data under `custom.sandbox`.
+A plugin's marks and cards are built on these APIs. For a complete example, see the sandbox's [suggestions plugin](https://github.com/inkbar/inkbar/blob/main/apps/sandbox/src/plugin/suggestions.ts). It keeps its own data under `custom.sandbox`.
 
 ## The document model on its own
 

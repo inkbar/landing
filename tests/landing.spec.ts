@@ -99,6 +99,8 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
   expect(titles.map((text) => text.trim())).toEqual([
     'Viewing',
     'Search',
+    'Outline and links',
+    'Sidebars',
     'Forms',
     'Signatures',
     'Highlights',
@@ -106,9 +108,13 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
     'Redaction marks',
     'Drawing',
     'Annotations as data',
+    'Plugins',
     'Undo and redo',
     'Keyboard and screen readers',
+    'Touch',
+    'Locked files',
     'Print and download',
+    'Translations',
   ])
   await expect(page.locator('#features .next li')).toHaveCount(1)
 })

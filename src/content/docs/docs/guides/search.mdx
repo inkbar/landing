@@ -159,14 +159,15 @@ The bar has no whole-word or regular expression toggles. `doc.search` takes both
 | `current`   | The index of the current hit in `hits`, or -1 when there is none   |
 | `scanning`  | Whether pages remain to scan                                       |
 
-| Action             | What it does                                                         |
-| ------------------ | -------------------------------------------------------------------- |
-| `open(query?)`     | Opens the search, with a new query if you pass one                   |
-| `setQuery(query)`  | Sets the query and searches again                                    |
-| `setMatchCase(on)` | Turns match case on or off and searches again                        |
-| `next()`           | Moves to the next hit and scrolls to it                              |
-| `previous()`       | Moves to the previous hit and scrolls to it                          |
-| `close()`          | Closes the search and clears the hits. It keeps the query and toggle |
+| Action             | What it does                                                                    |
+| ------------------ | ------------------------------------------------------------------------------- |
+| `open(query?)`     | Opens the search, with a new query if you pass one                              |
+| `setQuery(query)`  | Sets the query and searches again                                               |
+| `setMatchCase(on)` | Turns match case on or off and searches again                                   |
+| `next()`           | Moves to the next hit and scrolls to it                                         |
+| `previous()`       | Moves to the previous hit and scrolls to it                                     |
+| `select(index)`    | Makes hit `index` current and scrolls to it. An index out of range does nothing |
+| `close()`          | Closes the search and clears the hits. It keeps the query and toggle            |
 
 `open()` searches and draws the highlights even with no find bar on the page, so you can build your own. In Vue `state` is a ref, in React a plain value, and in Svelte a getter, so read it through the returned object. In plain DOM `viewer.search.state` is a readable. Before `InkRoot` mounts, and during server rendering, the state reads closed and the actions do nothing.
 

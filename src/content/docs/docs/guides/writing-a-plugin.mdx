@@ -160,6 +160,7 @@ A card is a popover next to its mark, styled by `@inkbar/theme` like the viewer'
 - `label`, the dialog's accessible name, also a string or a function. Default: `title`.
 - `meta`, an optional short line under the title, and `swatch`, an optional CSS colour for a dot before it.
 - `body`, optional text under the meta line.
+- `excerpt`, an optional line of context after the body, as `{ before, match, after }`. The `match` part is marked.
 - `actions`, one button per entry, in order. Give an object, where each key is a button's label, or an array of `{ label, run }`, where each `label` can be a function.
 - `className`, classes added to the card.
 
@@ -174,6 +175,7 @@ The theme styles the card through these classes, which are yours to restyle:
 | `.ink-card-meta`    | The meta line                |
 | `.ink-card-swatch`  | The dot before the meta line |
 | `.ink-card-body`    | The body                     |
+| `.ink-card-excerpt` | The excerpt                  |
 | `.ink-card-actions` | The row of action buttons    |
 
 For anything richer, use `onActivate` with your own popover, as [Your own popovers](/docs/frameworks/plain-dom/#your-own-popovers) describes.
@@ -203,26 +205,27 @@ A plugin can also be a plain object, `definePlugin({ id, setup(ctx) { … } })`,
 
 ### The context
 
-| Member                 | What it does                                                                                                                          |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                   | The plugin's id                                                                                                                       |
-| `document`             | A readable of the open `InkDocument`, or `null`                                                                                       |
-| `history.batch(fn)`    | Makes everything `fn` changes, annotations and records alike, one undo step                                                           |
-| `activated`            | A readable of the activated annotation's id, or `null`                                                                                |
-| `setActivated(id)`     | Activates an annotation, or clears the activation with `null`. An id not in the open document is ignored                              |
-| `root`                 | A readable of the viewport's scroll container, or `null` while none is mounted                                                        |
-| `commands.add(spec)`   | Adds a command and returns it                                                                                                         |
-| `tools.add(tool)`      | Adds a tool                                                                                                                           |
-| `decorate(fn)`         | Adds `data`, `classes` and a `description` to annotation elements                                                                     |
-| `redecorate()`         | Runs every decoration again                                                                                                           |
-| `store(name, options)` | A readable of the record store for the open document, or `null`                                                                       |
-| `storage`              | Settings kept between visits under `plugin.<id>.`, in the root's [storage](/docs/guides/storage/#in-a-plugin)                         |
-| `onDocument(fn)`       | Runs `fn(doc)` for each document that opens. The function it returns runs when that document closes                                   |
-| `onAnnotationEdit(fn)` | Runs `fn(edit)` for every user add, update and remove of an annotation, inside that edit's undo step                                  |
-| `layer(spec)`          | Adds a page layer and returns a handle with `invalidate(page?)`                                                                       |
-| `scrollTo(page, rect)` | Scrolls the viewer so `rect`, in user space on `page`, is in view. Moves no focus                                                     |
-| `onPress(fn)`          | Runs `fn(press)` for a press on a page that nothing in Inkbar acted on. Returns a function that stops listening                       |
-| `onLongPress(fn)`      | Runs `fn(press)` when a touch or pen is held still on a page that nothing in Inkbar acted on. Returns a function that stops listening |
+| Member                       | What it does                                                                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                         | The plugin's id                                                                                                                       |
+| `document`                   | A readable of the open `InkDocument`, or `null`                                                                                       |
+| `history.batch(fn)`          | Makes everything `fn` changes, annotations and records alike, one undo step                                                           |
+| `activated`                  | A readable of the activated annotation's id, or `null`                                                                                |
+| `setActivated(id)`           | Activates an annotation, or clears the activation with `null`. An id not in the open document is ignored                              |
+| `root`                       | A readable of the viewport's scroll container, or `null` while none is mounted                                                        |
+| `commands.add(spec)`         | Adds a command and returns it                                                                                                         |
+| `tools.add(tool)`            | Adds a tool                                                                                                                           |
+| `decorate(fn)`               | Adds `data`, `classes` and a `description` to annotation elements                                                                     |
+| `redecorate()`               | Runs every decoration again                                                                                                           |
+| `store(name, options)`       | A readable of the record store for the open document, or `null`                                                                       |
+| `storage`                    | Settings kept between visits under `plugin.<id>.`, in the root's [storage](/docs/guides/storage/#in-a-plugin)                         |
+| `onDocument(fn)`             | Runs `fn(doc)` for each document that opens. The function it returns runs when that document closes                                   |
+| `onAnnotationEdit(fn)`       | Runs `fn(edit)` for every user add, update and remove of an annotation, inside that edit's undo step                                  |
+| `layer(spec)`                | Adds a page layer and returns a handle with `invalidate(page?)`                                                                       |
+| `scrollTo(page, rect, opts)` | Scrolls the viewer so `rect`, in user space on `page`, is in view. `opts.behavior` is a `ScrollBehavior`. Moves no focus              |
+| `search`                     | The viewer's search state and actions, shared with the find bar. See [Search](/docs/guides/search/)                                   |
+| `onPress(fn)`                | Runs `fn(press)` for a press on a page that nothing in Inkbar acted on. Returns a function that stops listening                       |
+| `onLongPress(fn)`            | Runs `fn(press)` when a touch or pen is held still on a page that nothing in Inkbar acted on. Returns a function that stops listening |
 
 A readable has `get()` and `subscribe(fn)`, which returns a function that stops it. `writable` from `@inkbar/core` makes one you can `set`.
 
@@ -383,10 +386,10 @@ A plugin you publish lists `@inkbar/core` under `peerDependencies`, so the app a
   "version": "1.0.0",
   "type": "module",
   "peerDependencies": {
-    "@inkbar/core": "^0.13.0"
+    "@inkbar/core": "^0.14.0"
   },
   "devDependencies": {
-    "@inkbar/core": "^0.13.0"
+    "@inkbar/core": "^0.14.0"
   }
 }
 ```
