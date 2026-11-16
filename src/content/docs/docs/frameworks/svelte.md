@@ -125,6 +125,10 @@ For your own card next to an annotation, read `activated`, `setActivated` and `r
 
 Pass plugins to `InkRoot` as `plugins`. The list is read once, when the root mounts. A plugin's tools join the viewer's on their own, without `tools`. Nothing a plugin adds shows until you place it: a command with `InkCommand id="<plugin>.<id>"`, a tool with `InkToolButton tool="<plugin>.<id>"`. For a control of your own, `useCommand(id)` returns the command's `run`, `enabled`, `busy`, `status`, `label` and `icon`. [Plugins](/docs/guides/plugins/) covers placing commands, saving plugin records and undo, and [Writing a plugin](/docs/guides/writing-a-plugin/) covers building one.
 
+## Translations
+
+`InkRoot` takes `messages` and `locale`. Pass a set such as `fr` from `@inkbar/core/locales/fr`, or a partial one to change a few strings. Changing either relabels the viewer in place. Labels you pass, such as `label` on `InkPanel` or `InkToolButton`, take a string or a function. See [Translations](/docs/guides/translations/).
+
 ## Keyboard
 
 The scroll area takes focus. From there:

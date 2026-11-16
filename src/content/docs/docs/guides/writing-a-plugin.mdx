@@ -126,12 +126,12 @@ Options passed to `plugin.records(name, { initial, onChange })` win over the hos
 
 ## Commands
 
-`plugin.command(id, label, run, options)` adds a command under `<plugin>.<id>` and returns it. `run` receives:
+`plugin.command(id, label, run, options)` adds a command under `<plugin>.<id>` and returns it. `label` is a string or a function that returns one, so the button can follow your language; see [Translations](/docs/guides/translations/). `run` receives:
 
 - `doc`, the document open when the command started.
 - `signal`, an `AbortSignal` that aborts when that document closes or another opens.
 
-A string that `run` returns becomes the command's status, which the command button announces; `undefined` clears it. A thrown error is logged and sets the status to the `errorStatus` option, "Something went wrong." by default. An abort sets no status. The status clears when the document changes. The other options are `icon` and `enabled`; without `enabled`, the command is enabled while a document is open and ready. The command is busy, and disabled, until `run` settles, so a double click runs it once.
+A string that `run` returns becomes the command's status, which the command button announces; `undefined` clears it. A thrown error is logged and sets the status to the `errorStatus` option, "Something went wrong." by default. `errorStatus` takes a string or a function. An abort sets no status. The status clears when the document changes. The other options are `icon` and `enabled`; without `enabled`, the command is enabled while a document is open and ready. The command is busy, and disabled, until `run` settles, so a double click runs it once.
 
 Inside a command, write through `records.in(doc)`. A command often waits, for a request or for the page text, and the user can open another file meanwhile. A write through the plain handle after an `await` goes to whatever document is open then. `in(doc)` binds the handle to the run's document, and once that document closes its writes do nothing, so a stale result goes nowhere.
 
@@ -156,11 +156,11 @@ Each mark carries `data-record` with the record's id and `data-plugin` with the 
 
 A card is a popover next to its mark, styled by `@inkbar/theme` like the viewer's own popovers. `card(record)` returns:
 
-- `title`, the card's heading.
-- `label`, the dialog's accessible name. Default: `title`.
+- `title`, the card's heading. A string or a function that returns one.
+- `label`, the dialog's accessible name, also a string or a function. Default: `title`.
 - `meta`, an optional short line under the title, and `swatch`, an optional CSS colour for a dot before it.
 - `body`, optional text under the meta line.
-- `actions`, one button per key, in order.
+- `actions`, one button per entry, in order. Give an object, where each key is a button's label, or an array of `{ label, run }`, where each `label` can be a function.
 - `className`, classes added to the card.
 
 The card is a `role="dialog"`. Its first action is the primary one and takes focus when the card opens. Each card action is one undo step. Actions must be synchronous: a write after an `await` falls outside the action's undo step. After an action, the card re-renders if the mark stays. If the mark goes, the card closes and focus moves to the next of this `marks()` call's marks, else the previous one, else the viewport. Escape or a press outside closes the card and returns focus to the mark.

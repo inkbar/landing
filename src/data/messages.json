@@ -1,0 +1,1118 @@
+[
+  {
+    "group": "viewer",
+    "key": "document",
+    "kind": "text",
+    "english": "Document"
+  },
+  {
+    "group": "viewer",
+    "key": "loading",
+    "kind": "text",
+    "english": "Loading document…"
+  },
+  {
+    "group": "viewer",
+    "key": "openFailed",
+    "kind": "text",
+    "english": "This document could not be opened."
+  },
+  {
+    "group": "viewer",
+    "key": "pageFailed",
+    "kind": "function",
+    "english": "Page {page} could not be shown."
+  },
+  {
+    "group": "toolbar",
+    "key": "label",
+    "kind": "text",
+    "english": "Document tools"
+  },
+  {
+    "group": "toolbar",
+    "key": "find",
+    "kind": "text",
+    "english": "Find"
+  },
+  {
+    "group": "toolbar",
+    "key": "download",
+    "kind": "text",
+    "english": "Download"
+  },
+  {
+    "group": "toolbar",
+    "key": "print",
+    "kind": "text",
+    "english": "Print"
+  },
+  {
+    "group": "toolbar",
+    "key": "undo",
+    "kind": "text",
+    "english": "Undo"
+  },
+  {
+    "group": "toolbar",
+    "key": "redo",
+    "kind": "text",
+    "english": "Redo"
+  },
+  {
+    "group": "toolbar",
+    "key": "back",
+    "kind": "text",
+    "english": "Back"
+  },
+  {
+    "group": "toolbar",
+    "key": "forward",
+    "kind": "text",
+    "english": "Forward"
+  },
+  {
+    "group": "toolbar",
+    "key": "zoomIn",
+    "kind": "text",
+    "english": "Zoom in"
+  },
+  {
+    "group": "toolbar",
+    "key": "zoomOut",
+    "kind": "text",
+    "english": "Zoom out"
+  },
+  {
+    "group": "toolbar",
+    "key": "zoom",
+    "kind": "text",
+    "english": "Zoom"
+  },
+  {
+    "group": "toolbar",
+    "key": "fitWidth",
+    "kind": "text",
+    "english": "Fit width"
+  },
+  {
+    "group": "toolbar",
+    "key": "fitPage",
+    "kind": "text",
+    "english": "Fit page"
+  },
+  {
+    "group": "toolbar",
+    "key": "zoomPercent",
+    "kind": "function",
+    "english": "{percent}%"
+  },
+  {
+    "group": "toolbar",
+    "key": "page",
+    "kind": "text",
+    "english": "Page"
+  },
+  {
+    "group": "toolbar",
+    "key": "pageOf",
+    "kind": "function",
+    "english": "of {total}"
+  },
+  {
+    "group": "toolbar",
+    "key": "previousPage",
+    "kind": "text",
+    "english": "Previous page"
+  },
+  {
+    "group": "toolbar",
+    "key": "nextPage",
+    "kind": "text",
+    "english": "Next page"
+  },
+  {
+    "group": "find",
+    "key": "field",
+    "kind": "text",
+    "english": "Find in document"
+  },
+  {
+    "group": "find",
+    "key": "previous",
+    "kind": "text",
+    "english": "Previous match"
+  },
+  {
+    "group": "find",
+    "key": "next",
+    "kind": "text",
+    "english": "Next match"
+  },
+  {
+    "group": "find",
+    "key": "matchCase",
+    "kind": "text",
+    "english": "Match case"
+  },
+  {
+    "group": "find",
+    "key": "close",
+    "kind": "text",
+    "english": "Close find"
+  },
+  {
+    "group": "find",
+    "key": "noResults",
+    "kind": "text",
+    "english": "No results"
+  },
+  {
+    "group": "find",
+    "key": "count",
+    "kind": "function",
+    "english": "{current} of {total}"
+  },
+  {
+    "group": "find",
+    "key": "countScanning",
+    "kind": "function",
+    "english": "{current} of {total}…"
+  },
+  {
+    "group": "find",
+    "key": "announce",
+    "kind": "function",
+    "english": "Match {current} of {total}, page {page}"
+  },
+  {
+    "group": "find",
+    "key": "announceScanning",
+    "kind": "function",
+    "english": "Match {current} of {total} so far, page {page}"
+  },
+  {
+    "group": "search",
+    "key": "field",
+    "kind": "text",
+    "english": "Find in document"
+  },
+  {
+    "group": "search",
+    "key": "placeholder",
+    "kind": "text",
+    "english": "Search for a word or phrase"
+  },
+  {
+    "group": "search",
+    "key": "prompt",
+    "kind": "text",
+    "english": "Search to list every match."
+  },
+  {
+    "group": "search",
+    "key": "noResults",
+    "kind": "text",
+    "english": "No results"
+  },
+  {
+    "group": "search",
+    "key": "resultCount",
+    "kind": "function",
+    "english": "one: {count} result | other: {count} results"
+  },
+  {
+    "group": "search",
+    "key": "matchPage",
+    "kind": "function",
+    "english": "Page {page}"
+  },
+  {
+    "group": "search",
+    "key": "match",
+    "kind": "function",
+    "english": "Match {index}"
+  },
+  {
+    "group": "records",
+    "key": "empty",
+    "kind": "text",
+    "english": "Nothing here yet."
+  },
+  {
+    "group": "records",
+    "key": "itemCount",
+    "kind": "function",
+    "english": "one: {count} item | other: {count} items"
+  },
+  {
+    "group": "sidebar",
+    "key": "tab",
+    "kind": "function",
+    "english": "{label}, {badge}"
+  },
+  {
+    "group": "sidebar",
+    "key": "resizeLeft",
+    "kind": "text",
+    "english": "Resize left sidebar"
+  },
+  {
+    "group": "sidebar",
+    "key": "resizeRight",
+    "kind": "text",
+    "english": "Resize right sidebar"
+  },
+  {
+    "group": "outline",
+    "key": "label",
+    "kind": "text",
+    "english": "Outline"
+  },
+  {
+    "group": "outline",
+    "key": "empty",
+    "kind": "text",
+    "english": "This document has no outline"
+  },
+  {
+    "group": "thumbnails",
+    "key": "page",
+    "kind": "function",
+    "english": "Page {page}"
+  },
+  {
+    "group": "annotations",
+    "key": "highlight",
+    "kind": "text",
+    "english": "Highlight"
+  },
+  {
+    "group": "annotations",
+    "key": "underline",
+    "kind": "text",
+    "english": "Underline"
+  },
+  {
+    "group": "annotations",
+    "key": "strikeout",
+    "kind": "text",
+    "english": "Strikethrough"
+  },
+  {
+    "group": "annotations",
+    "key": "squiggly",
+    "kind": "text",
+    "english": "Squiggly underline"
+  },
+  {
+    "group": "annotations",
+    "key": "text",
+    "kind": "text",
+    "english": "Note"
+  },
+  {
+    "group": "annotations",
+    "key": "freetext",
+    "kind": "text",
+    "english": "Text box"
+  },
+  {
+    "group": "annotations",
+    "key": "square",
+    "kind": "text",
+    "english": "Rectangle"
+  },
+  {
+    "group": "annotations",
+    "key": "circle",
+    "kind": "text",
+    "english": "Ellipse"
+  },
+  {
+    "group": "annotations",
+    "key": "line",
+    "kind": "text",
+    "english": "Line"
+  },
+  {
+    "group": "annotations",
+    "key": "polyline",
+    "kind": "text",
+    "english": "Polyline"
+  },
+  {
+    "group": "annotations",
+    "key": "polygon",
+    "kind": "text",
+    "english": "Polygon"
+  },
+  {
+    "group": "annotations",
+    "key": "ink",
+    "kind": "text",
+    "english": "Drawing"
+  },
+  {
+    "group": "annotations",
+    "key": "stamp",
+    "kind": "text",
+    "english": "Stamp"
+  },
+  {
+    "group": "annotations",
+    "key": "loupe",
+    "kind": "text",
+    "english": "Loupe"
+  },
+  {
+    "group": "annotations",
+    "key": "mask",
+    "kind": "text",
+    "english": "Mask"
+  },
+  {
+    "group": "annotations",
+    "key": "redact",
+    "kind": "text",
+    "english": "Redaction"
+  },
+  {
+    "group": "annotations",
+    "key": "signature",
+    "kind": "text",
+    "english": "Signature"
+  },
+  {
+    "group": "annotations",
+    "key": "withComment",
+    "kind": "function",
+    "english": "{name} with comment"
+  },
+  {
+    "group": "annotations",
+    "key": "byAuthor",
+    "kind": "function",
+    "english": "{name} by {author}"
+  },
+  {
+    "group": "links",
+    "key": "unsupported",
+    "kind": "text",
+    "english": "This link is not supported"
+  },
+  {
+    "group": "links",
+    "key": "goToLink",
+    "kind": "text",
+    "english": "Go to link"
+  },
+  {
+    "group": "links",
+    "key": "goToPage",
+    "kind": "function",
+    "english": "Go to page {page}"
+  },
+  {
+    "group": "tools",
+    "key": "select-text",
+    "kind": "text",
+    "english": "Select text"
+  },
+  {
+    "group": "tools",
+    "key": "select",
+    "kind": "text",
+    "english": "Rectangle select"
+  },
+  {
+    "group": "tools",
+    "key": "draw",
+    "kind": "text",
+    "english": "Draw"
+  },
+  {
+    "group": "tools",
+    "key": "shape",
+    "kind": "text",
+    "english": "Shape"
+  },
+  {
+    "group": "tools",
+    "key": "note",
+    "kind": "text",
+    "english": "Add note"
+  },
+  {
+    "group": "tools",
+    "key": "highlight",
+    "kind": "text",
+    "english": "Highlight"
+  },
+  {
+    "group": "tools",
+    "key": "freetext",
+    "kind": "text",
+    "english": "Text box"
+  },
+  {
+    "group": "tools",
+    "key": "sketch",
+    "kind": "text",
+    "english": "Sketch"
+  },
+  {
+    "group": "tools",
+    "key": "signature",
+    "kind": "text",
+    "english": "Signature"
+  },
+  {
+    "group": "tools",
+    "key": "redact-area",
+    "kind": "text",
+    "english": "Mark for redaction"
+  },
+  {
+    "group": "lineStyle",
+    "key": "label",
+    "kind": "text",
+    "english": "Line style"
+  },
+  {
+    "group": "lineStyle",
+    "key": "weight",
+    "kind": "text",
+    "english": "Weight"
+  },
+  {
+    "group": "lineStyle",
+    "key": "weightValue",
+    "kind": "function",
+    "english": "{points} pt"
+  },
+  {
+    "group": "lineStyle",
+    "key": "pattern",
+    "kind": "text",
+    "english": "Pattern"
+  },
+  {
+    "group": "lineStyle",
+    "key": "solid",
+    "kind": "text",
+    "english": "Solid"
+  },
+  {
+    "group": "lineStyle",
+    "key": "dashed",
+    "kind": "text",
+    "english": "Dashed"
+  },
+  {
+    "group": "lineStyle",
+    "key": "arrowheads",
+    "kind": "text",
+    "english": "Arrowheads"
+  },
+  {
+    "group": "lineStyle",
+    "key": "arrowNone",
+    "kind": "text",
+    "english": "No arrowheads"
+  },
+  {
+    "group": "lineStyle",
+    "key": "arrowStart",
+    "kind": "text",
+    "english": "Arrowhead at start"
+  },
+  {
+    "group": "lineStyle",
+    "key": "arrowEnd",
+    "kind": "text",
+    "english": "Arrowhead at end"
+  },
+  {
+    "group": "lineStyle",
+    "key": "arrowBoth",
+    "kind": "text",
+    "english": "Arrowheads at both ends"
+  },
+  {
+    "group": "color",
+    "key": "border",
+    "kind": "text",
+    "english": "Border colour"
+  },
+  {
+    "group": "color",
+    "key": "fill",
+    "kind": "text",
+    "english": "Fill colour"
+  },
+  {
+    "group": "color",
+    "key": "textColor",
+    "kind": "text",
+    "english": "Text colour"
+  },
+  {
+    "group": "color",
+    "key": "noFill",
+    "kind": "text",
+    "english": "No fill"
+  },
+  {
+    "group": "color",
+    "key": "swatches",
+    "kind": "text",
+    "english": "Colours"
+  },
+  {
+    "group": "color",
+    "key": "custom",
+    "kind": "text",
+    "english": "Custom…"
+  },
+  {
+    "group": "color",
+    "key": "customColour",
+    "kind": "text",
+    "english": "Custom colour"
+  },
+  {
+    "group": "textStyle",
+    "key": "label",
+    "kind": "text",
+    "english": "Text style"
+  },
+  {
+    "group": "textStyle",
+    "key": "font",
+    "kind": "text",
+    "english": "Font"
+  },
+  {
+    "group": "textStyle",
+    "key": "fontSize",
+    "kind": "text",
+    "english": "Font size"
+  },
+  {
+    "group": "textStyle",
+    "key": "bold",
+    "kind": "text",
+    "english": "Bold"
+  },
+  {
+    "group": "textStyle",
+    "key": "italic",
+    "kind": "text",
+    "english": "Italic"
+  },
+  {
+    "group": "textStyle",
+    "key": "underline",
+    "kind": "text",
+    "english": "Underline"
+  },
+  {
+    "group": "textStyle",
+    "key": "alignment",
+    "kind": "text",
+    "english": "Alignment"
+  },
+  {
+    "group": "textStyle",
+    "key": "alignLeft",
+    "kind": "text",
+    "english": "Align left"
+  },
+  {
+    "group": "textStyle",
+    "key": "alignCenter",
+    "kind": "text",
+    "english": "Align centre"
+  },
+  {
+    "group": "textStyle",
+    "key": "alignRight",
+    "kind": "text",
+    "english": "Align right"
+  },
+  {
+    "group": "textStyle",
+    "key": "alignJustify",
+    "kind": "text",
+    "english": "Justify"
+  },
+  {
+    "group": "textStyle",
+    "key": "size",
+    "kind": "text",
+    "english": "Size"
+  },
+  {
+    "group": "textStyle",
+    "key": "decrease",
+    "kind": "text",
+    "english": "Decrease font size"
+  },
+  {
+    "group": "textStyle",
+    "key": "increase",
+    "kind": "text",
+    "english": "Increase font size"
+  },
+  {
+    "group": "textStyle",
+    "key": "emphasis",
+    "kind": "text",
+    "english": "Emphasis"
+  },
+  {
+    "group": "textStyle",
+    "key": "mixed",
+    "kind": "text",
+    "english": "Mixed"
+  },
+  {
+    "group": "highlight",
+    "key": "label",
+    "kind": "text",
+    "english": "Highlight"
+  },
+  {
+    "group": "highlight",
+    "key": "choose",
+    "kind": "text",
+    "english": "Choose highlight"
+  },
+  {
+    "group": "highlight",
+    "key": "menu",
+    "kind": "text",
+    "english": "Highlights"
+  },
+  {
+    "group": "highlight",
+    "key": "kinds",
+    "kind": "text",
+    "english": "Kinds"
+  },
+  {
+    "group": "highlight",
+    "key": "colour",
+    "kind": "text",
+    "english": "Colour"
+  },
+  {
+    "group": "highlight",
+    "key": "highlightColour",
+    "kind": "text",
+    "english": "Highlight colour"
+  },
+  {
+    "group": "highlight",
+    "key": "highlight",
+    "kind": "text",
+    "english": "Highlight"
+  },
+  {
+    "group": "highlight",
+    "key": "underline",
+    "kind": "text",
+    "english": "Underline"
+  },
+  {
+    "group": "highlight",
+    "key": "strikeout",
+    "kind": "text",
+    "english": "Strikethrough"
+  },
+  {
+    "group": "highlight",
+    "key": "squiggly",
+    "kind": "text",
+    "english": "Squiggly underline"
+  },
+  {
+    "group": "shape",
+    "key": "label",
+    "kind": "text",
+    "english": "Shape"
+  },
+  {
+    "group": "shape",
+    "key": "choose",
+    "kind": "text",
+    "english": "Choose shape"
+  },
+  {
+    "group": "shape",
+    "key": "menu",
+    "kind": "text",
+    "english": "Shapes"
+  },
+  {
+    "group": "shape",
+    "key": "current",
+    "kind": "function",
+    "english": "Shape: {kind}"
+  },
+  {
+    "group": "shape",
+    "key": "line",
+    "kind": "text",
+    "english": "Line"
+  },
+  {
+    "group": "shape",
+    "key": "arrow",
+    "kind": "text",
+    "english": "Arrow"
+  },
+  {
+    "group": "shape",
+    "key": "rectangle",
+    "kind": "text",
+    "english": "Rectangle"
+  },
+  {
+    "group": "shape",
+    "key": "roundedRectangle",
+    "kind": "text",
+    "english": "Rounded rectangle"
+  },
+  {
+    "group": "shape",
+    "key": "ellipse",
+    "kind": "text",
+    "english": "Ellipse"
+  },
+  {
+    "group": "shape",
+    "key": "bubble",
+    "kind": "text",
+    "english": "Speech bubble"
+  },
+  {
+    "group": "shape",
+    "key": "star",
+    "kind": "text",
+    "english": "Star"
+  },
+  {
+    "group": "shape",
+    "key": "polygon",
+    "kind": "text",
+    "english": "Polygon"
+  },
+  {
+    "group": "shape",
+    "key": "loupe",
+    "kind": "text",
+    "english": "Loupe"
+  },
+  {
+    "group": "shape",
+    "key": "mask",
+    "kind": "text",
+    "english": "Mask"
+  },
+  {
+    "group": "shape",
+    "key": "ovalMask",
+    "kind": "text",
+    "english": "Oval mask"
+  },
+  {
+    "group": "notes",
+    "key": "noteThread",
+    "kind": "text",
+    "english": "Note thread"
+  },
+  {
+    "group": "notes",
+    "key": "commentThread",
+    "kind": "text",
+    "english": "Comment thread"
+  },
+  {
+    "group": "notes",
+    "key": "anonymous",
+    "kind": "text",
+    "english": "Anonymous"
+  },
+  {
+    "group": "notes",
+    "key": "close",
+    "kind": "text",
+    "english": "Close"
+  },
+  {
+    "group": "notes",
+    "key": "comment",
+    "kind": "text",
+    "english": "Comment"
+  },
+  {
+    "group": "notes",
+    "key": "reply",
+    "kind": "text",
+    "english": "Reply"
+  },
+  {
+    "group": "notes",
+    "key": "delete",
+    "kind": "text",
+    "english": "Delete"
+  },
+  {
+    "group": "notes",
+    "key": "deleteHighlight",
+    "kind": "text",
+    "english": "Delete highlight"
+  },
+  {
+    "group": "signature",
+    "key": "sign",
+    "kind": "text",
+    "english": "Sign"
+  },
+  {
+    "group": "signature",
+    "key": "trigger",
+    "kind": "text",
+    "english": "Choose signature"
+  },
+  {
+    "group": "signature",
+    "key": "menu",
+    "kind": "text",
+    "english": "Signatures"
+  },
+  {
+    "group": "signature",
+    "key": "saved",
+    "kind": "text",
+    "english": "Saved signatures"
+  },
+  {
+    "group": "signature",
+    "key": "create",
+    "kind": "text",
+    "english": "Create signature"
+  },
+  {
+    "group": "signature",
+    "key": "dialog",
+    "kind": "text",
+    "english": "Create signature"
+  },
+  {
+    "group": "signature",
+    "key": "tabs",
+    "kind": "text",
+    "english": "Signature source"
+  },
+  {
+    "group": "signature",
+    "key": "draw",
+    "kind": "text",
+    "english": "Draw"
+  },
+  {
+    "group": "signature",
+    "key": "type",
+    "kind": "text",
+    "english": "Type"
+  },
+  {
+    "group": "signature",
+    "key": "image",
+    "kind": "text",
+    "english": "Image"
+  },
+  {
+    "group": "signature",
+    "key": "pad",
+    "kind": "text",
+    "english": "Signature pad"
+  },
+  {
+    "group": "signature",
+    "key": "clear",
+    "kind": "text",
+    "english": "Clear"
+  },
+  {
+    "group": "signature",
+    "key": "name",
+    "kind": "text",
+    "english": "Name"
+  },
+  {
+    "group": "signature",
+    "key": "namePlaceholder",
+    "kind": "text",
+    "english": "Your name"
+  },
+  {
+    "group": "signature",
+    "key": "fonts",
+    "kind": "text",
+    "english": "Font"
+  },
+  {
+    "group": "signature",
+    "key": "file",
+    "kind": "text",
+    "english": "Image file"
+  },
+  {
+    "group": "signature",
+    "key": "cancel",
+    "kind": "text",
+    "english": "Cancel"
+  },
+  {
+    "group": "signature",
+    "key": "save",
+    "kind": "text",
+    "english": "Save"
+  },
+  {
+    "group": "signature",
+    "key": "item",
+    "kind": "function",
+    "english": "Signature {n}"
+  },
+  {
+    "group": "signature",
+    "key": "remove",
+    "kind": "function",
+    "english": "Remove signature {n}"
+  },
+  {
+    "group": "signature",
+    "key": "imageTooLarge",
+    "kind": "text",
+    "english": "This image is too large. Choose a smaller one."
+  },
+  {
+    "group": "signature",
+    "key": "imageType",
+    "kind": "text",
+    "english": "Choose a PNG or JPEG image."
+  },
+  {
+    "group": "signature",
+    "key": "storageFull",
+    "kind": "text",
+    "english": "Your browser's storage is full. Remove a saved signature, or try a smaller one."
+  },
+  {
+    "group": "signature",
+    "key": "saveFailed",
+    "kind": "text",
+    "english": "The signature could not be saved. Try again."
+  },
+  {
+    "group": "signature",
+    "key": "removeFailed",
+    "kind": "text",
+    "english": "The signature could not be removed. Try again."
+  },
+  {
+    "group": "password",
+    "key": "dialog",
+    "kind": "text",
+    "english": "Password required"
+  },
+  {
+    "group": "password",
+    "key": "description",
+    "kind": "text",
+    "english": "This document is password protected. Enter its password to open it."
+  },
+  {
+    "group": "password",
+    "key": "field",
+    "kind": "text",
+    "english": "Password"
+  },
+  {
+    "group": "password",
+    "key": "submit",
+    "kind": "text",
+    "english": "Open"
+  },
+  {
+    "group": "password",
+    "key": "cancel",
+    "kind": "text",
+    "english": "Cancel"
+  },
+  {
+    "group": "password",
+    "key": "incorrect",
+    "kind": "text",
+    "english": "Incorrect password. Try again."
+  },
+  {
+    "group": "password",
+    "key": "locked",
+    "kind": "text",
+    "english": "This document is password protected."
+  },
+  {
+    "group": "password",
+    "key": "unlock",
+    "kind": "text",
+    "english": "Enter password"
+  },
+  {
+    "group": "forms",
+    "key": "unnamed",
+    "kind": "text",
+    "english": "Form field"
+  },
+  {
+    "group": "forms",
+    "key": "sign",
+    "kind": "text",
+    "english": "Sign"
+  },
+  {
+    "group": "forms",
+    "key": "signField",
+    "kind": "function",
+    "english": "Sign this field: {label}"
+  },
+  {
+    "group": "forms",
+    "key": "signFieldTitle",
+    "kind": "text",
+    "english": "Sign this field"
+  },
+  {
+    "group": "forms",
+    "key": "alert",
+    "kind": "text",
+    "english": "Message"
+  },
+  {
+    "group": "forms",
+    "key": "ok",
+    "kind": "text",
+    "english": "OK"
+  },
+  {
+    "group": "plugins",
+    "key": "commandFailed",
+    "kind": "text",
+    "english": "Something went wrong."
+  }
+]

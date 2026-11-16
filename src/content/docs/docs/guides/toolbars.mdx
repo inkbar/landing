@@ -34,7 +34,7 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 | `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                                                   |
 | `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                       |
 
-`tool` is `select-text`, `select`, or one of the creation tools you pass to the root (see [Choosing tools](#choosing-tools)). The first two are named Select text and Rectangle select. Pass `label` to change a tool button's name. To rename any other button, pass `aria-label` and `title`.
+`tool` is `select-text`, `select`, or one of the creation tools you pass to the root (see [Choosing tools](#choosing-tools)). The first two are named Select text and Rectangle select. Pass `label` to change a tool button's name. It takes a string or a function, so the name can follow your language; see [Translations](/docs/guides/translations/#labels-you-supply). To rename any other button, pass `aria-label` and `title`.
 
 Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history. History is on by default; in controlled mode, turn it on with `history`. The page number field and the zoom select keep their own Tab stops.
 
