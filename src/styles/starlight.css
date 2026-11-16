@@ -72,10 +72,70 @@ nav.sidebar a[aria-current='page']:focus {
   outline-offset: -3px;
 }
 
-/* Tables can scroll sideways, so they take keyboard focus too. */
-.sl-markdown-content table:focus-visible {
+/* Every table fills the column inside a frame, so tables line up down a page. The frame
+   scrolls sideways when a table is wider, so it takes keyboard focus too. */
+.sl-markdown-content .table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--sheet);
+}
+
+.sl-markdown-content .table-wrap:focus-visible {
   outline: 3px solid var(--ballpoint);
   outline-offset: 2px;
+}
+
+.sl-markdown-content .table-wrap table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+}
+
+.sl-markdown-content .table-wrap :is(th, td) {
+  padding: 0.75rem 1.125rem;
+  border-bottom: 1px solid var(--line);
+  text-align: start;
+  vertical-align: baseline;
+}
+
+.sl-markdown-content .table-wrap thead th {
+  padding-block: 0.625rem;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sl-markdown-content .table-wrap tbody td {
+  color: var(--body);
+}
+
+.sl-markdown-content .table-wrap tbody td:first-child {
+  color: var(--ink);
+}
+
+.sl-markdown-content .table-wrap tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+/* Identifiers stay on one line; the prose around them wraps. */
+.sl-markdown-content .table-wrap td code {
+  white-space: nowrap;
+}
+
+/* On a phone a wide table scrolls rather than squeezing each column to a word. */
+@media (max-width: 49.99rem) {
+  .sl-markdown-content .table-wrap td {
+    min-width: 7rem;
+  }
+
+  .sl-markdown-content .table-wrap td:last-child {
+    min-width: 15rem;
+  }
 }
 
 /* The site header has two rows on a phone, so the page starts lower. */

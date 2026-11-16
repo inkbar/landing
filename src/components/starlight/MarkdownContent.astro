@@ -1,11 +1,29 @@
 ---
 import '@astrojs/starlight/style/markdown.css'
 
-// A table that scrolls sideways must be reachable from the keyboard, so every table in the
-// docs takes focus, the same way every code block does (see src/shiki/focusable-code.ts).
-const html = (await Astro.slots.render('default')).replace(
-  /<table(?![^>]*\btabindex=)/g,
-  '<table tabindex="0"'
+// Every table in the docs sits in a frame that fills the column and scrolls sideways when the
+// table is wider. The frame takes keyboard focus so it can be scrolled, the same way every code
+// block does (see src/shiki/focusable-code.ts), and is named after the heading above it, or
+// after the page when no heading comes first.
+const rendered = await Astro.slots.render('default')
+
+const stripTags = (text: string) =>
+  text
+    .replace(/<[^>]+>/g, '')
+    .replace(/&#x26;|&amp;/g, '&')
+    .replace(/"/g, '&quot;')
+    .trim()
+
+let heading = stripTags(Astro.locals.starlightRoute.entry.data.title)
+const html = rendered.replace(
+  /<h[2-6][^>]*>([\s\S]*?)<\/h[2-6]>|<table[\s\S]*?<\/table>/g,
+  (match, headingText: string | undefined) => {
+    if (headingText !== undefined) {
+      heading = stripTags(headingText) || heading
+      return match
+    }
+    return `<div class="table-wrap" tabindex="0" role="region" aria-label="${heading}">${match}</div>`
+  }
 )
 ---
 

@@ -13,40 +13,38 @@ const groups = [...new Set(messages.map((m) => m.group))].map((group) => ({
     <h3 id={`messages-${group}`}>
       <code>{group}</code>
     </h3>
-    <div
-      class="table-wrap"
-      tabindex="0"
-      role="region"
-      aria-label={`Message keys: ${group}`}
-    >
-      <table>
-        <thead>
+    <table class="message-keys">
+      <thead>
+        <tr>
+          <th>Key</th>
+          <th>English</th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((row) => (
           <tr>
-            <th>Key</th>
-            <th>English</th>
+            <td>
+              <code>
+                {group}.{row.key}
+              </code>
+              {row.kind === 'function' && ' (function)'}
+            </td>
+            <td>{row.english}</td>
           </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr>
-              <td>
-                <code>
-                  {group}.{row.key}
-                </code>
-                {row.kind === 'function' && ' (function)'}
-              </td>
-              <td>{row.english}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+        ))}
+      </tbody>
+    </table>
   </>
 ))}
 
 <style>
-  .table-wrap {
-    max-width: 100%;
-    overflow-x: auto;
+  /* Every group shares one column split, so the tables line up down the page. */
+  @media (min-width: 50rem) {
+    .message-keys {
+      table-layout: fixed;
+    }
+    .message-keys th:first-child {
+      width: 50%;
+    }
   }
 </style>
