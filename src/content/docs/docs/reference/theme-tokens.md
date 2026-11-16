@@ -41,7 +41,7 @@ The stylesheet maps those names onto its own tokens. Set these on `[data-ink-roo
 | `--ink-page-shadow`    |                        | The shadow under each page                        |
 | `--ink-text-selection` |                        | Text selection on the page                        |
 
-Some parts can render outside the root, so they read the same tokens from their own element: the thread popover from `[data-ink-thread-popover]`, a panel from `createPopover` from `[data-ink-popover]`, the zoom select's list from `[data-ink-select-content]`, the signature and password dialogs from `[data-ink-signature-dialog]` and `[data-ink-password-dialog]`, and form alerts from `[data-ink-form-alert]`. Sidebars read them from `[data-ink-sidebar]` too.
+Some parts can render outside the root, so they read the same tokens from their own element: the thread popover from `[data-ink-thread-popover]`, a panel made by `createPopover` from `[data-ink-popover]`, the zoom select's list from `[data-ink-select-content]`, the signature and password dialogs from `[data-ink-signature-dialog]` and `[data-ink-password-dialog]`, and form alerts from `[data-ink-form-alert]`. Sidebars read them from `[data-ink-sidebar]` too.
 
 ## Control sizes
 
