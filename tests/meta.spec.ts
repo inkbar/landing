@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test'
 
+import { sidebar } from '../src/lib/docs-sidebar'
+
 test('the landing page carries its search and social metadata', async ({ page }) => {
   await page.goto('/')
   await expect(page).toHaveTitle('Inkbar: open-source PDF viewer and editor for the web')
@@ -82,4 +84,23 @@ test('llms.txt and its two documentation sets are served', async ({ request }) =
   expect(full).not.toContain('Section titled')
 
   expect((await request.get('/llms-small.txt')).status()).toBe(200)
+})
+
+test('llms.txt lists every docs page, linking to Markdown that is served', async ({
+  request,
+}) => {
+  const text = await (await request.get('/llms.txt')).text()
+  const pages = sidebar.flatMap(({ items }) => items)
+  for (const { slug } of pages) {
+    expect(text, slug).toContain(`(https://inkbar.dev/${slug}.md)`)
+  }
+  const links = new Set(
+    [...text.matchAll(/\(https:\/\/inkbar\.dev\/(docs[^)]*\.md)\)/g)].map(
+      ([, path]) => path
+    )
+  )
+  expect(links.size).toBe(pages.length)
+  for (const path of links) {
+    expect((await request.get(`/${path}`)).status(), path).toBe(200)
+  }
 })

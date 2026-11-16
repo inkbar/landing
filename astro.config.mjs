@@ -5,11 +5,18 @@ import { defineConfig } from 'astro/config'
 import starlightLinksValidator from 'starlight-links-validator'
 import starlightLlmsTxt from 'starlight-llms-txt'
 
+import { fileURLToPath } from 'node:url'
+
+import { docsIndex } from './src/lib/docs-index.ts'
 import { sidebar } from './src/lib/docs-sidebar.ts'
+import { siteUrl, twinPath } from './src/lib/markdown-twin.ts'
 import { baseLinks } from './src/markdown/base-links.ts'
 
 // Pull request previews are served from /pr-preview/pr-<number>/; the site itself from the root.
 const base = process.env.SITE_BASE ?? '/'
+const site = siteUrl(base)
+/** @param {string} id a docs page id */
+const twin = (id) => site + twinPath(id)
 
 export default defineConfig({
   site: 'https://inkbar.dev',
@@ -56,6 +63,14 @@ export default defineConfig({
             '- Install it from npm: `@inkbar/core` and `@inkbar/theme`, plus `@inkbar/vue`, `@inkbar/react` or `@inkbar/svelte`. The plain DOM API in `@inkbar/core/dom` needs no framework.',
             '- Every editing tool is opt-in: pass the tool factories your toolbar offers as `tools`.',
             '- Inkbar renders documents in the browser and sends them nowhere.',
+            '',
+            `Start with the [Introduction](${twin('docs')}) and the [Quickstart](${twin('docs/quickstart')}). Every page below links to its Markdown.`,
+            '',
+            docsIndex(
+              sidebar,
+              fileURLToPath(new URL('./src/content/docs/', import.meta.url)),
+              site
+            ),
           ].join('\n'),
           // The docs in reading order, as the sidebar has them.
           promote: sidebar.flatMap(({ items }) => items.map(({ slug }) => slug)),
