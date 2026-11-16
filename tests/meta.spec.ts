@@ -66,3 +66,20 @@ test('the 404 page is kept out of the index', async ({ page }) => {
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex')
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0)
 })
+
+test('llms.txt and its two documentation sets are served', async ({ request }) => {
+  const index = await request.get('/llms.txt')
+  expect(index.status()).toBe(200)
+  const text = await index.text()
+  expect(text).toMatch(/^# Inkbar\n\n> Inkbar is an open-source PDF viewer/)
+  expect(text).toContain('https://inkbar.dev/llms-full.txt')
+  expect(text).toContain('https://inkbar.dev/llms-small.txt')
+
+  const full = await (await request.get('/llms-full.txt')).text()
+  const headings = [...full.matchAll(/^# (.+)$/gm)].map(([, title]) => title)
+  expect(headings.slice(0, 3)).toEqual(['Introduction', 'Quickstart', 'Loading assets'])
+  expect(headings.at(-1)).toBe('Icons')
+  expect(full).not.toContain('Section titled')
+
+  expect((await request.get('/llms-small.txt')).status()).toBe(200)
+})

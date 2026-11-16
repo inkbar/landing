@@ -3,7 +3,9 @@ import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
 import { defineConfig } from 'astro/config'
 import starlightLinksValidator from 'starlight-links-validator'
+import starlightLlmsTxt from 'starlight-llms-txt'
 
+import { sidebar } from './src/lib/docs-sidebar.ts'
 import { baseLinks } from './src/markdown/base-links.ts'
 
 // Pull request previews are served from /pr-preview/pr-<number>/; the site itself from the root.
@@ -42,56 +44,37 @@ export default defineConfig({
         './src/styles/starlight.css',
       ],
       editLink: { baseUrl: 'https://github.com/inkbar/landing/edit/main/' },
-      plugins: [starlightLinksValidator()],
-      sidebar: [
-        {
-          label: 'Getting started',
-          items: [
-            { label: 'Introduction', slug: 'docs' },
-            { label: 'Quickstart', slug: 'docs/quickstart' },
-            { label: 'Loading assets', slug: 'docs/loading-assets' },
+      plugins: [
+        starlightLinksValidator(),
+        // Writes /llms.txt, /llms-full.txt and /llms-small.txt from the docs, for AI assistants.
+        starlightLlmsTxt({
+          projectName: 'Inkbar',
+          description:
+            'Inkbar is an open-source PDF viewer and editor for the browser, with form filling, highlights, note threads, drawing, signatures and redaction marks. It is written in TypeScript, has bindings for Vue, React and Svelte, and is free under the MIT licence.',
+          details: [
+            '- Install it from npm: `@inkbar/core` and `@inkbar/theme`, plus `@inkbar/vue`, `@inkbar/react` or `@inkbar/svelte`. The plain DOM API in `@inkbar/core/dom` needs no framework.',
+            '- Every editing tool is opt-in: pass the tool factories your toolbar offers as `tools`.',
+            '- Inkbar renders documents in the browser and sends them nowhere.',
+          ].join('\n'),
+          // The docs in reading order, as the sidebar has them.
+          promote: sidebar.flatMap(({ items }) => items.map(({ slug }) => slug)),
+          // Starlight's heading anchors would add a "Section titled" line under every heading.
+          customSelectors: { all: ['.sl-anchor-link'] },
+          optionalLinks: [
+            {
+              label: 'Source code',
+              url: 'https://github.com/inkbar/inkbar',
+              description: 'the TypeScript source, issues and releases',
+            },
+            {
+              label: 'Sandbox',
+              url: 'https://sandbox.inkbar.dev',
+              description: 'the viewers running on a sample document',
+            },
           ],
-        },
-        {
-          label: 'Guides',
-          items: [
-            { label: 'Toolbars', slug: 'docs/guides/toolbars' },
-            { label: 'Annotations', slug: 'docs/guides/annotations' },
-            { label: 'Drawing', slug: 'docs/guides/drawing' },
-            { label: 'Search', slug: 'docs/guides/search' },
-            { label: 'Sidebars', slug: 'docs/guides/sidebars' },
-            { label: 'Thumbnails', slug: 'docs/guides/thumbnails' },
-            { label: 'Outline and links', slug: 'docs/guides/outline-and-links' },
-            { label: 'Forms', slug: 'docs/guides/forms' },
-            { label: 'Signatures', slug: 'docs/guides/signatures' },
-            { label: 'Locked files', slug: 'docs/guides/locked-files' },
-            { label: 'Redaction', slug: 'docs/guides/redaction' },
-            { label: 'Controlled mode', slug: 'docs/guides/controlled-mode' },
-            { label: 'Plugins', slug: 'docs/guides/plugins' },
-            { label: 'Writing a plugin', slug: 'docs/guides/writing-a-plugin' },
-            { label: 'Storage', slug: 'docs/guides/storage' },
-            { label: 'Theming', slug: 'docs/guides/theming' },
-            { label: 'Translations', slug: 'docs/guides/translations' },
-          ],
-        },
-        {
-          label: 'Frameworks',
-          items: [
-            { label: 'Vue', slug: 'docs/frameworks/vue' },
-            { label: 'React', slug: 'docs/frameworks/react' },
-            { label: 'Svelte', slug: 'docs/frameworks/svelte' },
-            { label: 'Plain DOM', slug: 'docs/frameworks/plain-dom' },
-          ],
-        },
-        {
-          label: 'Reference',
-          items: [
-            { label: 'Gloss format', slug: 'docs/reference/gloss' },
-            { label: 'Theme tokens', slug: 'docs/reference/theme-tokens' },
-            { label: 'Icons', slug: 'docs/reference/icons' },
-          ],
-        },
+        }),
       ],
+      sidebar,
     }),
     svelte(),
   ],
