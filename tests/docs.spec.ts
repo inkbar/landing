@@ -75,13 +75,29 @@ for (const { path } of pages) {
   })
 }
 
-test('tables in the docs take keyboard focus', async ({ page }) => {
+test('tables in the docs sit in a named frame that takes keyboard focus', async ({
+  page,
+}) => {
   await page.goto('/docs/guides/annotations/')
   const tables = page.locator('main table')
   expect(await tables.count()).toBeGreaterThan(0)
   for (const table of await tables.all()) {
-    await expect(table).toHaveAttribute('tabindex', '0')
+    const frame = table.locator('xpath=..')
+    await expect(frame).toHaveClass(/\btable-wrap\b/)
+    await expect(frame).toHaveAttribute('tabindex', '0')
+    await expect(frame).toHaveAttribute('aria-label', /\S/)
   }
+})
+
+test('docs tables fill the content column', async ({ page }) => {
+  await page.goto('/docs/reference/theme-tokens/')
+  const widths = await page
+    .locator('main .table-wrap')
+    .evaluateAll((frames) =>
+      frames.map((frame) => Math.round(frame.getBoundingClientRect().width))
+    )
+  expect(widths.length).toBeGreaterThan(1)
+  expect(new Set(widths).size).toBe(1)
 })
 
 test('the docs never mention the Pro tier', async ({ page }) => {

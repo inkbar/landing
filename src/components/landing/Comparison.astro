@@ -162,9 +162,11 @@ const rows = [
     border-radius: 16px;
     overflow-x: auto;
   }
+  /* Fixed columns: the two products get the same width, so the rows compare like for like. */
   table {
     width: 100%;
-    min-width: 560px;
+    min-width: 600px;
+    table-layout: fixed;
     border-collapse: collapse;
     font-size: 15.5px;
     line-height: 1.45;
@@ -179,7 +181,7 @@ const rows = [
     padding-block: 20px;
   }
   .corner {
-    width: 30%;
+    width: 22%;
     font-weight: 500;
     color: var(--caption);
   }
