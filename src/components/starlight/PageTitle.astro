@@ -1,18 +1,44 @@
 ---
 import Default from '@astrojs/starlight/components/PageTitle.astro'
 
-import { agentNote, siteUrl } from '../../lib/markdown-twin'
+import { agentNote, siteUrl, twinPath } from '../../lib/markdown-twin'
+import MarkdownMenu from './MarkdownMenu.svelte'
 
-// Only docs pages carry the note for agents; Starlight renders any other page through here too.
+// Only docs pages carry the note and the menu; Starlight renders any other page through here too.
 const { id } = Astro.locals.starlightRoute.entry
 const isDocsPage = id === 'docs' || id.startsWith('docs/')
+const site = siteUrl(import.meta.env.BASE_URL)
 ---
 
-<Default>
-  <slot />
-</Default>
+{isDocsPage ? (
+  <div class="title-row">
+    <Default>
+      <slot />
+    </Default>
+    <MarkdownMenu client:load twin={site + twinPath(id)} llms={`${site}llms.txt`} />
+  </div>
+) : (
+  <Default>
+    <slot />
+  </Default>
+)}
 {isDocsPage && (
   <p class="sr-only" aria-hidden="true" data-agent-note>
-    {agentNote(siteUrl(import.meta.env.BASE_URL))}
+    {agentNote(site)}
   </p>
 )}
+
+<style>
+  .title-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  /* Starlight's top margin on the h1 moves to the row, so the button centres on the title. */
+  .title-row :global(h1) {
+    margin-top: 0;
+  }
+</style>
