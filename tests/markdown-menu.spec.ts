@@ -54,3 +54,26 @@ test('without JavaScript the docs title offers a plain Markdown link', async ({
   )
   await context.close()
 })
+
+test('a slow page copy does not overwrite a later llms.txt link copy', async ({
+  page,
+}) => {
+  await page.goto('/docs/guides/search/')
+  let release: () => void = () => {}
+  const held = new Promise<void>((resolve) => (release = resolve))
+  await page.route('**/docs/guides/search.md', async (route) => {
+    await held
+    await route.continue()
+  })
+  await page.getByRole('button', { name: 'Copy as Markdown' }).click()
+  await page.getByRole('button', { name: 'More Markdown options' }).click()
+  await page.getByRole('menuitem', { name: /Copy llms\.txt link/ }).click()
+  await expect(page.locator('[data-markdown-menu] [aria-live]')).toHaveText('Link copied')
+  release()
+  await page.waitForResponse('**/docs/guides/search.md')
+  await page.waitForTimeout(300)
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
+    'https://inkbar.dev/llms.txt'
+  )
+  await expect(page.locator('[data-markdown-menu] [aria-live]')).toHaveText('Link copied')
+})
