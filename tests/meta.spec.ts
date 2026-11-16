@@ -104,3 +104,17 @@ test('llms.txt lists every docs page, linking to Markdown that is served', async
     expect((await request.get(`/${path}`)).status(), path).toBe(200)
   }
 })
+
+test('the home page and every docs page carry a hidden note pointing agents at llms.txt', async ({
+  page,
+}) => {
+  for (const path of ['/', '/docs/', '/docs/guides/search/']) {
+    await page.goto(path)
+    const note = page.locator('[data-agent-note]')
+    await expect(note, path).toHaveCount(1)
+    await expect(note, path).toHaveAttribute('aria-hidden', 'true')
+    await expect(note, path).toContainText('https://inkbar.dev/llms.txt')
+    const box = await note.boundingBox()
+    expect(box?.width ?? 0, path).toBeLessThanOrEqual(1)
+  }
+})
