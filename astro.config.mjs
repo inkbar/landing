@@ -33,6 +33,7 @@ export default defineConfig({
       components: {
         Header: './src/components/starlight/Header.astro',
         MarkdownContent: './src/components/starlight/MarkdownContent.astro',
+        PageTitle: './src/components/starlight/PageTitle.astro',
         Footer: './src/components/starlight/Footer.astro',
         ThemeSelect: './src/components/starlight/ThemeSelect.astro',
         ThemeProvider: './src/components/starlight/ThemeProvider.astro',
