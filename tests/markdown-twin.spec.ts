@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 
+import { sidebar } from '../src/lib/docs-sidebar'
 import { siteUrl, toMarkdown, twinPath } from '../src/lib/markdown-twin'
 
 const site = 'https://inkbar.dev/'
@@ -40,6 +41,9 @@ test.describe('the Markdown twin', () => {
       'See [Search](https://inkbar.dev/docs/guides/search.md#from-code), [home](https://inkbar.dev/docs.md) and `[x](/docs/a/)`.\n'
     )
     expect(twin('```md\n[x](/docs/a/)\n```')).toBe('```md\n[x](/docs/a/)\n```\n')
+    expect(twin('A [CDN](//cdn.example.com/x.js) link.')).toBe(
+      'A [CDN](//cdn.example.com/x.js) link.\n'
+    )
   })
 
   test('drops imports and turns tabs into labelled blocks', () => {
@@ -65,6 +69,17 @@ test.describe('the Markdown twin', () => {
     expect(twin(body)).toBe(
       '**Vue**\n\n```vue\nimport { ref } from "vue"\n\n\n<Thing />\n```\n'
     )
+  })
+
+  test('keeps prose that starts with "import"', () => {
+    expect(twin('import the theme first.\n\nThen the rest.')).toBe(
+      'import the theme first.\n\nThen the rest.\n'
+    )
+    expect(
+      twin("import type { A } from 'a'\nimport 'b.css'\nimport X, { y } from 'c'\nKept.")
+    ).toBe('Kept.\n')
+    expect(() => twin('import {\n  a,\nprose')).toThrow('unexpected line in an import')
+    expect(() => twin('import {\n  a,')).toThrow('unterminated import')
   })
 
   test('turns asides into quotes', () => {
@@ -95,19 +110,25 @@ test.describe('the Markdown twin', () => {
   })
 })
 
-test('every docs page is served as Markdown, and its head points there', async ({
-  page,
+test('every docs page is served as Markdown, with no MDX left outside code', async ({
   request,
 }) => {
-  for (const path of ['/docs.md', '/docs/index.md', '/docs/quickstart.md']) {
-    const response = await request.get(path)
-    expect(response.status(), path).toBe(200)
-    expect(response.headers()['content-type']).toContain('text/markdown')
+  for (const { slug } of sidebar.flatMap(({ items }) => items)) {
+    for (const path of [`/${slug}.md`, `/${slug}/index.md`]) {
+      const response = await request.get(path)
+      expect(response.status(), path).toBe(200)
+      expect(response.headers()['content-type'], path).toContain('text/markdown')
+      const prose = (await response.text()).replace(
+        /^(`{3,}|~{3,})[^\n]*\n[\s\S]*?^\1\s*$/gm,
+        ''
+      )
+      expect(prose, path).not.toMatch(/^\s*(<[A-Z]|<\/[A-Z]|:::|import\s.*\sfrom\s)/m)
+      expect(prose, path).not.toMatch(/\]\(\/(?!\/)/)
+    }
   }
-  const quickstart = await (await request.get('/docs/quickstart/index.md')).text()
-  expect(quickstart).toMatch(/^# Quickstart\n/)
-  expect(quickstart).not.toMatch(/^<(Tabs|TabItem|Aside|FrameworkSnippet)/m)
+})
 
+test("a docs page's head points at its Markdown", async ({ page }) => {
   await page.goto('/docs/guides/search/')
   await expect(
     page.locator('link[rel="alternate"][type="text/markdown"]')

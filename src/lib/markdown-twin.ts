@@ -31,10 +31,19 @@ export interface TwinEntry {
 }
 
 // A code span, left as written, or a root-relative link target with an optional title, as in
-// "](/docs/a/)" or '](/docs/a/ "Title")'. Matching code spans first keeps their text intact; a
-// span closes only on a backtick run of its own length, so it can hold shorter runs.
+// "](/docs/a/)" or '](/docs/a/ "Title")'; a protocol-relative "](//host/)" is not one. Matching
+// code spans first keeps their text intact; a span closes only on a backtick run of its own
+// length, so it can hold shorter runs.
 const rootLink =
-  /(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)|\]\((\/[^)\s]*)((?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?)\)/g
+  /(?<!`)(`+)(?!`)[\s\S]*?(?<!`)\1(?!`)|\]\((\/(?!\/)[^)\s]*)((?:\s+(?:"[^"]*"|'[^']*'|\([^)]*\)))?)\)/g
+
+// An MDX import on one line: "import 'x'", "import X from 'x'", "import { a, b } from 'x'".
+const importLine =
+  /^import\s+(?:type\s+)?(?:[\w*{][^'"]*?\s+from\s+)?['"][^'"]+['"]\s*;?\s*$/
+// The first line of an import whose braced list runs over several lines: "import {".
+const importOpen = /^import\s+(?:type\s+)?(?:\w+\s*,\s*)?\{[^}]*$/
+// The line that closes it: "} from 'x'".
+const importClose = /^\s*\}\s*from\s+['"][^'"]+['"]\s*;?\s*$/
 
 // A code fence opener or closer: up to any indent, then three or more backticks or tildes.
 const fenceLine = /^\s*(`{3,}|~{3,})(.*)$/
@@ -161,9 +170,18 @@ export function toMarkdown(entry: TwinEntry, site: string): string {
       continue
     }
 
-    // MDX imports: a single line, or a braced list that runs until its "from" line.
-    if (inImport || /^import\s/.test(line)) {
-      inImport = !/(?:^import\s+['"]|\sfrom\s+['"][^'"]+['"])\s*;?\s*$/.test(line)
+    // MDX imports: a single line, or a braced list that runs until its "} from" line. Prose
+    // that happens to start with "import" matches neither shape and stays.
+    if (inImport) {
+      if (importClose.test(line)) inImport = false
+      else if (!/^\s+[\w$]+(?:\s+as\s+[\w$]+)?,?\s*$/.test(line)) {
+        throw new Error(`${entry.id}: unexpected line in an import: "${line}"`)
+      }
+      continue
+    }
+    if (importLine.test(line)) continue
+    if (importOpen.test(line)) {
+      inImport = true
       continue
     }
 
@@ -211,6 +229,7 @@ export function toMarkdown(entry: TwinEntry, site: string): string {
     )
   }
   if (aside) throw new Error(`${entry.id}: unterminated aside`)
+  if (inImport) throw new Error(`${entry.id}: unterminated import`)
 
   const parts = [`# ${entry.title}`, `> ${agentNote(site)}`]
   if (entry.description) parts.push(entry.description)
