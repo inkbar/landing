@@ -294,7 +294,7 @@ viewer.setMessages(de)
 viewer.setLocale('de-CH') // optional
 ```
 
-`viewer.messages` is the set in use. Pieces made without a viewer, such as `createToolbar`, follow it when you pass `messages: viewer.messages`.
+`viewer.messages` is a readable of the words and locale in use, as `{ messages, locale }`. `subscribe` calls you after each `setMessages` or `setLocale`. Pieces made without a viewer, such as `createToolbar`, follow it when you pass `messages: viewer.messages`.
 
   </TabItem>
 </Tabs>
