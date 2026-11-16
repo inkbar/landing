@@ -69,9 +69,12 @@ test('a slow page copy does not overwrite a later llms.txt link copy', async ({
   await page.getByRole('button', { name: 'More Markdown options' }).click()
   await page.getByRole('menuitem', { name: /Copy llms\.txt link/ }).click()
   await expect(page.locator('[data-markdown-menu] [aria-live]')).toHaveText('Link copied')
+  const response = page.waitForResponse('**/docs/guides/search.md')
   release()
-  await page.waitForResponse('**/docs/guides/search.md')
-  await page.waitForTimeout(300)
+  // Wait until the page has the whole body, so the stale copy has its text. A dropped write
+  // fires no event, so give the page's promise chain a moment to settle after that.
+  await (await response).finished()
+  await page.evaluate(() => new Promise((resolve) => setTimeout(resolve, 100)))
   expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(
     'https://inkbar.dev/llms.txt'
   )
