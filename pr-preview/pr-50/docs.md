@@ -1,0 +1,58 @@
+# Introduction
+
+> For AI agents: the full Inkbar documentation index is at https://inkbar.dev/pr-preview/pr-50/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/pr-preview/pr-50/docs/quickstart/ becomes https://inkbar.dev/pr-preview/pr-50/docs/quickstart.md.
+
+What Inkbar does today, what comes next, which packages it ships and where to start.
+
+Inkbar is a PDF viewer and editor for the browser, with form filling, annotations and redaction marks. It is written in TypeScript, built on PDF.js and released under the MIT licence.
+
+To see it before you install anything, open the [sandbox](https://sandbox.inkbar.dev). It runs the Vue, React, Svelte and plain DOM viewers on a sample document, and you can drop in your own PDF. The file stays in your browser.
+
+## What it does today
+
+| Area              | Available now                                                                                                                                                                                                                                                                                |
+| ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Viewing           | Canvas rendering with a selectable text layer, zoom, pinch zoom on touch screens and trackpads, fit to width or page, continuous or single-page layout, page navigation                                                                                                                      |
+| Search            | A find bar and Ctrl/Cmd+F in the viewer, and `doc.search` for code. See [Search](https://inkbar.dev/pr-preview/pr-50/docs/guides/search.md)                                                                                                                                                                                       |
+| Outline and links | The document's bookmarks as a tree, links on the page that Tab reaches, and Back and Forward after a jump. See [Outline and links](https://inkbar.dev/pr-preview/pr-50/docs/guides/outline-and-links.md)                                                                                                                          |
+| Sidebars          | Panels of thumbnails, search results or your own content beside the pages, resizable by drag or keyboard, with widths kept in the [storage](https://inkbar.dev/pr-preview/pr-50/docs/guides/storage.md) you choose. A rail panel floats over the pages when the document runs out of room. See [Sidebars](https://inkbar.dev/pr-preview/pr-50/docs/guides/sidebars.md) |
+| Forms             | Text, checkbox, radio, choice and signature fields, with the form's scripts, and `doc.form` for code. See [Forms](https://inkbar.dev/pr-preview/pr-50/docs/guides/forms.md)                                                                                                                                                       |
+| Signatures        | Draw, type or upload a signature, save it and place it on any page or in a signature field. See [Signatures](https://inkbar.dev/pr-preview/pr-50/docs/guides/signatures.md)                                                                                                                                                       |
+| Markup            | Highlights, underlines, strikeouts and squiggly underlines from a text selection                                                                                                                                                                                                             |
+| Notes             | Notes with reply threads                                                                                                                                                                                                                                                                     |
+| Redaction         | Text and area redaction marks                                                                                                                                                                                                                                                                |
+| Drawing           | Freehand ink, shapes, lines, arrows, speech bubbles, loupes, masks and text boxes, with colour and line style menus. See [Drawing](https://inkbar.dev/pr-preview/pr-50/docs/guides/drawing.md)                                                                                                                                    |
+| Annotations       | JSON export and import, and the PDF's own annotations shown as locked                                                                                                                                                                                                                        |
+| History           | Undo and redo with grouped steps, from the toolbar or Ctrl/Cmd+Z, whether Inkbar or your app holds the annotations. Field edits undo too                                                                                                                                                     |
+| Files             | Download and print the open PDF, from a button or Ctrl/Cmd+S and +P. Until saving into the PDF ships, that is the file as it was opened                                                                                                                                                      |
+| Locked files      | A password dialog for encrypted PDFs, or your own flow. See [Locked files](https://inkbar.dev/pr-preview/pr-50/docs/guides/locked-files.md)                                                                                                                                                                                       |
+| Toolbars          | Composable controls for tools, undo and redo, pages and zoom, with icons you can swap for your own                                                                                                                                                                                           |
+| Keyboard          | Zoom, page and annotation shortcuts, and `Enter` to apply the active tool. See [Tools and keyboard](https://inkbar.dev/pr-preview/pr-50/docs/guides/annotations.md#tools-and-keyboard)                                                                                                                                            |
+| Touch             | Pinch to zoom the document, not the page. One finger draws with the drawing tools and two fingers scroll. Plugins can listen for presses and long presses. See [Presses](https://inkbar.dev/pr-preview/pr-50/docs/guides/writing-a-plugin.md#presses)                                                                             |
+| Translations      | French and German built in, or your own strings for any language. Switch language without a remount. See [Translations](https://inkbar.dev/pr-preview/pr-50/docs/guides/translations.md)                                                                                                                                          |
+
+You build the toolbars from Inkbar's controls and place them where they fit your app. There are buttons for the tools, menus for shapes, highlights, signatures, colours, line style and text style, buttons for undo and redo, and previous and next page, plus a page number field, the page count and zoom controls. [Toolbars](https://inkbar.dev/pr-preview/pr-50/docs/guides/toolbars.md) lists them all.
+
+## Not there yet
+
+- **Saving into the PDF.** `save()` rejects with `EngineUnavailable`. Store `exportAnnotations('json')` in your own backend and import it on the next open.
+- **Applying redactions.** A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. Inkbar will remove content once saving into the PDF ships.
+- **Saving field values into the PDF.** Values stay in memory. Export them with the annotations as Gloss, as [Forms](https://inkbar.dev/pr-preview/pr-50/docs/guides/forms.md#save-values-as-gloss) shows.
+- **XFA forms.** A form built only in XFA shows as a static page.
+
+## Packages
+
+| Package          | Purpose                                                                         |
+| ---------------- | ------------------------------------------------------------------------------- |
+| `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency. |
+| `@inkbar/vue`    | Vue 3 components and composables to build your viewer.                          |
+| `@inkbar/react`  | React 19 components and hooks to build your viewer.                             |
+| `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                             |
+| `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.       |
+| `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.      |
+
+The packages are released together and share one version number. The framework packages take `@inkbar/core` as a peer dependency, so your app installs one copy of it.
+
+## Where to start
+
+Follow the [Quickstart](https://inkbar.dev/pr-preview/pr-50/docs/quickstart.md) to put a document on screen with a toolbar.
