@@ -92,13 +92,16 @@ Set these variables on `[data-ink-root]` to change the default colour for new an
 | Variable                                                                  | Used for                           |
 | ------------------------------------------------------------------------- | ---------------------------------- |
 | `--ink-highlight`, `--ink-underline`, `--ink-strikeout`, `--ink-squiggly` | Text markup                        |
-| `--ink-note`, `--ink-free-text`                                           | Notes and text boxes               |
+| `--ink-note`                                                              | New notes                          |
+| `--ink-free-text`                                                         | New text boxes (text colour)       |
 | `--ink-shape`, `--ink-ink`                                                | Shapes, lines and freehand drawing |
 | `--ink-redact`, `--ink-redact-fill`                                       | Redaction outline and fill         |
 
 The theme declares these on `[data-ink-root]` itself, so a value on `:root` or another ancestor does not reach them. Target `[data-ink-root]`, or pass colours through the `defaults` option on `InkRoot` or `createViewer`.
 
-Inkbar reads a colour when you create the annotation and stores it on the annotation, because the colour will be written into the PDF. Changing a variable later affects new annotations only, and dark mode does not change annotation colours.
+Inkbar reads a colour when you create the annotation and stores it on the annotation. Changing a variable later affects new annotations only, and dark mode does not change annotation colours.
+
+Inkbar draws an annotation from its data. A text box's fill, border, corner radius, alignment and text style come from the annotation, and `--ink-free-text` sets only the text colour a new text box starts with. A note keeps its own colour whatever `--ink-note` says, and the theme adds a drop shadow to it on screen.
 
 ## Search highlights
 

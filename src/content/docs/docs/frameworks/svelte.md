@@ -148,7 +148,7 @@ The full table, with the zoom and page keys, is in [Annotations](/docs/guides/an
 
 ## Styling
 
-Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. `InkRoot`, `InkViewport`, `InkToolbar` and the toolbar controls accept `class`.
+Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. An annotation's shape, colours and text come from its data, and a stylesheet cannot repaint them. `InkRoot`, `InkViewport`, `InkToolbar` and the toolbar controls accept `class`.
 
 ## Hooks
 
