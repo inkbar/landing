@@ -16,6 +16,8 @@ import '@inkbar/theme/theme.css'
 
 Every rule sits in `@layer inkbar` and inside `:where()`, so each selector has zero specificity. Your unlayered CSS overrides it without `!important`.
 
+Annotations are the exception. Inkbar draws each one from its data and locks the paint, so a stylesheet cannot change an annotation's fill, stroke or text. It can still hide, move or filter the annotation's element.
+
 ## Layer order
 
 Cascade layers win by order, whatever the specificity. The browser orders layers by first appearance, so if your stylesheet declares its own layers before this file loads, `inkbar` comes later and beats them. Declare `inkbar` first, at the top of your main stylesheet:

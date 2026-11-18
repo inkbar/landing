@@ -149,7 +149,7 @@ The full table, with the zoom and page keys, is in [Annotations](https://inkbar.
 
 ## Styling
 
-Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`.
+Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. An annotation's shape, colours and text come from its data, and a stylesheet cannot repaint them.
 
 ## Composables
 

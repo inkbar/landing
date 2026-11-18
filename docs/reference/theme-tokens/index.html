@@ -255,8 +255,12 @@
 <td>Text markup</td>
 </tr>
 <tr>
-<td><code dir="auto">--ink-note</code>, <code dir="auto">--ink-free-text</code></td>
-<td>Notes and text boxes</td>
+<td><code dir="auto">--ink-note</code></td>
+<td>New notes</td>
+</tr>
+<tr>
+<td><code dir="auto">--ink-free-text</code></td>
+<td>New text boxes (text colour)</td>
 </tr>
 <tr>
 <td><code dir="auto">--ink-shape</code>, <code dir="auto">--ink-ink</code></td>
@@ -269,7 +273,8 @@
 </tbody>
 </table></div>
 <p>The theme declares these on <code dir="auto">[data-ink-root]</code> itself, so a value on <code dir="auto">:root</code> or another ancestor does not reach them. Target <code dir="auto">[data-ink-root]</code>, or pass colours through the <code dir="auto">defaults</code> option on <code dir="auto">InkRoot</code> or <code dir="auto">createViewer</code>.</p>
-<p>Inkbar reads a colour when you create the annotation and stores it on the annotation, because the colour will be written into the PDF. Changing a variable later affects new annotations only, and dark mode does not change annotation colours.</p>
+<p>Inkbar reads a colour when you create the annotation and stores it on the annotation. Changing a variable later affects new annotations only, and dark mode does not change annotation colours.</p>
+<p>Inkbar draws an annotation from its data. A text box’s fill, border, corner radius, alignment and text style come from the annotation, and <code dir="auto">--ink-free-text</code> sets only the text colour a new text box starts with. A note keeps its own colour whatever <code dir="auto">--ink-note</code> says, and the theme adds a drop shadow to it on screen.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="search-highlights">Search highlights</h2><a class="sl-anchor-link" href="#search-highlights"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Search highlights”</span></a></div>
 <p>Set these on <code dir="auto">[data-ink-root]</code> to colour the matches of a <a href="/docs/guides/search/">search</a>:</p>
 <div class="table-wrap" tabindex="0" role="region" aria-label="Search highlights"><table>

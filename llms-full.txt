@@ -4450,6 +4450,8 @@ import '@inkbar/theme/theme.css'
 
 Every rule sits in `@layer inkbar` and inside `:where()`, so each selector has zero specificity. Your unlayered CSS overrides it without `!important`.
 
+Annotations are the exception. Inkbar draws each one from its data and locks the paint, so a stylesheet cannot change an annotation’s fill, stroke or text. It can still hide, move or filter the annotation’s element.
+
 ## Layer order
 
 Cascade layers win by order, whatever the specificity. The browser orders layers by first appearance, so if your stylesheet declares its own layers before this file loads, `inkbar` comes later and beats them. Declare `inkbar` first, at the top of your main stylesheet:
@@ -5307,7 +5309,7 @@ The full table, with the zoom and page keys, is in [Annotations](/docs/guides/an
 
 ## Styling
 
-Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`.
+Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. An annotation’s shape, colours and text come from its data, and a stylesheet cannot repaint them.
 
 ## Composables
 
@@ -5467,7 +5469,7 @@ The full table, with the zoom and page keys, is in [Annotations](/docs/guides/an
 
 ## Styling
 
-Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. `InkRoot`, `InkViewport`, `InkToolbar` and the toolbar controls accept `className`.
+Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. An annotation’s shape, colours and text come from its data, and a stylesheet cannot repaint them. `InkRoot`, `InkViewport`, `InkToolbar` and the toolbar controls accept `className`.
 
 ## Hooks
 
@@ -5629,7 +5631,7 @@ The full table, with the zoom and page keys, is in [Annotations](/docs/guides/an
 
 ## Styling
 
-Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. `InkRoot`, `InkViewport`, `InkToolbar` and the toolbar controls accept `class`.
+Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. An annotation’s shape, colours and text come from its data, and a stylesheet cannot repaint them. `InkRoot`, `InkViewport`, `InkToolbar` and the toolbar controls accept `class`.
 
 ## Hooks
 
@@ -6010,13 +6012,16 @@ Set these variables on `[data-ink-root]` to change the default colour for new an
 | Variable                                                                  | Used for                           |
 | ------------------------------------------------------------------------- | ---------------------------------- |
 | `--ink-highlight`, `--ink-underline`, `--ink-strikeout`, `--ink-squiggly` | Text markup                        |
-| `--ink-note`, `--ink-free-text`                                           | Notes and text boxes               |
+| `--ink-note`                                                              | New notes                          |
+| `--ink-free-text`                                                         | New text boxes (text colour)       |
 | `--ink-shape`, `--ink-ink`                                                | Shapes, lines and freehand drawing |
 | `--ink-redact`, `--ink-redact-fill`                                       | Redaction outline and fill         |
 
 The theme declares these on `[data-ink-root]` itself, so a value on `:root` or another ancestor does not reach them. Target `[data-ink-root]`, or pass colours through the `defaults` option on `InkRoot` or `createViewer`.
 
-Inkbar reads a colour when you create the annotation and stores it on the annotation, because the colour will be written into the PDF. Changing a variable later affects new annotations only, and dark mode does not change annotation colours.
+Inkbar reads a colour when you create the annotation and stores it on the annotation. Changing a variable later affects new annotations only, and dark mode does not change annotation colours.
+
+Inkbar draws an annotation from its data. A text box’s fill, border, corner radius, alignment and text style come from the annotation, and `--ink-free-text` sets only the text colour a new text box starts with. A note keeps its own colour whatever `--ink-note` says, and the theme adds a drop shadow to it on screen.
 
 ## Search highlights
 
