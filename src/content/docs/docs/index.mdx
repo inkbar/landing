@@ -21,9 +21,10 @@ To see it before you install anything, open the [sandbox](https://sandbox.inkbar
 | Notes             | Notes with reply threads                                                                                                                                                                                                                                                                     |
 | Redaction         | Text and area redaction marks                                                                                                                                                                                                                                                                |
 | Drawing           | Freehand ink, shapes, lines, arrows, speech bubbles, loupes, masks and text boxes, with colour and line style menus. See [Drawing](/docs/guides/drawing/)                                                                                                                                    |
-| Annotations       | JSON export and import, and the PDF's own annotations shown as locked                                                                                                                                                                                                                        |
+| Annotations       | JSON export and import, and annotations from other programs shown as locked                                                                                                                                                                                                                  |
 | History           | Undo and redo with grouped steps, from the toolbar or Ctrl/Cmd+Z, whether Inkbar or your app holds the annotations. Field edits undo too                                                                                                                                                     |
-| Files             | Download and print the open PDF, from a button or Ctrl/Cmd+S and +P. Until saving into the PDF ships, that is the file as it was opened                                                                                                                                                      |
+| Files             | Download and print the open PDF, from a button or Ctrl/Cmd+S and +P                                                                                                                                                                                                                          |
+| Saving            | With `@inkbar/engine`, annotations and form values are written into the PDF, and come back editable when the file is reopened. See [Saving](/docs/guides/saving/)                                                                                                                            |
 | Locked files      | A password dialog for encrypted PDFs, or your own flow. See [Locked files](/docs/guides/locked-files/)                                                                                                                                                                                       |
 | Toolbars          | Composable controls for tools, undo and redo, pages and zoom, with icons you can swap for your own                                                                                                                                                                                           |
 | Keyboard          | Zoom, page and annotation shortcuts, and `Enter` to apply the active tool. See [Tools and keyboard](/docs/guides/annotations/#tools-and-keyboard)                                                                                                                                            |
@@ -34,9 +35,7 @@ You build the toolbars from Inkbar's controls and place them where they fit your
 
 ## Not there yet
 
-- **Saving into the PDF.** `save()` rejects with `EngineUnavailable`. Store `exportAnnotations('json')` in your own backend and import it on the next open.
-- **Applying redactions.** A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. Inkbar will remove content once saving into the PDF ships.
-- **Saving field values into the PDF.** Values stay in memory. Export them with the annotations as Gloss, as [Forms](/docs/guides/forms/#save-values-as-gloss) shows.
+- **Applying redactions.** A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. A saved file holds the mark as a Redact annotation, with the content under it still there.
 - **XFA forms.** A form built only in XFA shows as a static page.
 
 ## Packages
@@ -49,6 +48,7 @@ You build the toolbars from Inkbar's controls and place them where they fit your
 | `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                             |
 | `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.       |
 | `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.      |
+| `@inkbar/engine` | Optional. Writes annotations and form values into the PDF.                      |
 
 The packages are released together and share one version number. The framework packages take `@inkbar/core` as a peer dependency, so your app installs one copy of it.
 

@@ -24,6 +24,24 @@
     "english": "Page {page} could not be shown."
   },
   {
+    "group": "viewer",
+    "key": "saveFailed",
+    "kind": "text",
+    "english": "Your changes could not be written into this file."
+  },
+  {
+    "group": "viewer",
+    "key": "saveUnavailable",
+    "kind": "text",
+    "english": "Saving is not available right now. Check your connection and try again."
+  },
+  {
+    "group": "viewer",
+    "key": "preparingFile",
+    "kind": "text",
+    "english": "Preparing your file…"
+  },
+  {
     "group": "toolbar",
     "key": "label",
     "kind": "text",
