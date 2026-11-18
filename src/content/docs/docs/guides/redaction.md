@@ -6,10 +6,10 @@ description: Mark text and areas for redaction by hand.
 Inkbar lets people mark what should be redacted. It does not yet remove anything from the file.
 
 :::caution
-A redaction mark is a tinted, outlined box over the content. The text under it still renders, anyone can select and copy it, and the PDF itself does not change. Removing the content needs saving into the PDF, which has not shipped. Do not share the original file as if it were redacted.
+A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. [Saving](/docs/guides/saving/) writes the mark into the PDF as a Redact annotation and leaves the content under it in the file. Do not share the original or a saved file as if it were redacted.
 :::
 
-Until then, the marks are a review record: who marked what, where and why. Export them as JSON with the rest of the annotations, or send them to a service that applies redactions on your server.
+The marks are a review record: who marked what, where and why. Export them as JSON with the rest of the annotations, or send them to a service that applies redactions on your server.
 
 ## Marking by hand
 

@@ -33,6 +33,7 @@ export const sidebar: SidebarGroup[] = [
       { label: 'Controlled mode', slug: 'docs/guides/controlled-mode' },
       { label: 'Plugins', slug: 'docs/guides/plugins' },
       { label: 'Writing a plugin', slug: 'docs/guides/writing-a-plugin' },
+      { label: 'Saving', slug: 'docs/guides/saving' },
       { label: 'Storage', slug: 'docs/guides/storage' },
       { label: 'Theming', slug: 'docs/guides/theming' },
       { label: 'Translations', slug: 'docs/guides/translations' },
