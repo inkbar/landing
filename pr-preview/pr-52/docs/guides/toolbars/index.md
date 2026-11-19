@@ -1,0 +1,322 @@
+# Toolbars
+
+> For AI agents: the full Inkbar documentation index is at https://inkbar.dev/pr-preview/pr-52/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/pr-preview/pr-52/docs/quickstart/ becomes https://inkbar.dev/pr-preview/pr-52/docs/quickstart.md.
+
+Build toolbars from Inkbar's controls, place them where they fit your app, and swap in your own icons and labels.
+
+Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, fill it with the controls you need, and add your own buttons beside them. You can have as many toolbars as you like: the [Quickstart](https://inkbar.dev/pr-preview/pr-52/docs/quickstart.md) puts the tools above the document and the page and zoom controls below it.
+
+## Controls
+
+| Component                    | What it does                                                                                                            |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                                    |
+| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                                        |
+| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                                 |
+| `InkToolbarButton`           | Your own button, in the toolbar's arrow-key order. See [Your own buttons](#your-own-buttons)                            |
+| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                           |
+| `InkDownloadButton`          | Downloads the open PDF, with the session's changes when [saving](https://inkbar.dev/pr-preview/pr-52/docs/guides/saving.md) is on. `filename` names the file |
+| `InkPrintButton`             | Prints the open PDF with the browser's print dialog                                                                     |
+| `InkApplyRedactions`         | Applies the redaction marks after a confirmation. Needs `engine`. See [Redaction](https://inkbar.dev/pr-preview/pr-52/docs/guides/redaction.md)              |
+| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                             |
+| `InkPageInput`               | The current page number, which the user can type into                                                                   |
+| `InkPageCount`               | "of N", the page count                                                                                                  |
+| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                                                   |
+| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                                                   |
+| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                                            |
+| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](https://inkbar.dev/pr-preview/pr-52/docs/guides/search.md)                                      |
+| `InkHighlightMenu`           | Turns on the `highlight` tool, and picks highlight, underline, strikethrough or squiggly and the markup colour          |
+| `InkShapeMenu`               | Turns on the `shape` tool, and picks the kind. See [Drawing](https://inkbar.dev/pr-preview/pr-52/docs/guides/drawing.md)                                     |
+| `InkLineStyleMenu`           | Line weight, solid or dashed, and arrowheads for the active tool or the selection                                       |
+| `InkColorMenu`               | The `border`, `fill` or `textColor` colour, given as `property`                                                         |
+| `InkTextStyleMenu`           | A text box's font, size, colour, bold, italic, underline and alignment                                                  |
+| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](https://inkbar.dev/pr-preview/pr-52/docs/guides/signatures.md)                       |
+| `InkCommand`                 | Runs a [plugin](https://inkbar.dev/pr-preview/pr-52/docs/guides/plugins.md) command given as `id`                                                            |
+| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                                |
+
+`tool` is `select-text`, `select`, or one of the creation tools you pass to the root (see [Choosing tools](#choosing-tools)). The first two are named Select text and Rectangle select. Pass `label` to change a tool button's name. It takes a string or a function, so the name can follow your language; see [Translations](https://inkbar.dev/pr-preview/pr-52/docs/guides/translations.md#labels-you-supply). To rename any other button, pass `aria-label` and `title`.
+
+Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one reads its state from that root. Undo and redo follow the root's history. History is on by default; in controlled mode, turn it on with `history`. The page number field and the zoom select keep their own Tab stops.
+
+Ctrl or Cmd with Z undoes, and Ctrl or Cmd with Shift and Z, or Ctrl with Y, redoes. Both work on every platform. The keys do what `InkUndo` and `InkRedo` do, from anywhere inside `InkRoot`, toolbars included. In a text field, a select or editable content, they act on that element instead.
+
+Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file's name, or the last part of its URL, or `document.pdf`. Printing opens the browser's print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. With `@inkbar/engine`, both give the file with this session's annotations and changed form values written into it: see [Saving](https://inkbar.dev/pr-preview/pr-52/docs/guides/saving.md). Without it, both give the file as it was opened.
+
+## Choosing tools
+
+`select-text` and `select` are always there. Every creation tool is opt-in: import its factory from `@inkbar/core/dom` and pass it to `InkRoot` as `tools`. Only the tools you import end up in your bundle.
+
+| Factory            | Tool          | Button name        |
+| ------------------ | ------------- | ------------------ |
+| `highlightTool()`  | `highlight`   | Highlight          |
+| `redactAreaTool()` | `redact-area` | Mark for redaction |
+| `sketchTool()`     | `sketch`      | Sketch             |
+| `drawTool()`       | `draw`        | Draw               |
+| `shapeTool()`      | `shape`       | Shape              |
+| `freetextTool()`   | `freetext`    | Text box           |
+| `signatureTool()`  | `signature`   | Signature          |
+| `noteTool()`       | `note`        | Add note           |
+
+Pass the tools your toolbar offers:
+
+**Vue**
+
+```vue
+<script setup lang="ts">
+import { highlightTool, noteTool } from '@inkbar/core/dom'
+import { InkRoot, InkToolbar, InkToolButton, InkViewport } from '@inkbar/vue'
+import { assets } from 'virtual:inkbar-assets'
+
+defineProps<{ file: File }>()
+
+const tools = [highlightTool(), noteTool()]
+</script>
+
+<template>
+  <InkRoot :src="file" :assets="assets" :tools="tools">
+    <InkToolbar>
+      <InkToolButton tool="select-text" />
+      <InkToolButton tool="highlight" />
+      <InkToolButton tool="note" />
+    </InkToolbar>
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+**React**
+
+```tsx
+import { highlightTool, noteTool } from '@inkbar/core/dom'
+import { InkRoot, InkToolbar, InkToolButton, InkViewport } from '@inkbar/react'
+import { assets } from 'virtual:inkbar-assets'
+
+const tools = [highlightTool(), noteTool()]
+
+export function Viewer({ file }: { file: File }) {
+  return (
+    <InkRoot src={file} assets={assets} tools={tools}>
+      <InkToolbar>
+        <InkToolButton tool="select-text" />
+        <InkToolButton tool="highlight" />
+        <InkToolButton tool="note" />
+      </InkToolbar>
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+**Svelte**
+
+```svelte
+<script lang="ts">
+  import { highlightTool, noteTool } from '@inkbar/core/dom'
+  import { InkRoot, InkToolbar, InkToolButton, InkViewport } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+
+  const tools = [highlightTool(), noteTool()]
+</script>
+
+<InkRoot src={file} {assets} {tools}>
+  <InkToolbar>
+    <InkToolButton tool="select-text" />
+    <InkToolButton tool="highlight" />
+    <InkToolButton tool="note" />
+  </InkToolbar>
+  <InkViewport />
+</InkRoot>
+```
+
+**Plain DOM**
+
+```ts
+import {
+  createToolbar,
+  createToolButton,
+  createViewer,
+  highlightTool,
+  noteTool,
+} from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  tools: [highlightTool(), noteTool()],
+})
+
+const tools = createToolbar()
+tools.append(
+  createToolButton(viewer, 'select-text'),
+  createToolButton(viewer, 'highlight'),
+  createToolButton(viewer, 'note')
+)
+viewer.element.prepend(tools)
+```
+
+To offer every tool, pass `allTools()`, which returns a fresh instance of each of the eight:
+
+```ts
+import { allTools } from '@inkbar/core/dom'
+
+const tools = allTools()
+```
+
+A button for a tool you did not pass renders disabled and hidden. `InkHighlightMenu`, `InkShapeMenu` and `InkSignatureMenu` render nothing without their tool. Each logs an `InkError('UnknownTool')` to the console once. If the active tool leaves `tools`, the viewer switches to `select-text` and reports it through `onToolChange` (`update:tool` in Vue). A [plugin's](https://inkbar.dev/pr-preview/pr-52/docs/guides/plugins.md) tools join the viewer's on their own.
+
+## Your own buttons
+
+`InkToolbarButton` is a button of your own inside an `InkToolbar`. It joins the toolbar's arrow-key focus and takes the theme's toolbar button styles. What it shows and does is up to you.
+
+**Vue**
+
+```vue
+<InkToolbarButton @click="download">Download</InkToolbarButton>
+```
+
+Button attributes such as `aria-label`, and listeners, pass through to the button. It takes `as-child` and `disabled`.
+
+**React**
+
+```tsx
+<InkToolbarButton onClick={download}>Download</InkToolbarButton>
+```
+
+It takes the props of a `<button>`, with `type="button"` by default, and `asChild`.
+
+**Svelte**
+
+```svelte
+<InkToolbarButton onclick={download}>Download</InkToolbarButton>
+```
+
+It takes the attributes of a `<button>` and a `child` snippet.
+
+**Plain DOM**
+
+```ts
+const download = document.createElement('button')
+download.type = 'button'
+download.textContent = 'Download'
+download.onclick = save
+toolbar.append(download)
+```
+
+No wrapper is needed. `createToolbar()` gives any `<button>` you append the same arrow-key focus, and the theme styles it like the toolbar's own buttons.
+
+`InkIcon` (`createIcon` in plain DOM) draws an `@inkbar/icons` icon on such a button, as the next section shows.
+
+## Icons and labels
+
+Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. `InkApplyRedactions` is the exception: it shows its name as text. The accessible name stays the same either way. This bar goes inside an `InkRoot` whose `tools` include `redactAreaTool()`.
+
+**Vue**
+
+```vue
+<script setup lang="ts">
+import { Check } from '@inkbar/icons'
+import {
+  InkIcon,
+  InkToolbar,
+  InkToolbarButton,
+  InkToolButton,
+  InkUndo,
+} from '@inkbar/vue'
+import { Eraser } from 'your-icon-library'
+</script>
+
+<template>
+  <InkToolbar label="Review">
+    <InkToolButton tool="redact-area" label="Mark">
+      <Eraser />
+    </InkToolButton>
+    <InkUndo />
+    <InkToolbarButton aria-label="Finish review" @click="finish">
+      <InkIcon :icon="Check" />
+    </InkToolbarButton>
+  </InkToolbar>
+</template>
+```
+
+**React**
+
+```tsx
+import { Check } from '@inkbar/icons'
+import {
+  InkIcon,
+  InkToolbar,
+  InkToolbarButton,
+  InkToolButton,
+  InkUndo,
+} from '@inkbar/react'
+import { Eraser } from 'your-icon-library'
+
+export function ReviewBar({ finish }: { finish: () => void }) {
+  return (
+    <InkToolbar label="Review">
+      <InkToolButton tool="redact-area" label="Mark">
+        <Eraser />
+      </InkToolButton>
+      <InkUndo />
+      <InkToolbarButton aria-label="Finish review" onClick={finish}>
+        <InkIcon icon={Check} />
+      </InkToolbarButton>
+    </InkToolbar>
+  )
+}
+```
+
+**Svelte**
+
+```svelte
+<script lang="ts">
+  import { Check } from '@inkbar/icons'
+  import {
+    InkIcon,
+    InkToolbar,
+    InkToolbarButton,
+    InkToolButton,
+    InkUndo,
+  } from '@inkbar/svelte'
+  import { Eraser } from 'your-icon-library'
+
+  let { finish }: { finish: () => void } = $props()
+</script>
+
+<InkToolbar label="Review">
+  <InkToolButton tool="redact-area" label="Mark">
+    <Eraser />
+  </InkToolButton>
+  <InkUndo />
+  <InkToolbarButton aria-label="Finish review" onclick={finish}>
+    <InkIcon icon={Check} />
+  </InkToolbarButton>
+</InkToolbar>
+```
+
+Install `@inkbar/icons` only if you want its icons on your own buttons. The controls bring their own. The [Icons](https://inkbar.dev/pr-preview/pr-52/docs/reference/icons.md) reference lists them all.
+
+## Rendering your own element
+
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkDownloadButton`, `InkPrintButton`, `InkApplyRedactions`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+
+## Without a framework
+
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](https://inkbar.dev/pr-preview/pr-52/docs/frameworks/plain-dom.md#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createDownloadButton`, `createPrintButton`, `createApplyRedactionsButton`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
+
+## Styling
+
+The theme gives a toolbar a background and padding, and styles the controls in it. You decide where the toolbar sits and what separates it from the document. Set `--ink-control-size` on a toolbar to change the height of its buttons, fields and zoom select (default `2.25rem`), and `--ink-icon-size` to change the size of their icons (default `1.125rem`):
+
+```css
+.my-page-bar {
+  --ink-control-size: 2rem;
+  --ink-icon-size: 1rem;
+  border-top: 1px solid var(--border);
+}
+```
+
+A tool button carries `data-tool` and `data-state="on|off"`, so `[data-tool="highlight"][data-state="on"]` targets the active highlight tool.
