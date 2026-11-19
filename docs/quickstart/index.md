@@ -207,12 +207,12 @@ export function Review({ url, id }: { url: string; id: string }) {
 
 The viewer fills its parent, so give the parent a height. Without one, the document has no room to scroll. Each control is its own component: drop the ones you don't need, move them, or add your own buttons. [Toolbars](https://inkbar.dev/docs/guides/toolbars.md) covers them.
 
-Inkbar keeps the annotations itself here, with undo and redo. To hold them in your own state, read [Controlled mode](https://inkbar.dev/docs/guides/controlled-mode.md). Annotations live in memory until you save them: [Annotations](https://inkbar.dev/docs/guides/annotations.md#saving-annotations) shows how to store them as JSON.
+Inkbar keeps the annotations itself here, with undo and redo. To hold them in your own state, read [Controlled mode](https://inkbar.dev/docs/guides/controlled-mode.md). Annotations live in memory until you save them. [Saving](https://inkbar.dev/docs/guides/saving.md) writes them into the PDF, and [Annotations](https://inkbar.dev/docs/guides/annotations.md#saving-annotations) shows how to store them as JSON.
 
 ## Next
 
 - [Restyle the controls](https://inkbar.dev/docs/guides/theming.md) with your own tokens and CSS.
 - [Work with annotations](https://inkbar.dev/docs/guides/annotations.md) and save them as JSON.
-- [Mark redactions](https://inkbar.dev/docs/guides/redaction.md) by hand.
+- [Mark and apply redactions](https://inkbar.dev/docs/guides/redaction.md).
 - Read the page for your framework: [Vue](https://inkbar.dev/docs/frameworks/vue.md), [React](https://inkbar.dev/docs/frameworks/react.md), [Svelte](https://inkbar.dev/docs/frameworks/svelte.md) or [Plain DOM](https://inkbar.dev/docs/frameworks/plain-dom.md).
 - Compare with the [sandbox](https://sandbox.inkbar.dev), which runs the same setup in each framework.

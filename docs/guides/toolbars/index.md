@@ -8,30 +8,31 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 
 ## Controls
 
-| Component                    | What it does                                                                                                   |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                           |
-| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                               |
-| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                        |
-| `InkToolbarButton`           | Your own button, in the toolbar's arrow-key order. See [Your own buttons](#your-own-buttons)                   |
-| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                  |
-| `InkDownloadButton`          | Downloads the open PDF. `filename` names the file                                                              |
-| `InkPrintButton`             | Prints the open PDF with the browser's print dialog                                                            |
-| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                    |
-| `InkPageInput`               | The current page number, which the user can type into                                                          |
-| `InkPageCount`               | "of N", the page count                                                                                         |
-| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                                          |
-| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                                          |
-| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                                   |
-| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](https://inkbar.dev/docs/guides/search.md)                             |
-| `InkHighlightMenu`           | Turns on the `highlight` tool, and picks highlight, underline, strikethrough or squiggly and the markup colour |
-| `InkShapeMenu`               | Turns on the `shape` tool, and picks the kind. See [Drawing](https://inkbar.dev/docs/guides/drawing.md)                            |
-| `InkLineStyleMenu`           | Line weight, solid or dashed, and arrowheads for the active tool or the selection                              |
-| `InkColorMenu`               | The `border`, `fill` or `textColor` colour, given as `property`                                                |
-| `InkTextStyleMenu`           | A text box's font, size, colour, bold, italic, underline and alignment                                         |
-| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](https://inkbar.dev/docs/guides/signatures.md)              |
-| `InkCommand`                 | Runs a [plugin](https://inkbar.dev/docs/guides/plugins.md) command given as `id`                                                   |
-| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                       |
+| Component                    | What it does                                                                                                            |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                                    |
+| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                                        |
+| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                                 |
+| `InkToolbarButton`           | Your own button, in the toolbar's arrow-key order. See [Your own buttons](#your-own-buttons)                            |
+| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                           |
+| `InkDownloadButton`          | Downloads the open PDF, with the session's changes when [saving](https://inkbar.dev/docs/guides/saving.md) is on. `filename` names the file |
+| `InkPrintButton`             | Prints the open PDF with the browser's print dialog                                                                     |
+| `InkApplyRedactions`         | Applies the redaction marks after a confirmation. Needs `engine`. See [Redaction](https://inkbar.dev/docs/guides/redaction.md)              |
+| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                             |
+| `InkPageInput`               | The current page number, which the user can type into                                                                   |
+| `InkPageCount`               | "of N", the page count                                                                                                  |
+| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                                                   |
+| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                                                   |
+| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                                            |
+| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](https://inkbar.dev/docs/guides/search.md)                                      |
+| `InkHighlightMenu`           | Turns on the `highlight` tool, and picks highlight, underline, strikethrough or squiggly and the markup colour          |
+| `InkShapeMenu`               | Turns on the `shape` tool, and picks the kind. See [Drawing](https://inkbar.dev/docs/guides/drawing.md)                                     |
+| `InkLineStyleMenu`           | Line weight, solid or dashed, and arrowheads for the active tool or the selection                                       |
+| `InkColorMenu`               | The `border`, `fill` or `textColor` colour, given as `property`                                                         |
+| `InkTextStyleMenu`           | A text box's font, size, colour, bold, italic, underline and alignment                                                  |
+| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](https://inkbar.dev/docs/guides/signatures.md)                       |
+| `InkCommand`                 | Runs a [plugin](https://inkbar.dev/docs/guides/plugins.md) command given as `id`                                                            |
+| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                                |
 
 `tool` is `select-text`, `select`, or one of the creation tools you pass to the root (see [Choosing tools](#choosing-tools)). The first two are named Select text and Rectangle select. Pass `label` to change a tool button's name. It takes a string or a function, so the name can follow your language; see [Translations](https://inkbar.dev/docs/guides/translations.md#labels-you-supply). To rename any other button, pass `aria-label` and `title`.
 
@@ -39,7 +40,7 @@ Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one rea
 
 Ctrl or Cmd with Z undoes, and Ctrl or Cmd with Shift and Z, or Ctrl with Y, redoes. Both work on every platform. The keys do what `InkUndo` and `InkRedo` do, from anywhere inside `InkRoot`, toolbars included. In a text field, a select or editable content, they act on that element instead.
 
-Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file's name, or the last part of its URL, or `document.pdf`. Printing opens the browser's print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. Until saving into the PDF ships, both give the file as it was opened, without this session's annotations.
+Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file's name, or the last part of its URL, or `document.pdf`. Printing opens the browser's print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. With `@inkbar/engine`, both give the file with this session's annotations and changed form values written into it: see [Saving](https://inkbar.dev/docs/guides/saving.md). Without it, both give the file as it was opened.
 
 ## Choosing tools
 
@@ -210,7 +211,7 @@ No wrapper is needed. `createToolbar()` gives any `<button>` you append the same
 
 ## Icons and labels
 
-Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. The accessible name stays the same either way. This bar goes inside an `InkRoot` whose `tools` include `redactAreaTool()`.
+Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. `InkApplyRedactions` is the exception: it shows its name as text. The accessible name stays the same either way. This bar goes inside an `InkRoot` whose `tools` include `redactAreaTool()`.
 
 **Vue**
 
@@ -300,11 +301,11 @@ Install `@inkbar/icons` only if you want its icons on your own buttons. The cont
 
 ## Rendering your own element
 
-`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkDownloadButton`, `InkPrintButton`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkDownloadButton`, `InkPrintButton`, `InkApplyRedactions`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
 
 ## Without a framework
 
-`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](https://inkbar.dev/docs/frameworks/plain-dom.md#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createDownloadButton`, `createPrintButton`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](https://inkbar.dev/docs/frameworks/plain-dom.md#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createDownloadButton`, `createPrintButton`, `createApplyRedactionsButton`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
 
 ## Styling
 

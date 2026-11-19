@@ -23,7 +23,7 @@ While the file is locked, the status is `{ state: 'locked', incorrect: boolean }
 
 The `error` event, or `onError`, still fires with a `PasswordRequired` error for each failed open, prompt or not.
 
-The typed password is used for that one load and dropped. It does not reach the status, the error, an event or storage.
+Inkbar uses the typed password for that one load and for no other file. It does not reach the status, the error, an event or storage. With [`engine`](https://inkbar.dev/docs/guides/saving.md), the open document keeps the password until it closes, because a save opens the file again in the engine.
 
 ## Turning the prompt off
 

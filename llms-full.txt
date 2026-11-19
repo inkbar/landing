@@ -4,7 +4,7 @@
 
 > What Inkbar does today, what comes next, which packages it ships and where to start.
 
-Inkbar is a PDF viewer and editor for the browser, with form filling, annotations and redaction marks. It is written in TypeScript, built on PDF.js and released under the MIT licence.
+Inkbar is a PDF viewer and editor for the browser, with form filling, annotations and redaction. It is written in TypeScript, built on PDF.js and released under the MIT licence.
 
 To see it before you install anything, open the [sandbox](https://sandbox.inkbar.dev). It runs the Vue, React, Svelte and plain DOM viewers on a sample document, and you can drop in your own PDF. The file stays in your browser.
 
@@ -20,11 +20,12 @@ To see it before you install anything, open the [sandbox](https://sandbox.inkbar
 | Signatures        | Draw, type or upload a signature, save it and place it on any page or in a signature field. See [Signatures](/docs/guides/signatures/)                                                                                                                                                       |
 | Markup            | Highlights, underlines, strikeouts and squiggly underlines from a text selection                                                                                                                                                                                                             |
 | Notes             | Notes with reply threads                                                                                                                                                                                                                                                                     |
-| Redaction         | Text and area redaction marks                                                                                                                                                                                                                                                                |
+| Redaction         | Text and area redaction marks. With `@inkbar/engine`, applying them removes the content under them and the file’s metadata, attached files and scripts, then checks the result. See [Redaction](/docs/guides/redaction/)                                                                     |
 | Drawing           | Freehand ink, shapes, lines, arrows, speech bubbles, loupes, masks and text boxes, with colour and line style menus. See [Drawing](/docs/guides/drawing/)                                                                                                                                    |
-| Annotations       | JSON export and import, and the PDF’s own annotations shown as locked                                                                                                                                                                                                                        |
+| Annotations       | JSON export and import, and annotations from other programs shown as locked                                                                                                                                                                                                                  |
 | History           | Undo and redo with grouped steps, from the toolbar or Ctrl/Cmd+Z, whether Inkbar or your app holds the annotations. Field edits undo too                                                                                                                                                     |
-| Files             | Download and print the open PDF, from a button or Ctrl/Cmd+S and +P. Until saving into the PDF ships, that is the file as it was opened                                                                                                                                                      |
+| Files             | Download and print the open PDF, from a button or Ctrl/Cmd+S and +P                                                                                                                                                                                                                          |
+| Saving            | With `@inkbar/engine`, annotations and form values are written into the PDF, and come back editable when the file is reopened. See [Saving](/docs/guides/saving/)                                                                                                                            |
 | Locked files      | A password dialog for encrypted PDFs, or your own flow. See [Locked files](/docs/guides/locked-files/)                                                                                                                                                                                       |
 | Toolbars          | Composable controls for tools, undo and redo, pages and zoom, with icons you can swap for your own                                                                                                                                                                                           |
 | Keyboard          | Zoom, page and annotation shortcuts, and `Enter` to apply the active tool. See [Tools and keyboard](/docs/guides/annotations/#tools-and-keyboard)                                                                                                                                            |
@@ -35,21 +36,20 @@ You build the toolbars from Inkbar’s controls and place them where they fit yo
 
 ## Not there yet
 
-* **Saving into the PDF.** `save()` rejects with `EngineUnavailable`. Store `exportAnnotations('json')` in your own backend and import it on the next open.
-* **Applying redactions.** A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. Inkbar will remove content once saving into the PDF ships.
-* **Saving field values into the PDF.** Values stay in memory. Export them with the annotations as Gloss, as [Forms](/docs/guides/forms/#save-values-as-gloss) shows.
+* **Redacting every kind of content.** Inkbar refuses a mark over patterned fills, some gradients or some soft-masked artwork, since it cannot remove that content from the file. It does not clean hidden layers, and it does not look for the removed words elsewhere in the file, such as in bookmark titles. [Redaction](/docs/guides/redaction/#limits) lists every limit.
 * **XFA forms.** A form built only in XFA shows as a static page.
 
 ## Packages
 
-| Package          | Purpose                                                                         |
-| ---------------- | ------------------------------------------------------------------------------- |
-| `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency. |
-| `@inkbar/vue`    | Vue 3 components and composables to build your viewer.                          |
-| `@inkbar/react`  | React 19 components and hooks to build your viewer.                             |
-| `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                             |
-| `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.       |
-| `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.      |
+| Package          | Purpose                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency.    |
+| `@inkbar/vue`    | Vue 3 components and composables to build your viewer.                             |
+| `@inkbar/react`  | React 19 components and hooks to build your viewer.                                |
+| `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                                |
+| `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.          |
+| `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.         |
+| `@inkbar/engine` | Optional. Writes annotations and form values into the PDF, and applies redactions. |
 
 The packages are released together and share one version number. The framework packages take `@inkbar/core` as a peer dependency, so your app installs one copy of it.
 
@@ -282,13 +282,13 @@ Wrap the viewport in a root. Put a toolbar of tools, undo and redo above it and 
 
 The viewer fills its parent, so give the parent a height. Without one, the document has no room to scroll. Each control is its own component: drop the ones you don’t need, move them, or add your own buttons. [Toolbars](/docs/guides/toolbars/) covers them.
 
-Inkbar keeps the annotations itself here, with undo and redo. To hold them in your own state, read [Controlled mode](/docs/guides/controlled-mode/). Annotations live in memory until you save them: [Annotations](/docs/guides/annotations/#saving-annotations) shows how to store them as JSON.
+Inkbar keeps the annotations itself here, with undo and redo. To hold them in your own state, read [Controlled mode](/docs/guides/controlled-mode/). Annotations live in memory until you save them. [Saving](/docs/guides/saving/) writes them into the PDF, and [Annotations](/docs/guides/annotations/#saving-annotations) shows how to store them as JSON.
 
 ## Next
 
 * [Restyle the controls](/docs/guides/theming/) with your own tokens and CSS.
 * [Work with annotations](/docs/guides/annotations/) and save them as JSON.
-* [Mark redactions](/docs/guides/redaction/) by hand.
+* [Mark and apply redactions](/docs/guides/redaction/).
 * Read the page for your framework: [Vue](/docs/frameworks/vue/), [React](/docs/frameworks/react/), [Svelte](/docs/frameworks/svelte/) or [Plain DOM](/docs/frameworks/plain-dom/).
 * Compare with the [sandbox](https://sandbox.inkbar.dev), which runs the same setup in each framework.
 
@@ -360,30 +360,31 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 
 ## Controls
 
-| Component                    | What it does                                                                                                   |
-| ---------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                           |
-| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                               |
-| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                        |
-| `InkToolbarButton`           | Your own button, in the toolbar’s arrow-key order. See [Your own buttons](#your-own-buttons)                   |
-| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                  |
-| `InkDownloadButton`          | Downloads the open PDF. `filename` names the file                                                              |
-| `InkPrintButton`             | Prints the open PDF with the browser’s print dialog                                                            |
-| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                    |
-| `InkPageInput`               | The current page number, which the user can type into                                                          |
-| `InkPageCount`               | “of N”, the page count                                                                                         |
-| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                                          |
-| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                                          |
-| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                                   |
-| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](/docs/guides/search/)                             |
-| `InkHighlightMenu`           | Turns on the `highlight` tool, and picks highlight, underline, strikethrough or squiggly and the markup colour |
-| `InkShapeMenu`               | Turns on the `shape` tool, and picks the kind. See [Drawing](/docs/guides/drawing/)                            |
-| `InkLineStyleMenu`           | Line weight, solid or dashed, and arrowheads for the active tool or the selection                              |
-| `InkColorMenu`               | The `border`, `fill` or `textColor` colour, given as `property`                                                |
-| `InkTextStyleMenu`           | A text box’s font, size, colour, bold, italic, underline and alignment                                         |
-| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](/docs/guides/signatures/)              |
-| `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                                                   |
-| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                       |
+| Component                    | What it does                                                                                                            |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                                    |
+| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                                        |
+| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                                 |
+| `InkToolbarButton`           | Your own button, in the toolbar’s arrow-key order. See [Your own buttons](#your-own-buttons)                            |
+| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                           |
+| `InkDownloadButton`          | Downloads the open PDF, with the session’s changes when [saving](/docs/guides/saving/) is on. `filename` names the file |
+| `InkPrintButton`             | Prints the open PDF with the browser’s print dialog                                                                     |
+| `InkApplyRedactions`         | Applies the redaction marks after a confirmation. Needs `engine`. See [Redaction](/docs/guides/redaction/)              |
+| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                             |
+| `InkPageInput`               | The current page number, which the user can type into                                                                   |
+| `InkPageCount`               | “of N”, the page count                                                                                                  |
+| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                                                   |
+| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                                                   |
+| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                                            |
+| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](/docs/guides/search/)                                      |
+| `InkHighlightMenu`           | Turns on the `highlight` tool, and picks highlight, underline, strikethrough or squiggly and the markup colour          |
+| `InkShapeMenu`               | Turns on the `shape` tool, and picks the kind. See [Drawing](/docs/guides/drawing/)                                     |
+| `InkLineStyleMenu`           | Line weight, solid or dashed, and arrowheads for the active tool or the selection                                       |
+| `InkColorMenu`               | The `border`, `fill` or `textColor` colour, given as `property`                                                         |
+| `InkTextStyleMenu`           | A text box’s font, size, colour, bold, italic, underline and alignment                                                  |
+| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](/docs/guides/signatures/)                       |
+| `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                                                            |
+| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                                |
 
 `tool` is `select-text`, `select`, or one of the creation tools you pass to the root (see [Choosing tools](#choosing-tools)). The first two are named Select text and Rectangle select. Pass `label` to change a tool button’s name. It takes a string or a function, so the name can follow your language; see [Translations](/docs/guides/translations/#labels-you-supply). To rename any other button, pass `aria-label` and `title`.
 
@@ -391,7 +392,7 @@ Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one rea
 
 Ctrl or Cmd with Z undoes, and Ctrl or Cmd with Shift and Z, or Ctrl with Y, redoes. Both work on every platform. The keys do what `InkUndo` and `InkRedo` do, from anywhere inside `InkRoot`, toolbars included. In a text field, a select or editable content, they act on that element instead.
 
-Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file’s name, or the last part of its URL, or `document.pdf`. Printing opens the browser’s print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. Until saving into the PDF ships, both give the file as it was opened, without this session’s annotations.
+Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file’s name, or the last part of its URL, or `document.pdf`. Printing opens the browser’s print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. With `@inkbar/engine`, both give the file with this session’s annotations and changed form values written into it: see [Saving](/docs/guides/saving/). Without it, both give the file as it was opened.
 
 ## Choosing tools
 
@@ -573,7 +574,7 @@ A button for a tool you did not pass renders disabled and hidden. `InkHighlightM
 
 ## Icons and labels
 
-Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. The accessible name stays the same either way. This bar goes inside an `InkRoot` whose `tools` include `redactAreaTool()`.
+Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. `InkApplyRedactions` is the exception: it shows its name as text. The accessible name stays the same either way. This bar goes inside an `InkRoot` whose `tools` include `redactAreaTool()`.
 
 * Vue
 
@@ -667,11 +668,11 @@ Install `@inkbar/icons` only if you want its icons on your own buttons. The cont
 
 ## Rendering your own element
 
-`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkDownloadButton`, `InkPrintButton`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkDownloadButton`, `InkPrintButton`, `InkApplyRedactions`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
 
 ## Without a framework
 
-`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createDownloadButton`, `createPrintButton`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createDownloadButton`, `createPrintButton`, `createApplyRedactionsButton`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
 
 ## Styling
 
@@ -735,7 +736,7 @@ In a framework app, `useAnnotations()` gives you the same `add`, `update` and `r
 
 ## Saving annotations
 
-Inkbar cannot write annotations into the PDF yet. `save()` rejects with `EngineUnavailable`. Store the JSON in your own backend instead, and import it the next time the document opens:
+There are two ways to keep annotations. [Saving](/docs/guides/saving/) writes them into the PDF with `@inkbar/engine`. Or store them as JSON in your own backend, and import them the next time the document opens:
 
 ```ts
 const data = doc.exportAnnotations('json')
@@ -757,6 +758,8 @@ In a framework app, `useDocument()` returns `exportAnnotations()` and `importAnn
 ## Annotations from the PDF
 
 Annotations already in the file are drawn by PDF.js on the page canvas. Inkbar adds them to the list with `source: 'pdf'` and `locked: true`, so people can select and read them, but cannot move, resize or delete them. `hasAppearance` says whether the file carries its own appearance for one. PDF.js draws a note only when it does, so Inkbar draws the icon of a note without one. Exports leave out `source`, `locked` and `hasAppearance`. `doc.embedded`, or `useEmbedded()`, counts them by subtype, including subtypes Inkbar does not model.
+
+Annotations that Inkbar itself saved into the file are the exception. They come back as session annotations with their original ids, ready to edit, and `doc.embedded` stops counting them. [Saving](/docs/guides/saving/#opening-a-saved-file) covers when they arrive and which ones stay locked.
 
 ## Annotation changes
 
@@ -2355,7 +2358,7 @@ Links show no box on hover by default, as desktop readers do not. Set `--ink-lin
 
 Inkbar fills the AcroForm fields in a PDF: text, checkboxes, radio buttons, combo boxes, lists, push buttons and signature fields. The form’s own scripts run too, so totals calculate and validation works as the author intended.
 
-Values live in memory. Inkbar does not write them into the PDF yet, and `doc.save()` still rejects with `EngineUnavailable`. To keep what someone typed, store the values yourself: hold them in your own state, or export them as [Gloss](#save-values-as-gloss) and import them the next time the document opens.
+Values live in memory until a save. With `@inkbar/engine`, Download, Print and `doc.save()` write the changed values into the PDF: see [Saving](/docs/guides/saving/). Without it, store the values yourself: hold them in your own state, or export them as [Gloss](#save-values-as-gloss) and import them the next time the document opens.
 
 ## Filling
 
@@ -2922,7 +2925,7 @@ While the file is locked, the status is `{ state: 'locked', incorrect: boolean }
 
 The `error` event, or `onError`, still fires with a `PasswordRequired` error for each failed open, prompt or not.
 
-The typed password is used for that one load and dropped. It does not reach the status, the error, an event or storage.
+Inkbar uses the typed password for that one load and for no other file. It does not reach the status, the error, an event or storage. With [`engine`](/docs/guides/saving/), the open document keeps the password until it closes, because a save opens the file again in the engine.
 
 ## Turning the prompt off
 
@@ -3237,24 +3240,356 @@ The flow has four steps. A failed open reports `PasswordRequired`, and `error.de
 
 # Redaction
 
-> Mark text and areas for redaction by hand.
+> Mark text and areas for redaction, then apply the marks to remove the content under them from the file.
 
-Inkbar lets people mark what should be redacted. It does not yet remove anything from the file.
+Redaction in Inkbar has two steps. People draw marks over what should go, then apply them. Applying removes the content under the marks, cleans parts of the file, checks the result and opens the redacted file in the viewer.
 
 Caution
 
-A redaction mark is a tinted, outlined box over the content. The text under it still renders, anyone can select and copy it, and the PDF itself does not change. Removing the content needs saving into the PDF, which has not shipped. Do not share the original file as if it were redacted.
+A mark on its own removes nothing. The text under it still renders, and anyone can select and copy it. Download, Print and `doc.save()` write a mark into the PDF as a Redact annotation and leave the content under it in the file. Only applying the marks removes that content.
 
-Until then, the marks are a review record: who marked what, where and why. Export them as JSON with the rest of the annotations, or send them to a service that applies redactions on your server.
+Applying needs `@inkbar/engine`. [Saving](/docs/guides/saving/#turn-it-on) shows how to install it and pass it as `engine`. Inkbar loads the engine on the first apply, or on the first save that has changes.
 
-## Marking by hand
+## Drawing marks
 
 Pass `redactAreaTool()` from `@inkbar/core/dom` in `tools` to offer the `redact-area` tool. Its tool button is labelled “Mark for redaction”, and it makes two kinds of mark:
 
 * **Area marks.** Drag a box over any part of the page, including images. With the `select` tool you can then move it and resize it by its corner handles, or from the keyboard.
 * **Text marks.** Select text with the `select-text` tool, switch to `redact-area`, then click inside the selection or press `Enter`. The mark follows the lines of the selection.
 
-Both are `redact` annotations. `interiorColor` is the colour the area will be filled with once redactions are applied. It defaults to `--ink-redact-fill`.
+Both are `redact` annotations. `interiorColor` is the colour of the box that replaces the content once the marks are applied. It defaults to `--ink-redact-fill`.
+
+A mark from your own detector is a `redact` annotation too, added through the same API as any other annotation. Anything your review needs, such as a reason or a score, goes in the annotation’s `custom` data.
+
+## Applying marks
+
+The Apply redactions button applies every mark in the session. It is disabled while no document is ready, without `engine`, and while there is no mark.
+
+A press asks first, in a dialog titled “Apply redactions?”. The dialog says:
+
+* how many marks on how many pages will have the content under them removed,
+* that this cannot be undone,
+* how many other annotations go too, when the marks overlap any,
+* that the signature will stop verifying, when the file is signed,
+* how many marks saved earlier will be applied too, when an encrypted file holds them.
+
+Focus starts on Cancel. If the marks change while the dialog is open, the viewer asks again about the marks there are now. If every mark has gone by then, nothing is applied. When the document closes or another one opens, the dialog closes and nothing is applied.
+
+While the marks are applied, the button says “Applying redactions…” and keeps focus, and another press does nothing. The document takes no input: the pages take no presses or keys and do not scroll, undo and redo are off, an open comment thread closes, and Download and Print are disabled.
+
+Once the apply succeeds:
+
+* Your `onRedacted` callback (the `redacted` event in Vue) receives `{ bytes, result }`: the redacted file and what was done. A host that stores files stores these bytes.
+* The viewer reopens on the redacted file with the same file name, page, zoom, layout, rotation and tool, and the password the file was opened with.
+* The marks are gone and undo history starts again.
+* Download and Print give the redacted file.
+* The message box says how many redactions were applied. It adds a line when the file has hidden layers, and when marks from another program were left in place.
+
+In [controlled mode](/docs/guides/controlled-mode/), Inkbar proposes your list without the marks it applied and the annotations removed with them, with `reason: 'redaction'`, before the redacted file opens. A mark added while the apply runs stays in that list. With the framework packages’ `history` on, your answer to that proposal starts the history; it is not an undo step.
+
+## What applying removes
+
+The engine works on the file as it was opened:
+
+1. It removes the text, image samples and drawing under each mark, and leaves an opaque box in the mark’s fill colour in its place, with the mark’s overlay text if it has one.
+2. It removes every annotation a mark overlaps, Inkbar’s and the file’s own, except masks and other programs’ redaction marks, which stay. Then it writes the other annotations and the changed form values.
+3. It removes the file’s metadata, attached files, scripts, page thumbnails and private application data.
+4. It rewrites the whole file, so no earlier version stays inside it.
+5. It checks the saved bytes under each mark. The check reads the file’s objects, so content hidden under an opaque box counts. When it finds anything, the apply fails and hands nothing over.
+
+Marks Inkbar saved into the file earlier count as marks. In an encrypted file they come back locked, and the engine applies them too. Redact annotations from other programs stay in the file, unapplied, and are counted.
+
+The open document does not change. Its annotations, `doc.changed`, `doc.save()` and `doc.getData()` stay as they were; the viewer shows the redacted file by opening the new bytes.
+
+## Marks the engine refuses
+
+The apply removes text, blanks image samples and cuts paths. A file can also define content once and paint it through a reference, and cutting the shape that paints it would leave that content in the file. So before anything changes, the engine refuses a mark that touches:
+
+* a shape painted with a tiling pattern, such as hatching or a texture,
+* a picture gradient: a mesh or function-based gradient, or a linear or radial gradient whose colour function is not a simple ramp,
+* artwork under a soft mask that holds more than a simple fade, which is how drop shadows and feathered edges are usually drawn,
+* a Type 3 glyph that paints outside the box it declares.
+
+A simple ramp blends from colour to colour in at most eight stretches. A simple fade is a soft mask made of at most four plain rectangles or simple-ramp gradients, which is how gradient transparency is drawn. Content under a simple fade, and linear and radial gradients with a simple ramp, are redacted.
+
+Covering the whole shape does not help. When the engine refuses, nothing is changed, the viewer selects the refused marks, and the message box says how many marks cover content that cannot be removed. Move or delete those marks and apply again. When only marks saved earlier in an encrypted file caused the refusal, the viewer selects nothing and the message says one mark.
+
+## Limits
+
+Read these before you rely on a redacted file:
+
+* Inkbar does not clean hidden layers. `result.hiddenLayers` says when the file has them, and the viewer’s message says so too.
+* The removed words may also appear where Inkbar does not look: bookmark titles, comments on other annotations, form values, and alternate text for screen readers.
+* Inkbar removes what lies under a mark. It does not find copies of that content elsewhere in the file: a second use of the same graphic that is cropped, covered or on another page, or a pattern or gradient that another page also uses.
+* A scanned page is one image. A mark removes the pixels under it, and there is no text to remove. OCR text layers are removed like any text.
+* Scripts are removed, so forms stop calculating.
+* A signed file’s signature stops verifying.
+* The engine refuses a mark over patterned fills, picture gradients, soft-masked artwork that holds more than a simple fade, and out-of-box Type 3 glyphs, even when the mark covers the whole shape.
+* An Inkbar loupe that comes back locked, in an encrypted file or after another program edited it, keeps a copy of its page made before the apply. When that page has a mark and no mark overlaps the loupe, the check reads the copy, finds what lay under the mark, and the apply fails. Draw a mark over the loupe as well, and the apply removes it. For a loupe another program edited, you can also delete it in that program. For an encrypted file, you can also save a copy without the password in another program and redact that copy: Inkbar’s loupes come back editable there, unless that program changed them, and the apply rewrites them.
+* Text set at an angle close to a mark’s edge can make the check fail, though the apply removed everything under the mark. Move the mark a little further from that text.
+* The check also fails, and the reader sees “Some content could not be removed”, for an image that has both a soft mask and a separate stencil mask. It can fail for a very low-quality JPEG.
+* A crafted file can make the apply and its check take a long time.
+
+The check after an apply is the engine reading the file it just wrote. It tells you what it found under each mark, within the limits above and those of [`checkRedaction`](#checking-a-file-from-elsewhere). Do not describe a file as safe because the apply succeeded.
+
+## In each front end
+
+`upload` in these examples stands for your own code that stores the redacted bytes.
+
+### Plain DOM
+
+`createApplyRedactionsButton(viewer)` is the button. `viewer.applyRedactions()` runs the same action from code and resolves with `result`, or with `null` when the reader cancelled, nothing was applied or the apply failed.
+
+```ts
+import {
+  createApplyRedactionsButton,
+  createToolbar,
+  createToolButton,
+  createViewer,
+  redactAreaTool,
+} from '@inkbar/core/dom'
+
+
+const viewer = createViewer(el, {
+  source,
+  assets,
+  tools: [redactAreaTool()],
+  engine: () => import('@inkbar/engine'),
+  onRedacted: ({ bytes }) => upload(bytes),
+})
+
+
+const bar = createToolbar()
+bar.append(createToolButton(viewer, 'redact-area'), createApplyRedactionsButton(viewer))
+viewer.element.prepend(bar)
+```
+
+### Vue
+
+```vue
+<script setup lang="ts">
+import { redactAreaTool } from '@inkbar/core/dom'
+import {
+  InkApplyRedactions,
+  InkRoot,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/vue'
+import { assets } from 'virtual:inkbar-assets'
+
+
+defineProps<{ file: File }>()
+
+
+const tools = [redactAreaTool()]
+const engine = () => import('@inkbar/engine')
+</script>
+
+
+<template>
+  <InkRoot
+    :src="file"
+    :assets="assets"
+    :tools="tools"
+    :engine="engine"
+    @redacted="({ bytes }) => upload(bytes)"
+  >
+    <InkToolbar>
+      <InkToolButton tool="redact-area" />
+      <InkApplyRedactions />
+    </InkToolbar>
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+A `redacted` listener that throws goes to Vue’s own error handling (`app.config.errorHandler` or `onErrorCaptured`), not to the `error` event, and the redacted file still opens.
+
+### React
+
+```tsx
+import { redactAreaTool } from '@inkbar/core/dom'
+import {
+  InkApplyRedactions,
+  InkRoot,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/react'
+import { assets } from 'virtual:inkbar-assets'
+
+
+const tools = [redactAreaTool()]
+const engine = () => import('@inkbar/engine')
+
+
+export function Viewer({ file }: { file: File }) {
+  return (
+    <InkRoot
+      src={file}
+      assets={assets}
+      tools={tools}
+      engine={engine}
+      onRedacted={({ bytes }) => upload(bytes)}
+    >
+      <InkToolbar>
+        <InkToolButton tool="redact-area" />
+        <InkApplyRedactions />
+      </InkToolbar>
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+### Svelte
+
+```svelte
+<script lang="ts">
+  import { redactAreaTool } from '@inkbar/core/dom'
+  import {
+    InkApplyRedactions,
+    InkRoot,
+    InkToolbar,
+    InkToolButton,
+    InkViewport,
+  } from '@inkbar/svelte'
+  import { assets } from 'virtual:inkbar-assets'
+
+
+  let { file }: { file: File } = $props()
+
+
+  const tools = [redactAreaTool()]
+  const engine = () => import('@inkbar/engine')
+</script>
+
+
+<InkRoot src={file} {assets} {tools} {engine} onRedacted={({ bytes }) => upload(bytes)}>
+  <InkToolbar>
+    <InkToolButton tool="redact-area" />
+    <InkApplyRedactions />
+  </InkToolbar>
+  <InkViewport />
+</InkRoot>
+```
+
+In React and Svelte, when `onRedacted` throws, `onError` hears a `RedactionFailed` error with `details.callback` set to `'onRedacted'`, and the redacted file still opens.
+
+### After the redacted file opens
+
+In Vue, React and Svelte, `InkRoot` shows the redacted bytes in place of `src`, and `src` stays as you passed it. A new `src` opens as usual: a different `key`, or for a source without one, a different URL string, `File` or bytes object. Passing the stored bytes back under the same `key` reopens nothing.
+
+### Your own confirmation
+
+Pass `redactionConfirm` to `createViewer` or `InkRoot` (`redaction-confirm` in Vue) to ask your own way. It receives a preview and resolves `true` to apply. `false` applies without asking.
+
+```ts
+const viewer = createViewer(el, {
+  source,
+  assets,
+  tools: [redactAreaTool()],
+  engine: () => import('@inkbar/engine'),
+  redactionConfirm: async (preview) =>
+    window.confirm(
+      `Remove the content under ${preview.marks} marks? This cannot be undone.`
+    ),
+})
+```
+
+The preview holds `marks`, `pages`, `overlapped` (the other annotations the marks overlap), `signed` and, in an encrypted file, `lockedMarks`.
+
+### Your own button
+
+`useRedaction()` gives the same action for a control of your own, inside `InkRoot`. `canRedact` and `busy` say when to disable it, and `apply()` resolves with `result`, or with `null` when the reader cancelled, nothing was applied or the apply failed. It never rejects for a failure the viewer has already shown. In Vue `canRedact` and `busy` are refs, in React they are booleans, and in Svelte you read them through the object `useRedaction()` returns.
+
+```tsx
+import { useRedaction } from '@inkbar/react'
+
+
+function RedactButton() {
+  const redaction = useRedaction()
+  return (
+    <button
+      type="button"
+      disabled={!redaction.canRedact || redaction.busy}
+      onClick={() => void redaction.apply()}
+    >
+      Redact
+    </button>
+  )
+}
+```
+
+`InkApplyRedactions` also takes your own content and your own element, as the other [toolbar controls](/docs/guides/toolbars/#your-own-buttons) do.
+
+### From the document
+
+Without a viewer, `doc.redactionPreview()` gives the counts a confirmation needs without loading the engine, and `doc.applyRedactions()` applies every mark and resolves with `{ bytes, result }`. Open the bytes to show the redacted file.
+
+```ts
+const preview = doc.redactionPreview()
+if (await ask(preview)) {
+  const { bytes, result } = await doc.applyRedactions()
+  await upload(bytes)
+}
+```
+
+An apply never overlaps a save, and a second call while an apply runs gets the same promise.
+
+## What `result` holds
+
+* `marks` and `pages`: the marks applied and the pages they were on. A mark with no area, or wholly off its page, is skipped.
+* `removed.session`: the ids of the session annotations removed with the content. `removed.file`: how many of the file’s own annotations went, pop-up windows included.
+* `foreignMarks`: other programs’ Redact annotations, left unapplied. `ownLockedMarks`: Inkbar’s earlier marks applied in an encrypted file.
+* `fieldsSkipped`: the names of changed form fields that were not written, because a mark removed their widgets.
+* `sanitised`: what was removed from the file.
+* `hiddenLayers` and `signed`: whether the file has hidden layers, and whether it held a digital signature.
+* `findings`: what the check found under each mark. Findings hold places and verdicts, never the file’s text.
+
+## When applying fails
+
+When the apply fails, nothing is handed over and the open document stays as it was. The viewer says why in its message box, and your error handler (`onError`, or the `error` event in Vue) hears one of these errors:
+
+* `EngineUnavailable`: there is no `engine`.
+
+* `NothingToRedact`: there is no mark, or the engine applied none because every mark has no area or lies wholly off its page.
+
+* `RedactionFailed`: the engine could not finish. `details.stage` says where:
+
+  * `'engine'` when the engine could not be loaded or started, as when offline.
+  * `'apply'` when the engine refused the marks, or could not apply them or write the rest. `details.page` and `details.annotation` name the page and the annotation when one was the cause.
+  * `'verify'` when the check could not run or did not find every mark’s place clean. `details.regions` lists the page and rectangle of each place it did not find clean, and `details.page` names a page the check could not read.
+
+A refusal has `details.reason: 'unremovable-content'`. `details.annotations` lists the ids of every refused mark, `details.annotation` holds the first, `details.kinds` says what was found (`'pattern'`, `'shading'`, `'mask-group'` or `'glyph'`) and `details.page` names the first page. When the engine could not look under the marks, `details.reason` is `'could-not-inspect'`.
+
+The words in the button, the dialog and the message box are in the `viewer` group of messages, from `applyRedactions` to `redactForeign`. [Translations](/docs/guides/translations/) lists them and shows how to change them.
+
+## Checking a file from elsewhere
+
+`checkRedaction` from `@inkbar/engine` reports what it finds under redactions in any PDF. Without `regions`, it looks for candidates itself: Redact annotations, filled boxes in the page content, and Square, Highlight and Stamp annotations drawn as one opaque filled box. That is the use for a file Inkbar did not just produce.
+
+A crafted file can make the check take a long time, so run it on an engine of its own, in its own worker (the default in a browser), with a timeout, and destroy that engine when the timeout fires:
+
+```ts
+import { createEngine } from '@inkbar/engine'
+
+
+const engine = await createEngine()
+const timeout = setTimeout(() => void engine.destroy(), 30_000)
+try {
+  const { candidates, file } = await engine.checkRedaction(bytes)
+  const flagged = candidates.filter((candidate) => candidate.verdict !== 'clean')
+} finally {
+  clearTimeout(timeout)
+  await engine.destroy()
+}
+```
+
+Each candidate gives its `page` and `rect`, its `kind`, whether `text`, `image` or `drawing` is present under it, and a `verdict`: `unapplied` for a Redact annotation with anything under it, `content-remains` for any other candidate with anything under it, and `clean` when the check found nothing under it. `file` counts the earlier versions and attached files the file keeps, and says whether it has metadata, scripts, hidden layers or a digital signature. Findings never hold text from the file.
+
+`clean` means the check found nothing under that place. Without `regions`, the check reports only the redactions it recognises, and a filled box with nothing under it is `clean` whether it is a redaction or a graphic. A `check-failed` error means the check could not inspect a page or the file: treat it as a failed check, never as a finding of nothing. The [`@inkbar/engine` README](https://github.com/inkbar/inkbar/tree/main/packages/engine#checking-a-redaction) has the rules, the thresholds and the full list of limits.
 
 # Controlled mode
 
@@ -3461,6 +3796,10 @@ const viewer = createViewer(el, {
 ```
 
 To refuse a change, leave it out of the list you push back. Undo and redo do nothing in controlled mode: your app owns the list, so it owns undo too.
+
+## Files Inkbar saved
+
+When a file holds annotations that Inkbar [saved into it](/docs/guides/saving/#opening-a-saved-file), Inkbar proposes them once after the document opens: your list with the saved annotations added, with the reason `'file'`. Apply that proposal as you apply any other. Until your list holds them, the viewer does not show them, and each save still keeps them in the file.
 
 ## Form fields
 
@@ -4249,6 +4588,166 @@ export const review = definePlugin('review', (plugin) => {
 
 Each is an `InkError` from `@inkbar/core`, with the code on `error.code`.
 
+# Saving
+
+> Write annotations and form values into the PDF with @inkbar/engine, so Download, Print and doc.save() give the file as it looks on screen.
+
+Inkbar writes a session’s annotations and changed form values into the PDF. Download, Print and `doc.save()` then give a file that looks as it does on screen, and other programs can read what was added. Open that file in Inkbar again and its annotations come back ready to edit.
+
+Saving is opt-in. It needs `@inkbar/engine`, a build of PDFium that runs in the browser. The same engine [applies redactions](/docs/guides/redaction/). Without it, Download and Print give the file as it was opened, and redaction marks cannot be applied.
+
+## Turn it on
+
+Install the engine:
+
+```sh
+pnpm add @inkbar/engine
+```
+
+Then pass a function that imports it as `engine`:
+
+* Vue
+
+  ```vue
+  <script setup lang="ts">
+  const engine = () => import('@inkbar/engine')
+  </script>
+
+
+  <template>
+    <InkRoot :src="url" :assets="assets" :engine="engine">
+      <!-- … -->
+    </InkRoot>
+  </template>
+  ```
+
+* React
+
+  ```tsx
+  const engine = () => import('@inkbar/engine')
+
+
+  <InkRoot src={url} assets={assets} engine={engine}>
+    {/* … */}
+  </InkRoot>
+  ```
+
+* Svelte
+
+  ```svelte
+  <script lang="ts">
+    const engine = () => import('@inkbar/engine')
+  </script>
+
+
+  <InkRoot src={url} {assets} {engine}>
+    <!-- … -->
+  </InkRoot>
+  ```
+
+* Plain DOM
+
+  ```ts
+  const viewer = createViewer(el, {
+    source,
+    assets,
+    engine: () => import('@inkbar/engine'),
+  })
+  ```
+
+The download and print buttons, Ctrl or Cmd+S and Ctrl or Cmd+P then hand over the file with the session’s changes written into it. `doc.save()` resolves with the same bytes.
+
+Inkbar loads the engine on the first save that has changes, or the first apply of redactions. A visit that does neither never loads it, and a save with no changes gives the bytes the file was opened from. The engine’s binary is 2.9 MB gzipped. A bundler picks up its wasm and worker from the package, so there is nothing to set up. To serve those files from a path of your own, see the [`@inkbar/engine` README](https://github.com/inkbar/inkbar/tree/main/packages/engine#serving-the-files).
+
+Inkbar reads `engine` when a document opens. Without it, `doc.save()` rejects with `EngineUnavailable` once there are changes. With or without it, `doc.getData()` gives the bytes the file was opened from.
+
+`doc.changed` is a readable that is true while the session differs from the file: its annotations from those it opened with, or a form value from the file’s. The file’s values are the ones the form holds when `ready` resolves. A value you set after that is a change, and so is one you pass at open.
+
+### Opening documents yourself
+
+A host that calls `openDocument` itself passes one more option, `pictures`. In a browser, `savePictures(document)` from `@inkbar/core/dom` supplies it. `createViewer` and the framework packages pass it for you.
+
+```ts
+import { openDocument } from '@inkbar/core'
+import { savePictures } from '@inkbar/core/dom'
+
+
+const doc = await openDocument(file, {
+  assets,
+  engine: () => import('@inkbar/engine'),
+  pictures: savePictures(document),
+})
+```
+
+`pictures` gives a save three things from the browser: a picture of each line of text the standard fonts cannot set, a PNG copy of an image that is neither PNG nor JPEG, and the text widths the screen uses. Without it, a save lays text out with the standard fonts’ own widths, so a line can break at a different word in the file than on screen. A text box with Chinese, Arabic or emoji text then fails the save with `SaveFailed`, and so does a stamp whose image is WebP.
+
+## What goes into the file
+
+* Each annotation becomes a standard PDF annotation that other programs can list, select and delete. A highlight is a Highlight, a note a Text annotation, a text box a FreeText and a drawing an Ink annotation. A loupe or a mask becomes a Stamp. A comment goes in the annotation’s contents, and replies are saved as replies.
+* Each annotation’s look is drawn from the same description the screen uses, so it matches what you see in Inkbar, apart from [the differences below](#where-the-saved-file-differs-from-the-screen).
+* Changed form values. Fields you did not change keep the look they came with.
+* A redaction mark becomes a Redact annotation. A save does not apply it.
+
+Caution
+
+Saving does not redact. The text and images under a redaction mark are still in the saved file, and anyone can copy them. Applying the marks removes them: see [Redaction](/docs/guides/redaction/).
+
+An encrypted file keeps its password. With `engine`, the open document holds the password until it closes, because a save opens the file again in the engine.
+
+### Signed files
+
+A file with a digital signature is saved by appending the changes after the signed bytes, so the signature still verifies. Other viewers report that the file changed after signing. Any other file is rewritten.
+
+Appending keeps the earlier versions of a signed file inside it. If you delete or edit an annotation that an earlier Inkbar save wrote into a signed file, a reader can still recover the old one from the earlier version. A rewrite drops it.
+
+### Loupes
+
+A saved loupe holds a copy of its whole page’s content, fonts and images included, and shows the part under the lens. If you redact that page later in another tool, the original content stays in the file inside the loupe. When Inkbar [applies redactions](/docs/guides/redaction/), every loupe it writes gets a copy of the redacted page. A loupe that stays locked keeps its old copy, and the apply then fails ([the limits](/docs/guides/redaction/#limits) say what to do). On a page with large images the copy also adds to the file’s size.
+
+## Opening a saved file
+
+Annotations Inkbar saved come back as session annotations, with the same ids, ready to edit. Saving again replaces them, so each one is in the file once. They are not an undo step and do not count as a change.
+
+They arrive a moment after `ready`, as one `replace` change with `reason: 'file'`. Until then the file’s copy shows, locked. A signature saved on a signature field comes back on the field, and the field shows as signed.
+
+In [controlled mode](/docs/guides/controlled-mode/), `onChange` proposes them once, with `reason: 'file'`: your list with the saved annotations added. Apply that proposal as you apply any other, by pushing the list back. Until you push a list, the viewer does not show the saved annotations, and each save still keeps them in the file. The framework packages’ undo history takes your answer as its starting point, so undo does not remove them.
+
+Some annotations stay locked:
+
+* Annotations made by other programs.
+* An annotation Inkbar saved that another program has since moved, edited, replied to or given a pop-up window. Inkbar’s own replies to a note that stays locked stay locked with it.
+* Inkbar’s own annotations in an encrypted file.
+
+## Where the saved file differs from the screen
+
+* Text with characters outside the standard fonts, such as Chinese, Arabic or emoji, is saved as a picture of the line, at four pixels per point. It blurs at high zoom and cannot be selected. The annotation’s contents keep the text.
+* The standard fonts (Helvetica, Times and Courier) are not embedded, so each viewer draws them with its own equivalent. Widths match, and letter shapes can differ slightly.
+* A note’s drop shadow is not saved.
+* A loupe in the saved file magnifies the page’s content only. It leaves out the annotations and form fields under it.
+* Form fields look as the engine draws them, which can differ from how Inkbar draws them on screen.
+* Another viewer may redraw an annotation its user edits there.
+* The file grows a little each time it is saved and opened again: about 1.5 KB for a file with eighteen annotations. Saving several times in one session does not add to it.
+
+XFA forms are not supported.
+
+## When a save fails
+
+When the engine cannot be loaded or cannot write the file, `doc.save()` rejects with `SaveFailed`:
+
+* `details.stage` is `'engine'` when the engine could not be loaded or started, as when offline.
+* `details.stage` is `'write'` when the engine could not open or write this file.
+* `details.annotation` holds an annotation’s id when that annotation is the cause.
+
+Download and Print then hand over nothing. The viewer says why in its message box, and your error handler (`onError`, or the `error` event in Vue) hears the error.
+
+While a copy is being written, the download and print buttons show they are busy, and another press does nothing. Inkbar keeps the written copy until the next change, so Print after Download does not write the file twice.
+
+The three messages are `saveFailed`, `saveUnavailable` and `preparingFile`, in the `viewer` group. [Translations](/docs/guides/translations/) shows how to change them.
+
+## Without the engine
+
+You can still keep a session without writing into the PDF. Store the annotations and form values as JSON in your own backend and import them on the next open: [Annotations](/docs/guides/annotations/#saving-annotations) and [Forms](/docs/guides/forms/#save-values-as-gloss) show how.
+
 # Storage
 
 > Choose where Inkbar keeps saved signatures, sidebar widths and plugin settings between visits, from memory to localStorage to your own server.
@@ -4866,12 +5365,32 @@ Every message in the English set, by group. The table leaves out `lang`, which n
 
 ### `viewer`
 
-| Key                            | English                            |
-| ------------------------------ | ---------------------------------- |
-| `viewer.document`              | Document                           |
-| `viewer.loading`               | Loading document…                  |
-| `viewer.openFailed`            | This document could not be opened. |
-| `viewer.pageFailed` (function) | Page {page} could not be shown.    |
+| Key                                   | English                                                                                                                                                                                    |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `viewer.document`                     | Document                                                                                                                                                                                   |
+| `viewer.loading`                      | Loading document…                                                                                                                                                                          |
+| `viewer.openFailed`                   | This document could not be opened.                                                                                                                                                         |
+| `viewer.pageFailed` (function)        | Page {page} could not be shown.                                                                                                                                                            |
+| `viewer.saveFailed`                   | Your changes could not be written into this file.                                                                                                                                          |
+| `viewer.saveUnavailable`              | Saving is not available right now. Check your connection and try again.                                                                                                                    |
+| `viewer.preparingFile`                | Preparing your file…                                                                                                                                                                       |
+| `viewer.applyRedactions`              | Apply redactions                                                                                                                                                                           |
+| `viewer.redactTitle`                  | Apply redactions?                                                                                                                                                                          |
+| `viewer.redactSummary` (function)     | This removes the content under {marks, plural, one {{marks} mark} other {{marks} marks}} on {pages, plural, one {{pages} page} other {{pages} pages}}.                                     |
+| `viewer.redactLocked` (function)      | one: {count} mark saved in this file earlier will be applied too. \| other: {count} marks saved in this file earlier will be applied too.                                                  |
+| `viewer.redactPermanent`              | It cannot be undone.                                                                                                                                                                       |
+| `viewer.redactOverlapped` (function)  | one: {count} other annotation under the marks will be removed too. \| other: {count} other annotations under the marks will be removed too.                                                |
+| `viewer.redactSigned`                 | This file is signed. Its signature will stop verifying.                                                                                                                                    |
+| `viewer.redactConfirm`                | Apply                                                                                                                                                                                      |
+| `viewer.redactCancel`                 | Cancel                                                                                                                                                                                     |
+| `viewer.redacting`                    | Applying redactions…                                                                                                                                                                       |
+| `viewer.redactFailed`                 | The redactions could not be applied. Nothing was changed.                                                                                                                                  |
+| `viewer.redactUnremovable` (function) | one: {count} mark covers content that cannot be removed. Move or delete it and try again. \| other: {count} marks cover content that cannot be removed. Move or delete them and try again. |
+| `viewer.redactUnverified`             | Some content could not be removed, so nothing was changed.                                                                                                                                 |
+| `viewer.redactUnavailable`            | Redaction is not available right now. Check your connection and try again.                                                                                                                 |
+| `viewer.redactDone` (function)        | one: {marks} redaction applied. \| other: {marks} redactions applied.                                                                                                                      |
+| `viewer.redactHiddenLayers`           | This file has hidden layers. Their content was not removed.                                                                                                                                |
+| `viewer.redactForeign` (function)     | one: {count} redaction mark from another program was left in place. \| other: {count} redaction marks from another program were left in place.                                             |
 
 ### `toolbar`
 
@@ -5727,7 +6246,7 @@ Buttons show an icon from `@inkbar/icons`; replace their children with your own 
 
 `createToolbar` gives one Tab stop to all its buttons, with arrow keys between them. A button you append joins that order, so your own buttons need no wrapper. An input, select or textarea you add keeps its arrow keys and its own `tabindex`: it is a Tab stop unless you give it `tabindex="-1"`.
 
-`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `passwordPrompt`, `messages`, `locale`, `defaults`, `history`, `annotations`, `fields`, `plugins`, `onReady` and `onError`. Set `threads` to `false` to leave threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. `viewer.setMessages(set)` and `viewer.setLocale(tag)` switch language without a remount, and `viewer.messages` is the set in use; see [Translations](/docs/guides/translations/). `viewer.activated` is a readable too: the id of the annotation the user last clicked or activated with Enter or Space, or `null`. `viewer.setActivated(id)` activates one from your code without calling `onActivate`. It ignores an id the document doesn’t have, and `setActivated(null)` clears it. A password you pass to `open` replaces the `createViewer` one for that load. A locked file opens a password dialog unless you pass `passwordPrompt: false`; see [Locked files](/docs/guides/locked-files/).
+`createViewer` takes the [`mountViewer` options](#your-own-chrome) except `container` and `document`, plus `source` and `assets` (both required), `password`, `passwordPrompt`, `engine`, `messages`, `locale`, `defaults`, `history`, `annotations`, `fields`, `plugins`, `redactionConfirm`, `onRedacted`, `onReady` and `onError`. `engine` turns on [saving into the PDF](/docs/guides/saving/) and [applying redactions](/docs/guides/redaction/), which `redactionConfirm` and `onRedacted` go with. Set `threads` to `false` to leave threads out. `viewer.status`, `viewer.document`, `viewer.engine`, `viewer.viewport` and `viewer.tools` are readables; the last two change when the engine rebuilds. `viewer.setMessages(set)` and `viewer.setLocale(tag)` switch language without a remount, and `viewer.messages` is the set in use; see [Translations](/docs/guides/translations/). `viewer.activated` is a readable too: the id of the annotation the user last clicked or activated with Enter or Space, or `null`. `viewer.setActivated(id)` activates one from your code without calling `onActivate`. It ignores an id the document doesn’t have, and `setActivated(null)` clears it. A password you pass to `open` replaces the `createViewer` one for that load. A locked file opens a password dialog unless you pass `passwordPrompt: false`; see [Locked files](/docs/guides/locked-files/).
 
 `plugins` takes plugins from `definePlugin`, set up once for the viewer’s life. Their tools join the viewer’s without `tools`. Place a plugin command with `createCommandButton(viewer, 'review.suggest')` and a plugin tool with `createToolButton(viewer, 'review.box')`. `viewer.commands.get(id)` returns a command for a control of your own. [Plugins](/docs/guides/plugins/) has the details.
 

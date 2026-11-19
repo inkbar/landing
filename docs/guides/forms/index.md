@@ -6,7 +6,7 @@ Fill AcroForm fields in the viewer, read and set values from code, handle what a
 
 Inkbar fills the AcroForm fields in a PDF: text, checkboxes, radio buttons, combo boxes, lists, push buttons and signature fields. The form's own scripts run too, so totals calculate and validation works as the author intended.
 
-Values live in memory. Inkbar does not write them into the PDF yet, and `doc.save()` still rejects with `EngineUnavailable`. To keep what someone typed, store the values yourself: hold them in your own state, or export them as [Gloss](#save-values-as-gloss) and import them the next time the document opens.
+Values live in memory until a save. With `@inkbar/engine`, Download, Print and `doc.save()` write the changed values into the PDF: see [Saving](https://inkbar.dev/docs/guides/saving.md). Without it, store the values yourself: hold them in your own state, or export them as [Gloss](#save-values-as-gloss) and import them the next time the document opens.
 
 ## Filling
 

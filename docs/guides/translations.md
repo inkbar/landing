@@ -327,6 +327,26 @@ Every message in the English set, by group. The table leaves out `lang`, which n
 | `viewer.loading` | Loading document… |
 | `viewer.openFailed` | This document could not be opened. |
 | `viewer.pageFailed` (function) | Page {page} could not be shown. |
+| `viewer.saveFailed` | Your changes could not be written into this file. |
+| `viewer.saveUnavailable` | Saving is not available right now. Check your connection and try again. |
+| `viewer.preparingFile` | Preparing your file… |
+| `viewer.applyRedactions` | Apply redactions |
+| `viewer.redactTitle` | Apply redactions? |
+| `viewer.redactSummary` (function) | This removes the content under {marks, plural, one {{marks} mark} other {{marks} marks}} on {pages, plural, one {{pages} page} other {{pages} pages}}. |
+| `viewer.redactLocked` (function) | one: {count} mark saved in this file earlier will be applied too. \| other: {count} marks saved in this file earlier will be applied too. |
+| `viewer.redactPermanent` | It cannot be undone. |
+| `viewer.redactOverlapped` (function) | one: {count} other annotation under the marks will be removed too. \| other: {count} other annotations under the marks will be removed too. |
+| `viewer.redactSigned` | This file is signed. Its signature will stop verifying. |
+| `viewer.redactConfirm` | Apply |
+| `viewer.redactCancel` | Cancel |
+| `viewer.redacting` | Applying redactions… |
+| `viewer.redactFailed` | The redactions could not be applied. Nothing was changed. |
+| `viewer.redactUnremovable` (function) | one: {count} mark covers content that cannot be removed. Move or delete it and try again. \| other: {count} marks cover content that cannot be removed. Move or delete them and try again. |
+| `viewer.redactUnverified` | Some content could not be removed, so nothing was changed. |
+| `viewer.redactUnavailable` | Redaction is not available right now. Check your connection and try again. |
+| `viewer.redactDone` (function) | one: {marks} redaction applied. \| other: {marks} redactions applied. |
+| `viewer.redactHiddenLayers` | This file has hidden layers. Their content was not removed. |
+| `viewer.redactForeign` (function) | one: {count} redaction mark from another program was left in place. \| other: {count} redaction marks from another program were left in place. |
 
 ### `toolbar`
 
