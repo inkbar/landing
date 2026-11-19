@@ -7,7 +7,7 @@ import { TabItem, Tabs } from '@astrojs/starlight/components'
 
 Inkbar writes a session's annotations and changed form values into the PDF. Download, Print and `doc.save()` then give a file that looks as it does on screen, and other programs can read what was added. Open that file in Inkbar again and its annotations come back ready to edit.
 
-Saving is opt-in. It needs `@inkbar/engine`, a build of PDFium that runs in the browser. Without it, Download and Print give the file as it was opened.
+Saving is opt-in. It needs `@inkbar/engine`, a build of PDFium that runs in the browser. The same engine [applies redactions](/docs/guides/redaction/). Without it, Download and Print give the file as it was opened, and redaction marks cannot be applied.
 
 ## Turn it on
 
@@ -74,7 +74,7 @@ const viewer = createViewer(el, {
 
 The download and print buttons, Ctrl or Cmd+S and Ctrl or Cmd+P then hand over the file with the session's changes written into it. `doc.save()` resolves with the same bytes.
 
-Inkbar loads the engine on the first save that has changes. A visit that changes nothing never loads it, and a save with no changes gives the bytes the file was opened from. The engine's binary is 2.6 MB gzipped. A bundler picks up its wasm and worker from the package, so there is nothing to set up. To serve those files from a path of your own, see the [`@inkbar/engine` README](https://github.com/inkbar/inkbar/tree/main/packages/engine#serving-the-files).
+Inkbar loads the engine on the first save that has changes, or the first apply of redactions. A visit that does neither never loads it, and a save with no changes gives the bytes the file was opened from. The engine's binary is 2.9 MB gzipped. A bundler picks up its wasm and worker from the package, so there is nothing to set up. To serve those files from a path of your own, see the [`@inkbar/engine` README](https://github.com/inkbar/inkbar/tree/main/packages/engine#serving-the-files).
 
 Inkbar reads `engine` when a document opens. Without it, `doc.save()` rejects with `EngineUnavailable` once there are changes. With or without it, `doc.getData()` gives the bytes the file was opened from.
 
@@ -102,10 +102,10 @@ const doc = await openDocument(file, {
 - Each annotation becomes a standard PDF annotation that other programs can list, select and delete. A highlight is a Highlight, a note a Text annotation, a text box a FreeText and a drawing an Ink annotation. A loupe or a mask becomes a Stamp. A comment goes in the annotation's contents, and replies are saved as replies.
 - Each annotation's look is drawn from the same description the screen uses, so it matches what you see in Inkbar, apart from [the differences below](#where-the-saved-file-differs-from-the-screen).
 - Changed form values. Fields you did not change keep the look they came with.
-- A redaction mark becomes a Redact annotation. Inkbar does not apply it.
+- A redaction mark becomes a Redact annotation. A save does not apply it.
 
 :::caution
-Saving does not redact. The text and images under a redaction mark are still in the saved file, and anyone can copy them. [Redaction](/docs/guides/redaction/) explains what the marks are for.
+Saving does not redact. The text and images under a redaction mark are still in the saved file, and anyone can copy them. Applying the marks removes them: see [Redaction](/docs/guides/redaction/).
 :::
 
 An encrypted file keeps its password. With `engine`, the open document holds the password until it closes, because a save opens the file again in the engine.
@@ -118,7 +118,7 @@ Appending keeps the earlier versions of a signed file inside it. If you delete o
 
 ### Loupes
 
-A saved loupe holds a copy of its whole page's content, fonts and images included, and shows the part under the lens. If you redact that page later in another tool, the original content stays in the file inside the loupe. On a page with large images the copy also adds to the file's size.
+A saved loupe holds a copy of its whole page's content, fonts and images included, and shows the part under the lens. If you redact that page later in another tool, the original content stays in the file inside the loupe. When Inkbar [applies redactions](/docs/guides/redaction/), every loupe it writes gets a copy of the redacted page. A loupe that stays locked keeps its old copy, and the apply then fails ([the limits](/docs/guides/redaction/#limits) say what to do). On a page with large images the copy also adds to the file's size.
 
 ## Opening a saved file
 

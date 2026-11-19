@@ -42,6 +42,108 @@
     "english": "Preparing your file…"
   },
   {
+    "group": "viewer",
+    "key": "applyRedactions",
+    "kind": "text",
+    "english": "Apply redactions"
+  },
+  {
+    "group": "viewer",
+    "key": "redactTitle",
+    "kind": "text",
+    "english": "Apply redactions?"
+  },
+  {
+    "group": "viewer",
+    "key": "redactSummary",
+    "kind": "function",
+    "english": "This removes the content under {marks, plural, one {{marks} mark} other {{marks} marks}} on {pages, plural, one {{pages} page} other {{pages} pages}}."
+  },
+  {
+    "group": "viewer",
+    "key": "redactLocked",
+    "kind": "function",
+    "english": "one: {count} mark saved in this file earlier will be applied too. | other: {count} marks saved in this file earlier will be applied too."
+  },
+  {
+    "group": "viewer",
+    "key": "redactPermanent",
+    "kind": "text",
+    "english": "It cannot be undone."
+  },
+  {
+    "group": "viewer",
+    "key": "redactOverlapped",
+    "kind": "function",
+    "english": "one: {count} other annotation under the marks will be removed too. | other: {count} other annotations under the marks will be removed too."
+  },
+  {
+    "group": "viewer",
+    "key": "redactSigned",
+    "kind": "text",
+    "english": "This file is signed. Its signature will stop verifying."
+  },
+  {
+    "group": "viewer",
+    "key": "redactConfirm",
+    "kind": "text",
+    "english": "Apply"
+  },
+  {
+    "group": "viewer",
+    "key": "redactCancel",
+    "kind": "text",
+    "english": "Cancel"
+  },
+  {
+    "group": "viewer",
+    "key": "redacting",
+    "kind": "text",
+    "english": "Applying redactions…"
+  },
+  {
+    "group": "viewer",
+    "key": "redactFailed",
+    "kind": "text",
+    "english": "The redactions could not be applied. Nothing was changed."
+  },
+  {
+    "group": "viewer",
+    "key": "redactUnremovable",
+    "kind": "function",
+    "english": "one: {count} mark covers content that cannot be removed. Move or delete it and try again. | other: {count} marks cover content that cannot be removed. Move or delete them and try again."
+  },
+  {
+    "group": "viewer",
+    "key": "redactUnverified",
+    "kind": "text",
+    "english": "Some content could not be removed, so nothing was changed."
+  },
+  {
+    "group": "viewer",
+    "key": "redactUnavailable",
+    "kind": "text",
+    "english": "Redaction is not available right now. Check your connection and try again."
+  },
+  {
+    "group": "viewer",
+    "key": "redactDone",
+    "kind": "function",
+    "english": "one: {marks} redaction applied. | other: {marks} redactions applied."
+  },
+  {
+    "group": "viewer",
+    "key": "redactHiddenLayers",
+    "kind": "text",
+    "english": "This file has hidden layers. Their content was not removed."
+  },
+  {
+    "group": "viewer",
+    "key": "redactForeign",
+    "kind": "function",
+    "english": "one: {count} redaction mark from another program was left in place. | other: {count} redaction marks from another program were left in place."
+  },
+  {
     "group": "toolbar",
     "key": "label",
     "kind": "text",

@@ -18,6 +18,7 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 | `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                           |
 | `InkDownloadButton`          | Downloads the open PDF, with the session's changes when [saving](/docs/guides/saving/) is on. `filename` names the file |
 | `InkPrintButton`             | Prints the open PDF with the browser's print dialog                                                                     |
+| `InkApplyRedactions`         | Applies the redaction marks after a confirmation. Needs `engine`. See [Redaction](/docs/guides/redaction/)              |
 | `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                             |
 | `InkPageInput`               | The current page number, which the user can type into                                                                   |
 | `InkPageCount`               | "of N", the page count                                                                                                  |
@@ -225,7 +226,7 @@ No wrapper is needed. `createToolbar()` gives any `<button>` you append the same
 
 ## Icons and labels
 
-Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. The accessible name stays the same either way. This bar goes inside an `InkRoot` whose `tools` include `redactAreaTool()`.
+Every button shows an icon from [`@inkbar/icons`](https://www.npmjs.com/package/@inkbar/icons) until you give it your own content. `InkApplyRedactions` is the exception: it shows its name as text. The accessible name stays the same either way. This bar goes inside an `InkRoot` whose `tools` include `redactAreaTool()`.
 
 <Tabs syncKey="framework">
   <TabItem label="Vue">
@@ -321,11 +322,11 @@ Install `@inkbar/icons` only if you want its icons on your own buttons. The cont
 
 ## Rendering your own element
 
-`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkDownloadButton`, `InkPrintButton`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkDownloadButton`, `InkPrintButton`, `InkApplyRedactions`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` can render your own element in place of theirs, such as a button from your design system. In React, pass `asChild`. In Vue, pass `as-child`. In Svelte, use the `child` snippet and spread the `props` it gives you. The control keeps its behaviour and accessible name.
 
 ## Without a framework
 
-`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createDownloadButton`, `createPrintButton`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
+`@inkbar/core/dom` has the same controls as functions for a [`createViewer`](/docs/frameworks/plain-dom/#the-whole-viewer) viewer: `createToolbar`, `createToolButton`, `createToolbarSeparator`, `createUndo`, `createRedo`, `createDownloadButton`, `createPrintButton`, `createApplyRedactionsButton`, `createPrevPage`, `createNextPage`, `createPageInput`, `createPageCount`, `createZoomIn`, `createZoomOut`, `createZoomSelect`, `createSearchButton`, `createFindBar`, `createHighlightMenu`, `createShapeMenu`, `createLineStyleMenu`, `createColorMenu`, `createTextStyleMenu`, `createSignatureMenu`, `createCommandButton` and `createIcon`. A `<button>` you append to `createToolbar()` joins its arrow-key order with no wrapper.
 
 ## Styling
 

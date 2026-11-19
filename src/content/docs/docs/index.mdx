@@ -3,7 +3,7 @@ title: Introduction
 description: What Inkbar does today, what comes next, which packages it ships and where to start.
 ---
 
-Inkbar is a PDF viewer and editor for the browser, with form filling, annotations and redaction marks. It is written in TypeScript, built on PDF.js and released under the MIT licence.
+Inkbar is a PDF viewer and editor for the browser, with form filling, annotations and redaction. It is written in TypeScript, built on PDF.js and released under the MIT licence.
 
 To see it before you install anything, open the [sandbox](https://sandbox.inkbar.dev). It runs the Vue, React, Svelte and plain DOM viewers on a sample document, and you can drop in your own PDF. The file stays in your browser.
 
@@ -19,7 +19,7 @@ To see it before you install anything, open the [sandbox](https://sandbox.inkbar
 | Signatures        | Draw, type or upload a signature, save it and place it on any page or in a signature field. See [Signatures](/docs/guides/signatures/)                                                                                                                                                       |
 | Markup            | Highlights, underlines, strikeouts and squiggly underlines from a text selection                                                                                                                                                                                                             |
 | Notes             | Notes with reply threads                                                                                                                                                                                                                                                                     |
-| Redaction         | Text and area redaction marks                                                                                                                                                                                                                                                                |
+| Redaction         | Text and area redaction marks. With `@inkbar/engine`, applying them removes the content under them and the file's metadata, attached files and scripts, then checks the result. See [Redaction](/docs/guides/redaction/)                                                                     |
 | Drawing           | Freehand ink, shapes, lines, arrows, speech bubbles, loupes, masks and text boxes, with colour and line style menus. See [Drawing](/docs/guides/drawing/)                                                                                                                                    |
 | Annotations       | JSON export and import, and annotations from other programs shown as locked                                                                                                                                                                                                                  |
 | History           | Undo and redo with grouped steps, from the toolbar or Ctrl/Cmd+Z, whether Inkbar or your app holds the annotations. Field edits undo too                                                                                                                                                     |
@@ -35,20 +35,20 @@ You build the toolbars from Inkbar's controls and place them where they fit your
 
 ## Not there yet
 
-- **Applying redactions.** A redaction mark is a tinted, outlined box over the content. The text under it still renders, and anyone can select and copy it. A saved file holds the mark as a Redact annotation, with the content under it still there.
+- **Redacting every kind of content.** Inkbar refuses a mark over patterned fills, some gradients or some soft-masked artwork, since it cannot remove that content from the file. It does not clean hidden layers, and it does not look for the removed words elsewhere in the file, such as in bookmark titles. [Redaction](/docs/guides/redaction/#limits) lists every limit.
 - **XFA forms.** A form built only in XFA shows as a static page.
 
 ## Packages
 
-| Package          | Purpose                                                                         |
-| ---------------- | ------------------------------------------------------------------------------- |
-| `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency. |
-| `@inkbar/vue`    | Vue 3 components and composables to build your viewer.                          |
-| `@inkbar/react`  | React 19 components and hooks to build your viewer.                             |
-| `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                             |
-| `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.       |
-| `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.      |
-| `@inkbar/engine` | Optional. Writes annotations and form values into the PDF.                      |
+| Package          | Purpose                                                                            |
+| ---------------- | ---------------------------------------------------------------------------------- |
+| `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency.    |
+| `@inkbar/vue`    | Vue 3 components and composables to build your viewer.                             |
+| `@inkbar/react`  | React 19 components and hooks to build your viewer.                                |
+| `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                                |
+| `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.          |
+| `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.         |
+| `@inkbar/engine` | Optional. Writes annotations and form values into the PDF, and applies redactions. |
 
 The packages are released together and share one version number. The framework packages take `@inkbar/core` as a peer dependency, so your app installs one copy of it.
 
