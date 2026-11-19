@@ -10,10 +10,9 @@ import Icon from '../site/Icon.astro'
       <h2>What it does today.</h2>
       <p class="lede">
         Inkbar covers viewing, search, outlines and links, sidebars, forms, signatures,
-        highlights, note threads, drawing, redaction marks, plugins, printing and
-        downloads. It works by touch, opens password-protected files and ships in English,
-        French and German. Everything below works in every framework package and with no
-        framework.
+        highlights, note threads, drawing, redaction, plugins, printing and downloads. It
+        works by touch, opens password-protected files and ships in English, French and
+        German. Everything below works in every framework package and with no framework.
       </p>
     </div>
     <div class="grid">
@@ -98,10 +97,11 @@ import Icon from '../site/Icon.astro'
       </div>
       <div class="cell">
         <Icon icon={Square} />
-        <h3>Redaction marks</h3>
+        <h3>Redaction</h3>
         <p>
-          Mark selected text, or drag a box over any area. A mark records what to remove.
-          Inkbar will remove the content once saving into the PDF ships.
+          Mark selected text, or drag a box over any area. With{' '}
+          <code>@inkbar/engine</code>, apply the marks to remove the content under them
+          and the file's metadata, attachments and scripts, then check the result.
         </p>
       </div>
       <div class="cell">
@@ -184,8 +184,8 @@ import Icon from '../site/Icon.astro'
         <h3>Print and download</h3>
         <p>
           Press Ctrl/Cmd+P to print or Ctrl/Cmd+S to download, or use the toolbar buttons.
-          Both give you the PDF as it was opened. Annotations go in once saving into the
-          PDF ships.
+          With <code>@inkbar/engine</code>, both give you the PDF with the session's
+          annotations and form values written in.
         </p>
       </div>
       <div class="cell">
@@ -200,12 +200,6 @@ import Icon from '../site/Icon.astro'
           viewer in place, with no remount and no lost scroll position.
         </p>
       </div>
-    </div>
-    <div class="next">
-      <h3>On the way</h3>
-      <ul>
-        <li>Saving annotations, field values and applied redactions into the PDF</li>
-      </ul>
     </div>
   </div>
 </section>
@@ -308,26 +302,5 @@ import Icon from '../site/Icon.astro'
     font-family: var(--font-mono);
     font-size: 14px;
     color: var(--ink);
-  }
-  .next {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 12px 32px;
-  }
-  .next ul {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 12px;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-  .next li {
-    padding: 6px 14px;
-    border: 1px dashed var(--caption);
-    border-radius: 999px;
-    font-size: 15px;
-    color: var(--body);
   }
 </style>

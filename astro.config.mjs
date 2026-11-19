@@ -59,7 +59,7 @@ export default defineConfig({
         starlightLlmsTxt({
           projectName: 'Inkbar',
           description:
-            'Inkbar is an open-source PDF viewer and editor for the browser, with form filling, highlights, note threads, drawing, signatures and redaction marks. It is written in TypeScript, has bindings for Vue, React and Svelte, and is free under the MIT licence.',
+            'Inkbar is an open-source PDF viewer and editor for the browser, with form filling, highlights, note threads, drawing, signatures and redaction. It is written in TypeScript, has bindings for Vue, React and Svelte, and is free under the MIT licence.',
           details: [
             '- Install it from npm: `@inkbar/core` and `@inkbar/theme`, plus `@inkbar/vue`, `@inkbar/react` or `@inkbar/svelte`. The plain DOM API in `@inkbar/core/dom` needs no framework.',
             '- Every editing tool is opt-in: pass the tool factories your toolbar offers as `tools`.',

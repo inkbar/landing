@@ -94,7 +94,7 @@ test('the theming section shows three routes', async ({ page }) => {
   await expect(cards.nth(2).getByRole('heading')).toHaveText('Use your own components')
 })
 
-test('the features grid lists what ships, then what is on the way', async ({ page }) => {
+test('the features grid lists what ships', async ({ page }) => {
   const titles = await page.locator('#features .cell h3').allTextContents()
   expect(titles.map((text) => text.trim())).toEqual([
     'Viewing',
@@ -105,7 +105,7 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
     'Signatures',
     'Highlights',
     'Note threads',
-    'Redaction marks',
+    'Redaction',
     'Drawing',
     'Annotations as data',
     'Plugins',
@@ -116,7 +116,6 @@ test('the features grid lists what ships, then what is on the way', async ({ pag
     'Print and download',
     'Translations',
   ])
-  await expect(page.locator('#features .next li')).toHaveCount(1)
 })
 
 for (const [width, columns] of [
