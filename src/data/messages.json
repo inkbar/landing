@@ -63,7 +63,7 @@
     "group": "viewer",
     "key": "redactLocked",
     "kind": "function",
-    "english": "one: {count} mark saved in this file earlier will be applied too. | other: {count} marks saved in this file earlier will be applied too."
+    "english": "one: {count} mark saved in this file earlier will be applied too, unless another program made it. | other: {count} marks saved in this file earlier will be applied too, unless another program made them."
   },
   {
     "group": "viewer",
