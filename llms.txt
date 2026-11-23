@@ -62,3 +62,4 @@ Start with the [Introduction](https://inkbar.dev/docs.md) and the [Quickstart](h
 
 - [Source code](https://github.com/inkbar/inkbar): the TypeScript source, issues and releases
 - [Sandbox](https://sandbox.inkbar.dev): the viewers running on a sample document
+- [Changelog](https://inkbar.dev/changelog.md): what each release added, newest first
