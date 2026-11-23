@@ -20,7 +20,8 @@
     "og": "node scripts/make-og.mjs",
     "messages:table": "node scripts/messages-table.mjs",
     "prepare": "husky",
-    "test:unit": "node --test 'src/**/*.test.ts' 'scripts/**/*.test.ts'"
+    "test:unit": "node --test 'src/**/*.test.ts' 'scripts/**/*.test.ts'",
+    "changelog:draft": "node scripts/changelog/draft.ts"
   },
   "lint-staged": {
     "*.{ts,mts}": [
@@ -32,6 +33,7 @@
     ]
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "1.12.0",
     "@astrojs/check": "^0.9.10",
     "@astrojs/markdown-satteri": "0.4.3",
     "@astrojs/sitemap": "^3.7.4",
