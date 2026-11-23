@@ -10,6 +10,9 @@ interface Props {
 
 const { variant = 'full' } = Astro.props
 const full = variant === 'full'
+const useCases = (await getCollection('useCases')).sort(
+  (a, b) => a.data.order - b.data.order
+)
 // The changelog page exists only once it has notes.
 const hasChangelog = (await getCollection('changelog')).length > 0
 ---
@@ -30,6 +33,14 @@ const hasChangelog = (await getCollection('changelog')).length > 0
           <a href={url('/docs/')}>Documentation</a>
           <a href="https://sandbox.inkbar.dev">Sandbox</a>
         </nav>
+        {useCases.length > 0 && (
+          <nav aria-label="Use cases">
+            <h2>Use cases</h2>
+            {useCases.map(({ id, data }) => (
+              <a href={url(`/use-cases/${id}/`)}>{data.label}</a>
+            ))}
+          </nav>
+        )}
         <nav aria-label="Packages">
           <h2>Packages</h2>
           <a class="mono" href="https://www.npmjs.com/package/@inkbar/core">

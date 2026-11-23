@@ -17,6 +17,10 @@ const landingSources = [
 export function pageSources(path: string, root = '.'): string[] {
   if (path === '/') return landingSources
   if (path === '/changelog/') return ['src/content/changelog']
+  const useCase = /^\/use-cases\/([a-z-]+)\/$/.exec(path)?.[1]
+  if (useCase) {
+    return [`src/content/use-cases/${useCase}.md`, `src/assets/use-cases/${useCase}.png`]
+  }
   const slug = /^\/(docs(?:\/.+?)?)\/?$/.exec(path)?.[1]
   if (!slug) return []
   const stem = `src/content/docs/${slug}`

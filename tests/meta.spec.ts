@@ -4,6 +4,11 @@ import { expect, test } from '@playwright/test'
 
 import { sidebar } from '../src/lib/docs-sidebar'
 
+// Every use-case page, from its Markdown file.
+const useCasePaths = readdirSync(new URL('../src/content/use-cases/', import.meta.url))
+  .filter((name) => name.endsWith('.md'))
+  .map((name) => `/use-cases/${name.slice(0, -'.md'.length)}/`)
+
 // The changelog page exists only once it has notes.
 const hasChangelog = readdirSync(
   new URL('../src/content/changelog/', import.meta.url)
@@ -82,6 +87,7 @@ test('every page has a description that fits a search result', async ({ page }) 
     '/docs/',
     ...sidebar.flatMap(({ items }) => items.map(({ slug }) => `/${slug}/`)),
     ...(hasChangelog ? ['/changelog/'] : []),
+    ...useCasePaths,
   ]
   for (const path of [...new Set(paths)]) {
     await page.goto(path)
