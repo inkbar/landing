@@ -13,11 +13,13 @@ import { parseArgs } from 'node:util'
 
 import Anthropic from '@anthropic-ai/sdk'
 
-import { collectChanges, githubGet, listReleases, openPrVersions } from './github.ts'
-import { draftNotes, type NotesClient, notesFile } from './notes.ts'
+import { chooseBranch } from './branch.ts'
+import { githubGet, listReleases, openPrBranches } from './github.ts'
+import { type NotesClient, notesFile } from './notes.ts'
 import { prBody } from './pr-body.ts'
+import { draftReleases } from './run.ts'
 import { type Finding, scanNotes } from './scan.ts'
-import { previousVersion, resolveVersions } from './versions.ts'
+import { resolveVersions } from './versions.ts'
 
 const changelogDir = new URL('../../src/content/changelog/', import.meta.url)
 const runFile = new URL('../../changelog-run.json', import.meta.url)
@@ -45,35 +47,36 @@ async function main(): Promise<void> {
       .filter((name) => name.endsWith('.md'))
       .map((name) => name.slice(0, -'.md'.length))
   )
+  const openPrs = await openPrBranches(get)
   const targets = resolveVersions(
     { versions: values.versions, trigger },
     releases,
     onMain,
-    await openPrVersions(get)
+    new Set(openPrs.keys())
   )
-  if (targets.length === 0) {
+  const versions = targets.map(({ version }) => version)
+  if (versions.length === 0) {
     console.log('Nothing to draft')
-    if (!values.stdout) writeRun([], false, '')
+    if (!values.stdout) writeRun({ versions })
     return
   }
+  // Chosen before drafting, so a run that can't be placed spends nothing.
+  const { branch, existing } = chooseBranch(versions, openPrs)
 
   const anthropic = new Anthropic()
   const client: NotesClient = {
     beta: { messages: { create: (request) => anthropic.beta.messages.create(request) } },
   }
   // Draft everything before writing anything, so a failure leaves no partial set.
-  const drafts: { version: string; date: string; notes: string }[] = []
-  for (const { version } of targets) {
-    const base = previousVersion(version, releases)
-    const changes = await collectChanges(get, base, version)
-    const notes = await draftNotes(client, version, changes, base === null)
-    const release = releases.find((candidate) => candidate.version === version)
-    drafts.push({ version, date: (release?.publishedAt ?? '').slice(0, 10), notes })
-    console.error(`Drafted ${version} from ${changes.length} commits`)
-  }
+  const drafts = await draftReleases(get, client, versions, releases)
 
   if (values.stdout) {
-    for (const { version, notes } of drafts) console.log(`## ${version}\n\n${notes}\n`)
+    for (const { version, notes } of drafts) {
+      console.log(`## ${version}\n\n${notes}\n`)
+      for (const { line, rule, match } of scanNotes(notes)) {
+        console.error(`${version} line ${line}: ${rule} "${match}"`)
+      }
+    }
     return
   }
   const findings = new Map<string, Finding[]>()
@@ -82,16 +85,30 @@ async function main(): Promise<void> {
     const found = scanNotes(notes)
     if (found.length > 0) findings.set(version, found)
   }
-  const versions = drafts.map(({ version }) => version)
-  writeRun(
+  const range =
+    versions.length === 1 ? versions[0] : `${versions[0]} to ${versions.at(-1)}`
+  writeRun({
     versions,
-    targets.some(({ overwrite }) => overwrite),
-    prBody(findings, versions)
-  )
+    branch,
+    existing,
+    title:
+      versions.length === 1
+        ? `docs: ${existing ? 'redraft' : 'add'} the ${range} changelog`
+        : `docs: ${existing ? 'redraft' : 'add'} changelogs for ${range}`,
+    body: prBody(findings, versions),
+  })
 }
 
-function writeRun(versions: string[], overwrite: boolean, body: string): void {
-  writeFileSync(runFile, JSON.stringify({ versions, overwrite, body }, null, 2) + '\n')
+interface Run {
+  versions: string[]
+  branch?: string
+  existing?: boolean
+  title?: string
+  body?: string
+}
+
+function writeRun(run: Run): void {
+  writeFileSync(runFile, JSON.stringify(run, null, 2) + '\n')
 }
 
 main().catch((error: unknown) => {

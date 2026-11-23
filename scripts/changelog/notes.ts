@@ -52,6 +52,10 @@ export async function draftNotes(
   })
   if (reply.stop_reason === 'refusal')
     throw new Error(`Claude refused to draft ${version}`)
+  // Anything else, such as max_tokens, means the notes were cut off.
+  if (reply.stop_reason !== 'end_turn') {
+    throw new Error(`Claude stopped early (${reply.stop_reason}) drafting ${version}`)
+  }
   const text = reply.content
     .filter((block) => block.type === 'text')
     .map((block) => block.text ?? '')

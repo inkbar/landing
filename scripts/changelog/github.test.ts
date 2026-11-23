@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { collectChanges, type GitHubGet, listReleases, openPrVersions } from './github.ts'
+import { collectChanges, type GitHubGet, listReleases, openPrBranches } from './github.ts'
 
 function fakeGet(responses: Record<string, unknown>): GitHubGet & { calls: string[] } {
   const calls: string[] = []
@@ -78,7 +78,7 @@ test('collectChanges reads every commit up to the first release, oldest first', 
   )
 })
 
-test('openPrVersions reads the versions in open changelog pull requests', async () => {
+test('openPrBranches maps each version in an open changelog pull request to its branch', async () => {
   const get = fakeGet({
     '/repos/inkbar/landing/pulls?state=open&per_page=100': [
       { number: 70, head: { ref: 'changelog/backfill' } },
@@ -90,5 +90,11 @@ test('openPrVersions reads the versions in open changelog pull requests', async 
       { filename: 'README.md' },
     ],
   })
-  assert.deepEqual(await openPrVersions(get), new Set(['0.1.0', '0.1.1']))
+  assert.deepEqual(
+    await openPrBranches(get),
+    new Map([
+      ['0.1.0', 'changelog/backfill'],
+      ['0.1.1', 'changelog/backfill'],
+    ])
+  )
 })

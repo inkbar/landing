@@ -77,6 +77,18 @@ test('a refusal or an empty reply fails the draft', async () => {
   )
 })
 
+test('a reply cut off before it finished fails the draft', async () => {
+  await assert.rejects(
+    draftNotes(
+      fakeClient({ stop_reason: 'max_tokens', text: '### New\n\n- Half' }).client,
+      '0.2.0',
+      [change],
+      false
+    ),
+    /stopped early \(max_tokens\)/
+  )
+})
+
 test('cleanReply strips one wrapping fence and rejects a title', () => {
   assert.equal(cleanReply('```markdown\n### New\n- x\n```'), '### New\n- x')
   assert.throws(() => cleanReply('## 0.18.0\n\n- x'), /title/)
