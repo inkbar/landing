@@ -30,5 +30,11 @@ export default defineConfig(
       // Astro and its integrations provide `astro:` and `virtual:` modules.
       'import-x/no-unresolved': ['error', { ignore: ['^virtual:', '^astro:'] }],
     },
+  },
+  {
+    // node:test's test() returns a promise the runner awaits itself.
+    name: 'landing/unit-tests',
+    files: ['**/*.test.ts'],
+    rules: { '@typescript-eslint/no-floating-promises': 'off' },
   }
 )

@@ -19,7 +19,8 @@
     "format:check": "prettier --check .",
     "og": "node scripts/make-og.mjs",
     "messages:table": "node scripts/messages-table.mjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:unit": "node --test 'src/**/*.test.ts' 'scripts/**/*.test.ts'"
   },
   "lint-staged": {
     "*.{ts,mts}": [
