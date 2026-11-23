@@ -1,6 +1,9 @@
 ---
 title: Redaction
 description: Mark text and areas for redaction, then apply the marks to remove the content under them from the file.
+head:
+  - tag: title
+    content: 'Redact PDFs in the browser | Inkbar'
 ---
 
 Redaction in Inkbar has two steps. People draw marks over what should go, then apply them. Applying removes the content under the marks, cleans parts of the file, checks the result and opens the redacted file in the viewer.

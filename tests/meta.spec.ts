@@ -36,6 +36,22 @@ test('docs pages carry a canonical URL and the social image', async ({ page }) =
   )
 })
 
+test('docs pages share under their full title', async ({ page }) => {
+  // React's title is set in frontmatter; Plugins' is Starlight's default.
+  for (const [path, title] of [
+    ['/docs/frameworks/react/', 'React PDF viewer and editor | Inkbar'],
+    ['/docs/guides/plugins/', 'Plugins | Inkbar'],
+  ]) {
+    await page.goto(path)
+    await expect(page).toHaveTitle(title)
+    await expect(page.locator('h1')).not.toHaveText(title)
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      'content',
+      title
+    )
+  }
+})
+
 test('the static files for the host and for crawlers are served', async ({ request }) => {
   const robots = await request.get('/robots.txt')
   expect(robots.status()).toBe(200)
