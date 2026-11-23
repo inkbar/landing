@@ -35,7 +35,7 @@ A press asks first, in a dialog titled "Apply redactions?". The dialog says:
 - that this cannot be undone,
 - how many other annotations go too, when the marks overlap any,
 - that the signature will stop verifying, when the file is signed,
-- how many marks saved earlier will be applied too, when an encrypted file holds them.
+- how many marks saved earlier will be applied too, when an encrypted file holds them. Marks there from another program are left.
 
 Focus starts on Cancel. If the marks change while the dialog is open, the viewer asks again about the marks there are now. If every mark has gone by then, nothing is applied. When the document closes or another one opens, the dialog closes and nothing is applied.
 
@@ -47,7 +47,7 @@ Once the apply succeeds:
 - The viewer reopens on the redacted file with the same file name, page, zoom, layout, rotation and tool, and the password the file was opened with.
 - The marks are gone and undo history starts again.
 - Download and Print give the redacted file.
-- The message box says how many redactions were applied. It adds a line when the file has hidden layers, and when marks from another program were left in place.
+- The message box says how many redactions were applied. It adds a line when the file has hidden layers, and when marks from another program stayed locked and were left in place.
 
 In [controlled mode](/docs/guides/controlled-mode/), Inkbar proposes your list without the marks it applied and the annotations removed with them, with `reason: 'redaction'`, before the redacted file opens. A mark added while the apply runs stays in that list. With the framework packages' `history` on, your answer to that proposal starts the history; it is not an undo step.
 
@@ -56,12 +56,14 @@ In [controlled mode](/docs/guides/controlled-mode/), Inkbar proposes your list w
 The engine works on the file as it was opened:
 
 1. It removes the text, image samples and drawing under each mark, and leaves an opaque box in the mark's fill colour in its place, with the mark's overlay text if it has one.
-2. It removes every annotation a mark overlaps, Inkbar's and the file's own, except masks and other programs' redaction marks, which stay. Then it writes the other annotations and the changed form values.
+2. It removes every annotation a mark overlaps, Inkbar's and the file's own, except masks and redaction marks from other programs that stayed locked. Then it writes the other annotations and the changed form values.
 3. It removes the file's metadata, attached files, scripts, page thumbnails and private application data.
 4. It rewrites the whole file, so no earlier version stays inside it.
 5. It checks the saved bytes under each mark. The check reads the file's objects, so content hidden under an opaque box counts. When it finds anything, the apply fails and hands nothing over.
 
-Marks Inkbar saved into the file earlier count as marks. In an encrypted file they come back locked, and the engine applies them too. Redact annotations from other programs stay in the file, unapplied, and are counted.
+Marks Inkbar saved into the file earlier count as marks. In an encrypted file they come back locked, and the engine applies them too.
+
+Unapplied Redact annotations from other programs open as marks and are applied with the rest. A few stay locked, and those stay in the file, unapplied, and are counted. [Saving](/docs/guides/saving/#opening-a-saved-file) lists which.
 
 The open document does not change. Its annotations, `doc.changed`, `doc.save()` and `doc.getData()` stay as they were; the viewer shows the redacted file by opening the new bytes.
 
@@ -295,7 +297,7 @@ An apply never overlaps a save, and a second call while an apply runs gets the s
 
 - `marks` and `pages`: the marks applied and the pages they were on. A mark with no area, or wholly off its page, is skipped.
 - `removed.session`: the ids of the session annotations removed with the content. `removed.file`: how many of the file's own annotations went, pop-up windows included.
-- `foreignMarks`: other programs' Redact annotations, left unapplied. `ownLockedMarks`: Inkbar's earlier marks applied in an encrypted file.
+- `foreignMarks`: other programs' Redact annotations that stayed locked and were left unapplied. `ownLockedMarks`: Inkbar's earlier marks applied in an encrypted file.
 - `fieldsSkipped`: the names of changed form fields that were not written, because a mark removed their widgets.
 - `sanitised`: what was removed from the file.
 - `hiddenLayers` and `signed`: whether the file has hidden layers, and whether it held a digital signature.
