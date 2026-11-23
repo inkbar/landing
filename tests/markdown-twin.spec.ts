@@ -1,3 +1,5 @@
+import { readdirSync } from 'node:fs'
+
 import { expect, test } from '@playwright/test'
 
 import { sidebar } from '../src/lib/docs-sidebar'
@@ -133,4 +135,32 @@ test("a docs page's head points at its Markdown", async ({ page }) => {
   await expect(
     page.locator('link[rel="alternate"][type="text/markdown"]')
   ).toHaveAttribute('href', /\/docs\/guides\/search\.md$/)
+})
+
+// The changelog's twin exists only once the changelog has notes.
+const changelogVersions = readdirSync(
+  new URL('../src/content/changelog/', import.meta.url)
+)
+  .filter((name) => name.endsWith('.md'))
+  .map((name) => name.slice(0, -'.md'.length))
+
+test('the changelog is served as Markdown and listed in llms.txt', async ({
+  request,
+}) => {
+  test.skip(changelogVersions.length === 0, 'the changelog has no notes yet')
+  const response = await request.get('/changelog.md')
+  expect(response.status()).toBe(200)
+  expect(response.headers()['content-type']).toContain('text/markdown')
+  const markdown = await response.text()
+  expect(markdown).toMatch(/^# Inkbar changelog\n/)
+  for (const version of changelogVersions) expect(markdown).toContain(`## ${version} (`)
+  expect(await (await request.get('/llms.txt')).text()).toContain(
+    'https://inkbar.dev/changelog.md'
+  )
+})
+
+test('with no notes there is no changelog twin or llms.txt link', async ({ request }) => {
+  test.skip(changelogVersions.length > 0, 'the changelog has notes')
+  expect((await request.get('/changelog.md')).status()).toBe(404)
+  expect(await (await request.get('/llms.txt')).text()).not.toContain('changelog')
 })

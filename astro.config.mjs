@@ -6,6 +6,7 @@ import { defineConfig } from 'astro/config'
 import starlightLinksValidator from 'starlight-links-validator'
 import starlightLlmsTxt from 'starlight-llms-txt'
 
+import { readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 import { docsIndex } from './src/lib/docs-index.ts'
@@ -19,6 +20,10 @@ const base = process.env.SITE_BASE ?? '/'
 const site = siteUrl(base)
 /** @param {string} id a docs page id */
 const twin = (id) => site + twinPath(id)
+// The changelog page and its Markdown exist only once the changelog has notes.
+const hasChangelog = readdirSync(
+  new URL('./src/content/changelog/', import.meta.url)
+).some((name) => name.endsWith('.md'))
 
 export default defineConfig({
   site: 'https://inkbar.dev',
@@ -90,6 +95,15 @@ export default defineConfig({
               url: 'https://sandbox.inkbar.dev',
               description: 'the viewers running on a sample document',
             },
+            ...(hasChangelog
+              ? [
+                  {
+                    label: 'Changelog',
+                    url: `${site}changelog.md`,
+                    description: 'what each release added, newest first',
+                  },
+                ]
+              : []),
           ],
         }),
       ],
