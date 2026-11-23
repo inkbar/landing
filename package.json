@@ -21,7 +21,8 @@
     "messages:table": "node scripts/messages-table.mjs",
     "prepare": "husky",
     "test:unit": "node --test 'src/**/*.test.ts' 'scripts/**/*.test.ts'",
-    "changelog:draft": "node scripts/changelog/draft.ts"
+    "changelog:draft": "node scripts/changelog/draft.ts",
+    "screenshots": "node scripts/screenshots/run.ts"
   },
   "lint-staged": {
     "*.{ts,mts}": [
@@ -42,6 +43,9 @@
     "@ecssc/commitlint-config": "^0.0.5",
     "@ecssc/eslint-config": "^1.0.2",
     "@ecssc/prettier-config": "^0.1.3",
+    "@inkbar/core": "0.17.0",
+    "@inkbar/engine": "0.17.0",
+    "@inkbar/theme": "0.17.0",
     "@playwright/test": "1.62.1",
     "@types/node": "^24",
     "eslint": "^10.0.0",
@@ -52,7 +56,8 @@
     "prettier-plugin-svelte": "^4.1.1",
     "satteri": "0.10.5",
     "starlight-links-validator": "^0.27.0",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vite": "8.3.4"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.42.6",
