@@ -1,0 +1,160 @@
+# Svelte
+
+> For AI agents: the full Inkbar documentation index is at https://inkbar.dev/pr-preview/pr-70/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/pr-preview/pr-70/docs/quickstart/ becomes https://inkbar.dev/pr-preview/pr-70/docs/quickstart.md.
+
+Add a PDF viewer and editor to a Svelte 5 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction.
+
+Svelte 5 components and hooks for Inkbar. The components are unstyled primitives built on `@inkbar/core`.
+
+Install the packages as the [Quickstart](https://inkbar.dev/pr-preview/pr-70/docs/quickstart.md) shows.
+
+Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/core/vite` so PDF.js can load its worker and fonts; [Loading assets](https://inkbar.dev/pr-preview/pr-70/docs/loading-assets.md) covers it. The package ships `.svelte` sources, so your bundler compiles them for your target, including the server.
+
+## Usage
+
+```svelte
+<script lang="ts">
+  import {
+    InkRoot,
+    InkViewport,
+    InkToolbar,
+    InkToolButton,
+    InkToolbarSeparator,
+    InkUndo,
+    InkRedo,
+    InkPrevPage,
+    InkPageInput,
+    InkPageCount,
+    InkNextPage,
+    InkZoomSelect,
+    InkThreadPopover,
+  } from '@inkbar/svelte'
+  import { highlightTool, noteTool, redactAreaTool } from '@inkbar/core/dom'
+  import type { Annotation } from '@inkbar/core'
+  import { assets } from 'virtual:inkbar-assets'
+  import '@inkbar/theme/theme.css'
+
+  let { signedUrl, documentId }: { signedUrl: string; documentId: string } = $props()
+
+  let annotations = $state.raw<Annotation[]>([])
+  const tools = [highlightTool(), redactAreaTool(), noteTool()]
+</script>
+
+<InkRoot src={{ url: signedUrl, key: documentId }} {assets} {tools} bind:annotations>
+  <InkToolbar>
+    <InkToolButton tool="select-text" />
+    <InkToolButton tool="select" />
+    <InkToolButton tool="highlight" />
+    <InkToolButton tool="redact-area" />
+    <InkToolButton tool="note" />
+    <InkToolbarSeparator />
+    <InkUndo />
+    <InkRedo />
+  </InkToolbar>
+  <InkViewport />
+  <InkToolbar label="Page and zoom">
+    <InkPrevPage />
+    <InkPageInput />
+    <InkPageCount />
+    <InkNextPage />
+    <InkZoomSelect />
+  </InkToolbar>
+  <InkThreadPopover />
+</InkRoot>
+```
+
+`select-text` and `select` are always there. Every other tool is opt-in: pass the ones you offer through `tools`, from the tool factories in `@inkbar/core/dom`, or `allTools()` for all of them. A button for a tool you did not pass renders disabled and hidden, a tool menu renders nothing, and each logs an `InkError('UnknownTool')` to the console once. If the active tool leaves `tools`, the viewer switches to `select-text` and reports it through `onToolChange`.
+
+Each control is a separate component, so put them in any order or leave some out. Buttons show icons from `@inkbar/icons`. Pass your own as `children` to replace one, and use `InkIcon` to put the same icons on your own buttons. For a button of your own, such as `<InkToolbarButton onclick={download}>Download</InkToolbarButton>`, use `InkToolbarButton`: it joins the toolbar's arrow-key focus and looks like the other buttons. [Toolbars](https://inkbar.dev/pr-preview/pr-70/docs/guides/toolbars.md) lists every control.
+
+`bind:annotations` makes your list the source of truth. Declare it with `$state.raw`, since Inkbar replaces the list whole. Leave the binding off and Inkbar keeps the state itself, with undo and redo. [Controlled mode](https://inkbar.dev/pr-preview/pr-70/docs/guides/controlled-mode.md) covers the details.
+
+`tool`, `page` and `zoom` are bindable too, and each has a callback prop such as `onToolChange` if you would rather not bind.
+
+`InkViewport` zooms the document on a two-finger pinch, a trackpad pinch or ctrl+wheel. With `pinchZoom={false}`, the browser handles pinches and zooms the whole page.
+
+## Forms
+
+`InkViewport` fills the PDF's form fields and runs the form's scripts. `useForm()` returns the fields, their values, and `set` and `reset`. Use `bind:fields` to hold the values in your own state. The form never submits, opens a link, sends mail or prints: `onaction` hands each request to you. `formHighlight={false}` turns off the field tint, and a change applies to the open document in place.
+
+[Forms](https://inkbar.dev/pr-preview/pr-70/docs/guides/forms.md) covers controlled fields, form actions, scripts, signature fields and saving values as Gloss.
+
+## Signatures
+
+`InkSignatureMenu` lists the saved signatures, turns on the `signature` tool with the chosen one, and opens `InkSignatureDialog` to draw, type or upload a new one. The menu needs `signatureTool()` in `tools`. The dialog and signature form fields work without it; the dialog then only saves the signature. These are marks on the page, not cryptographic signatures. `InkRoot` keeps them in its [`storage`](https://inkbar.dev/pr-preview/pr-70/docs/guides/storage.md): `createLocalStorage(prefix)` from `@inkbar/core` uses `localStorage`, and the default store forgets them on reload. `signatureFonts` lists the handwriting fonts the Type tab offers. Load them with `@font-face`. [Signatures](https://inkbar.dev/pr-preview/pr-70/docs/guides/signatures.md) has the details.
+
+## Thread popover
+
+`InkThreadPopover` opens the thread of the activated note or text markup. A new note or highlight has no text yet, so the form first writes its own text (labelled "Comment"); after that it adds replies.
+
+A root note with no text and no replies is removed when its popover closes, or when activation moves to another annotation, so abandoned notes do not stay on the page. Locked notes are never removed. If you add notes yourself (`add({ type: 'note', ... })`), give them `contents`, or they will be removed the first time someone opens and closes them.
+
+## Custom rendering
+
+Slots are snippets. `InkViewport` takes `loading`, `empty`, `error`, `locked`, `annotation` and `pageError`. `InkThreadPopover` takes `children` as a snippet that receives the popover's props. `InkToolButton` takes `children` as a snippet of `{ active, label }`, and `InkCommand` one of `{ label, busy }`. The props each receives are typed as `AnnotationSlotProps` and `ThreadPopoverSlotProps`, the same types the Vue and React packages export.
+
+`InkRoot` takes `decorateAnnotation`, which returns your own `data`, `classes` and `description` for an annotation's element, as `mountViewer` describes in [Your own chrome](https://inkbar.dev/pr-preview/pr-70/docs/frameworks/plain-dom.md#your-own-chrome). Pass a new function when its output depends on your own state, and Inkbar applies it again.
+
+```svelte
+<script lang="ts">
+  import type { DecorateAnnotation } from '@inkbar/svelte'
+
+  const decorate: DecorateAnnotation = (a) =>
+    a.custom?.review === 'open'
+      ? { data: { review: 'open' }, description: 'Needs review' }
+      : undefined
+</script>
+
+<InkRoot src={file} {assets} decorateAnnotation={decorate}>
+  <InkViewport />
+</InkRoot>
+```
+
+For your own card next to an annotation, read `activated`, `setActivated` and `rootEl` from `useInkContext` and use them with `createFocusReturn` and `createPopover`, as [Your own popovers](https://inkbar.dev/pr-preview/pr-70/docs/frameworks/plain-dom.md#your-own-popovers) shows. The context's `setActivated` calls `onActivate` for an id; `viewer.setActivated` in plain DOM does not.
+
+`InkRoot`, `InkToolbar`, `InkToolButton`, `InkToolbarButton`, `InkCommand`, `InkUndo`, `InkRedo`, `InkPrevPage`, `InkNextPage`, `InkZoomIn` and `InkZoomOut` take a `child` snippet to render your own element. Spread the `props` it gives you on that element. The snippet type is exported as `ChildSnippet`.
+
+```svelte
+<InkToolbar>
+  {#snippet child({ props })}
+    <nav {...props} class="my-toolbar">…</nav>
+  {/snippet}
+</InkToolbar>
+```
+
+## Plugins
+
+Pass plugins to `InkRoot` as `plugins`. The list is read once, when the root mounts. A plugin's tools join the viewer's on their own, without `tools`. Nothing a plugin adds shows until you place it: a command with `InkCommand id="<plugin>.<id>"`, a tool with `InkToolButton tool="<plugin>.<id>"`. For a control of your own, `useCommand(id)` returns the command's `run`, `enabled`, `busy`, `status`, `label` and `icon`. [Plugins](https://inkbar.dev/pr-preview/pr-70/docs/guides/plugins.md) covers placing commands, saving plugin records and undo, and [Writing a plugin](https://inkbar.dev/pr-preview/pr-70/docs/guides/writing-a-plugin.md) covers building one.
+
+## Translations
+
+`InkRoot` takes `messages` and `locale`. Pass a set such as `fr` from `@inkbar/core/locales/fr`, or a partial one to change a few strings. Changing either relabels the viewer in place. Labels you pass, such as `label` on `InkPanel` or `InkToolButton`, take a string or a function. See [Translations](https://inkbar.dev/pr-preview/pr-70/docs/guides/translations.md).
+
+## Keyboard
+
+The scroll area takes focus. From there:
+
+- With the `highlight` or `redact-area` tool active, `Enter` turns the text selection into a mark.
+- With the `note` tool active, `Enter` places a note at the centre of the current page and opens it.
+
+On a focused annotation:
+
+- `Enter` or `Space` selects and activates it. A note or text markup opens its thread; other types are only selected.
+- `ArrowUp` and `ArrowDown` move to the previous or next annotation on the page.
+- `Shift` + arrow moves it by 1 pt, or by 10 pt with `Alt` as well.
+- `Ctrl` or `Cmd` + `Shift` + arrow resizes an area redaction, text box or shape.
+- `Delete` or `Backspace` removes it.
+
+The full table, with the zoom and page keys, is in [Annotations](https://inkbar.dev/pr-preview/pr-70/docs/guides/annotations.md#tools-and-keyboard).
+
+## Styling
+
+Components carry state on data attributes, for example `[data-annotation][data-state="selected"]` and `[data-tool="highlight"][data-state="on"]`. `@inkbar/theme` gives a default look. Your own CSS overrides it without `!important`. An annotation's shape, colours and text come from its data, and a stylesheet cannot repaint them. `InkRoot`, `InkViewport`, `InkToolbar` and the toolbar controls accept `class`.
+
+## Hooks
+
+`useDocument`, `useAnnotations`, `useTool`, `useSelection`, `useZoom`, `usePage`, `useHistory`, `useEmbedded`, `useCommand`, `useSearch`, `useForm`, `useToolOptions`, `useToolStyle`, `useRecords` and `useRecordSelection` read the state of the nearest `InkRoot`. Call them during component initialisation, as you would `getContext`. Build your own controls or side panel from them. [Lists of records](https://inkbar.dev/pr-preview/pr-70/docs/guides/sidebars.md#lists-of-records) covers `useRecords` and `useRecordSelection`.
+
+`useReadable(() => readable, fallback)` follows any core readable. It returns an object whose `current` holds the value, or `fallback` while there is none.
+
+Each hook returns an object whose reactive members are getters. Read `useZoom().zoom` in your template or an effect and it tracks. Destructure it (`const { zoom } = useZoom()`) and you copy the value once, so keep the object and read through it.

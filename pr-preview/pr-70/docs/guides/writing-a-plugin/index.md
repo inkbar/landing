@@ -1,0 +1,424 @@
+# Writing a plugin
+
+> For AI agents: the full Inkbar documentation index is at https://inkbar.dev/pr-preview/pr-70/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/pr-preview/pr-70/docs/quickstart/ becomes https://inkbar.dev/pr-preview/pr-70/docs/quickstart.md.
+
+Write an Inkbar plugin with records, commands, marks and cards, once for every framework.
+
+A plugin is a function of the plugin API that `definePlugin` turns into a factory. You write it against `@inkbar/core` and `@inkbar/core/dom`, and it runs in Vue, React, Svelte and `createViewer` alike. This page is for plugin authors. To add a plugin to your app, see [Plugins](https://inkbar.dev/pr-preview/pr-70/docs/guides/plugins.md).
+
+## An example
+
+This plugin suggests redactions. Suggest adds suggestions, the plugin's own records, for the open document. Each open one is drawn as a mark over its text that opens a review card. Accept marks the suggestion accepted and adds a redaction linked to it, Dismiss sets it aside, and deleting that redaction puts the suggestion back up for review. Each of those is one undo step.
+
+```ts
+import type { Quad, Rect, RecordBase } from '@inkbar/core'
+import { definePlugin } from '@inkbar/core/dom'
+
+export interface Suggestion extends RecordBase {
+  /** Page index, from 0. */
+  page: number
+  /** Where the text is, in PDF user space. */
+  quads: Quad[]
+  /** The box around `quads`, where the mark goes. */
+  rect: Rect
+  reason: string
+  explanation?: string
+  status: 'suggested' | 'accepted' | 'dismissed'
+}
+
+export const review = definePlugin('review', (plugin) => {
+  // The open document's `review.suggestions` records; empty while none is open.
+  const suggestions = plugin.records<Suggestion>('suggestions')
+
+  // Accept adds a redaction linked to its suggestion. Deleting that redaction puts the
+  // suggestion back, inside the delete's undo step.
+  const redaction = suggestions.annotates('redact', {
+    from: (s) => ({ page: s.page, quads: s.quads }),
+    onRemoved: (s) => suggestions.update(s.id, { status: 'suggested' }),
+  })
+
+  plugin.command(
+    'suggest', // placed as `review.suggest`
+    'Suggest redactions',
+    async ({ doc, signal }) => {
+      const found = await findSuggestions(doc, { signal }) // your own code
+      // Bound to this run's document: if another file opened meanwhile, this adds nothing.
+      const added = suggestions.in(doc).addMissing(found)
+      return added.length === 1 ? '1 suggestion' : `${added.length} suggestions`
+    },
+    { errorStatus: 'Could not check this document.' }
+  )
+
+  plugin
+    .marks(suggestions, {
+      where: (s) => s.status === 'suggested',
+      rect: (s) => s.rect,
+      label: (s) => `Suggested redaction: ${s.reason}`,
+      className: 'review-mark',
+      card: (s) => ({
+        title: s.reason,
+        label: 'Suggested redaction',
+        ...(s.explanation && { body: s.explanation }),
+        actions: {
+          Accept: () => {
+            suggestions.update(s.id, { status: 'accepted' })
+            redaction.add(s)
+          },
+          Dismiss: () => suggestions.update(s.id, { status: 'dismissed' }),
+        },
+      }),
+    })
+    .scrollToFirst()
+})
+```
+
+Core draws each mark as a bare `<button>`. Its look is your CSS:
+
+```css
+.review-mark {
+  border: 2px dashed #c0392b;
+  background: transparent;
+  cursor: pointer;
+}
+```
+
+The host passes `review()` in `plugins` and places the command with `<InkCommand id="review.suggest" />`. The sandbox's [suggestions plugin](https://github.com/inkbar/inkbar/blob/main/apps/sandbox/src/plugin/suggestions.ts) is the full version, with sample data, a confidence colour on each mark and in its card, and a search of the page text.
+
+## `definePlugin`
+
+`definePlugin(id, setup)` checks the id and returns a factory. The id is lower-case kebab case: a letter, then letters, digits and hyphens (`review`, `pii-check`). Anything else throws `InkError('InvalidPluginId')`.
+
+The id is the namespace for everything the plugin adds. Command `suggest` becomes `review.suggest`, tool `box` becomes `review.box` and records `suggestions` are keyed `review.suggestions`.
+
+Calling the factory with the host's options makes a plugin, and each call makes an independent one. `setup(plugin, options)` runs once per viewer with the plugin API and those options. It can return a function, which runs when the viewer is destroyed. Type your own options with `definePlugin<Options>(id, setup)`; every plugin also takes `records`, below.
+
+## Records
+
+`plugin.records<T>(name)` returns a handle on the open document's records, keyed `<plugin>.<name>`. Each document that opens gets its own. The handle follows the open document, so keep it for the plugin's lifetime: while no document is open it reads empty and its writes do nothing. A record is a plain object with a string `id`.
+
+| Member                  | What it does                                                                                                |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `list`                  | A readable of the records, `[]` while no document is open. It emits when the records or the document change |
+| `all()`                 | The records, in order                                                                                       |
+| `find(id)`, `has(id)`   | The record or `undefined`, and whether it exists                                                            |
+| `where(match)`          | The records that pass a function, or whose fields equal every field of an object                            |
+| `add(record)`           | Adds a record and returns the stored copy. Throws `InkError('DuplicateId')` when the id is taken            |
+| `addMissing(records)`   | Adds the records whose ids are not taken yet, and returns those it added                                    |
+| `update(id, patch)`     | Merges `patch` into a record and returns it. An unknown id returns `undefined`                              |
+| `remove(id)`            | Removes a record and returns it, or `undefined` for an unknown id                                           |
+| `in(doc)`               | The same handle bound to `doc`, for commands                                                                |
+| `annotates(type, spec)` | Links the records to annotations made from them. See [Linked annotations](#linked-annotations)              |
+| `store()`               | The underlying record store, or `null`, for anything the handle lacks                                       |
+
+Every records call is one undo step, and `plugin.batch` makes several one step. `addMissing` adds all its records in one step. `plugin.batch(fn)` is `history.batch`: everything `fn` changes, annotations and records alike, undoes together. `fn` must be synchronous.
+
+### Loading and saving
+
+Inkbar keeps no plugin data. The host hands each records name its `initial` and `onChange` through the factory's `records` option, and `plugin.records(name)` picks them up by name, so the plugin passes nothing on:
+
+```ts
+review({ records: { suggestions: { initial, onChange } } })
+```
+
+- `initial(doc)` returns the records a document opens with, called once for each document.
+- `onChange(list, change)` runs after every change, with the list as it now stands.
+
+Options passed to `plugin.records(name, { initial, onChange })` win over the host's.
+
+## Commands
+
+`plugin.command(id, label, run, options)` adds a command under `<plugin>.<id>` and returns it. `label` is a string or a function that returns one, so the button can follow your language; see [Translations](https://inkbar.dev/pr-preview/pr-70/docs/guides/translations.md). `run` receives:
+
+- `doc`, the document open when the command started.
+- `signal`, an `AbortSignal` that aborts when that document closes or another opens.
+
+A string that `run` returns becomes the command's status, which the command button announces; `undefined` clears it. A thrown error is logged and sets the status to the `errorStatus` option, "Something went wrong." by default. `errorStatus` takes a string or a function. An abort sets no status. The status clears when the document changes. The other options are `icon` and `enabled`; without `enabled`, the command is enabled while a document is open and ready. The command is busy, and disabled, until `run` settles, so a double click runs it once.
+
+Inside a command, write through `records.in(doc)`. A command often waits, for a request or for the page text, and the user can open another file meanwhile. A write through the plain handle after an `await` goes to whatever document is open then. `in(doc)` binds the handle to the run's document, and once that document closes its writes do nothing, so a stale result goes nowhere.
+
+## Marks
+
+`plugin.marks(records, options)` draws a `<button>` over each record that passes `where`, on page `record.page` (from 0) at `rect(record)` in user space, in a page layer of its own. Records drawn as marks need a `page`.
+
+- `rect(record)` and `label(record)`, the mark's accessible name, are required.
+- `where(record)` picks the records that get a mark. Default: all.
+- `style(record)` returns inline styles, custom properties such as `--tint` included, `className` adds classes, and `attrs(record)` adds attributes such as `data-*` and `aria-*`. Core draws nothing else.
+- `card(record)` opens a card when the mark is activated. See [Cards](#cards).
+- `onActivate(record, mark)` runs when the mark is clicked, or activated with Enter or Space, for anything a card does not cover.
+
+Each mark carries `data-record` with the record's id and `data-plugin` with the plugin's id. Marks redraw when the records change, undo and redo included, and when the page's zoom or rotation changes. A mark that stays keeps its element, so focus and an open card survive a redraw. Presses and clicks on a mark go no further, so the active tool and listeners on the viewer's root never see them. Marks are Tab stops after the page's annotations.
+
+`plugin.marks` returns a handle:
+
+- `refresh()` redraws every mark, for marks that read state of your own that changed.
+- `scrollToFirst()` scrolls the viewer to new marks. When records start to get a mark, added or changed to pass `where`, the viewer scrolls to the first of them in reading order, unless that one is in view already. Focus stays where it is, and the records a document opens with, undo and redo never scroll. It returns the handle, so you can chain it onto `plugin.marks(…)`.
+
+## Cards
+
+A card is a popover next to its mark, styled by `@inkbar/theme` like the viewer's own popovers. `card(record)` returns:
+
+- `title`, the card's heading. A string or a function that returns one.
+- `label`, the dialog's accessible name, also a string or a function. Default: `title`.
+- `meta`, an optional short line under the title, and `swatch`, an optional CSS colour for a dot before it.
+- `body`, optional text under the meta line.
+- `excerpt`, an optional line of context after the body, as `{ before, match, after }`. The `match` part is marked.
+- `actions`, one button per entry, in order. Give an object, where each key is a button's label, or an array of `{ label, run }`, where each `label` can be a function.
+- `className`, classes added to the card.
+
+The card is a `role="dialog"`. Its first action is the primary one and takes focus when the card opens. Each card action is one undo step. Actions must be synchronous: a write after an `await` falls outside the action's undo step. After an action, the card re-renders if the mark stays. If the mark goes, the card closes and focus moves to the next of this `marks()` call's marks, else the previous one, else the viewport. Escape or a press outside closes the card and returns focus to the mark.
+
+The theme styles the card through these classes, which are yours to restyle:
+
+| Class               | Element                      |
+| ------------------- | ---------------------------- |
+| `.ink-card`         | The card                     |
+| `.ink-card-title`   | The title                    |
+| `.ink-card-meta`    | The meta line                |
+| `.ink-card-swatch`  | The dot before the meta line |
+| `.ink-card-body`    | The body                     |
+| `.ink-card-excerpt` | The excerpt                  |
+| `.ink-card-actions` | The row of action buttons    |
+
+For anything richer, use `onActivate` with your own popover, as [Your own popovers](https://inkbar.dev/pr-preview/pr-70/docs/frameworks/plain-dom.md#your-own-popovers) describes.
+
+Records that pass a `marks` call's `where` also appear in a record list, each as the same card with the same actions in the same undo step, so the cards you wrote for the marks give you a sidebar list with no further code. The app places it with `InkRecordList records="<plugin>.<name>"`, as [Sidebars](https://inkbar.dev/pr-preview/pr-70/docs/guides/sidebars.md#lists-of-records) shows. When a plugin has no `marks` call for these records, every record still lists, with its id as the title and no actions.
+
+## Linked annotations
+
+`records.annotates(type, spec)` links records to the annotations of `type` made from them. Call it in `setup`.
+
+- `spec.from(record)` returns the annotation's fields, without `type`. Without a `color`, the annotation gets the document's default colour for its type.
+- `spec.onRemoved(record, annotation)` runs once for each linked annotation the user removes, inside that edit's undo step, so the record change undoes with the delete. It never runs on undo or redo.
+- `spec.onChanged(record, annotation)` runs for each user update of a linked annotation, inside that edit's undo step.
+
+The returned link's `add(record)` adds the annotation and stores the link in it at `custom.<plugin>.<records name>`, the record's id: `custom.review.suggestions` in the example. `of(record)` returns the record's linked annotations of this type, in document order. A record can have several. The link survives a Gloss export and import, so a host that saves both keeps them linked.
+
+## Text and geometry
+
+- `doc.pageText(page)` resolves to the page's text items joined with single spaces. Most plugins that look for something start there.
+- `quadsFromRect(rect)` from `@inkbar/core` returns the quads covering a rect, which text markup such as `redact` takes. `rectFromQuads(quads)` returns the box around them, where a mark goes.
+
+## Going further
+
+The `plugin` that `setup` receives is also the plugin's context, with everything below. Use it for what the shorthands above do not cover: tools, decorations, page layers of your own, or stores without the handle.
+
+A plugin can also be a plain object, `definePlugin({ id, setup(ctx) { … } })`, which checks the id and returns the plugin itself. The host passes it as it is, without a call.
+
+### The context
+
+| Member                       | What it does                                                                                                                          |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `id`                         | The plugin's id                                                                                                                       |
+| `document`                   | A readable of the open `InkDocument`, or `null`                                                                                       |
+| `history.batch(fn)`          | Makes everything `fn` changes, annotations and records alike, one undo step                                                           |
+| `activated`                  | A readable of the activated annotation's id, or `null`                                                                                |
+| `setActivated(id)`           | Activates an annotation, or clears the activation with `null`. An id not in the open document is ignored                              |
+| `root`                       | A readable of the viewport's scroll container, or `null` while none is mounted                                                        |
+| `commands.add(spec)`         | Adds a command and returns it                                                                                                         |
+| `tools.add(tool)`            | Adds a tool                                                                                                                           |
+| `decorate(fn)`               | Adds `data`, `classes` and a `description` to annotation elements                                                                     |
+| `redecorate()`               | Runs every decoration again                                                                                                           |
+| `store(name, options)`       | A readable of the record store for the open document, or `null`                                                                       |
+| `storage`                    | Settings kept between visits under `plugin.<id>.`, in the root's [storage](https://inkbar.dev/pr-preview/pr-70/docs/guides/storage.md#in-a-plugin)                         |
+| `onDocument(fn)`             | Runs `fn(doc)` for each document that opens. The function it returns runs when that document closes                                   |
+| `onAnnotationEdit(fn)`       | Runs `fn(edit)` for every user add, update and remove of an annotation, inside that edit's undo step                                  |
+| `layer(spec)`                | Adds a page layer and returns a handle with `invalidate(page?)`                                                                       |
+| `scrollTo(page, rect, opts)` | Scrolls the viewer so `rect`, in user space on `page`, is in view. `opts.behavior` is a `ScrollBehavior`. Moves no focus              |
+| `search`                     | The viewer's search state and actions, shared with the find bar. See [Search](https://inkbar.dev/pr-preview/pr-70/docs/guides/search.md)                                   |
+| `onPress(fn)`                | Runs `fn(press)` for a press on a page that nothing in Inkbar acted on. Returns a function that stops listening                       |
+| `onLongPress(fn)`            | Runs `fn(press)` when a touch or pen is held still on a page that nothing in Inkbar acted on. Returns a function that stops listening |
+
+A readable has `get()` and `subscribe(fn)`, which returns a function that stops it. `writable` from `@inkbar/core` makes one you can `set`.
+
+### `commands.add`
+
+`ctx.commands.add(spec)` takes:
+
+- `id`, namespaced to `<plugin>.<id>`.
+- `label`, which names the command's button. It is required: an empty label throws `InkError('InvalidCommandLabel')`.
+- `icon`, an optional icon node such as one from `@inkbar/icons`. Without one, the button shows the label as text.
+- `enabled`, an optional readable of a boolean. Without it, the command is enabled while a document is open and ready.
+- `status`, an optional readable of a short progress or result message. The command button announces it in a live region.
+- `run()`, which may return a promise.
+
+The returned command has `id`, `label`, `icon` and three readables: `enabled`, `busy` and `status`. It is busy from `run()` until the promise settles, and disabled while busy, so a double click runs it once. `command.run()` does nothing while the command is busy or disabled, and never rejects. A failure is logged. One caused by the document closing during the run (`DocumentDestroyed`) is dropped silently. Check `ctx.document.get()` after each `await`, so results for a closed document go nowhere. `plugin.command` does this for you through `run`'s `doc` and `signal`.
+
+### Record stores
+
+`ctx.store(name, options)` asks for a store keyed `<plugin>.<name>`. Each document that opens gets a fresh one, and the readable holds `null` while no document is open. Read it with `get()` when you need it rather than keep the store.
+
+Inkbar keeps no plugin data. Accept `initial` and `onChange` from the host and pass them on:
+
+- `initial(doc)` returns the records a document opens with, called once for each document.
+- `onChange(list, change)` runs after every change, with the list as it now stands.
+
+A store holds plain records, each with a string `id`:
+
+| Member                     | What it does                                                                                                   |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `key`                      | `<plugin>.<name>`                                                                                              |
+| `list`                     | A readable of the records, in order                                                                            |
+| `get(id)`                  | The record, or `undefined`                                                                                     |
+| `add(record)`              | Adds a record and returns the stored copy. Throws `InkError('DuplicateId')` when the id is taken               |
+| `update(id, patch)`        | Merges `patch` into a record and returns it. The id cannot change. An unknown id returns `undefined`           |
+| `remove(id)`               | Removes a record and returns it, or `undefined` for an unknown id                                              |
+| `replaceAll(list, reason)` | Replaces every record. Pass `'reset'` to start over: earlier undo steps no longer restore this store's records |
+| `on('change', fn)`         | Calls `fn(change)` after every change and returns a function that stops it                                     |
+
+Records are stored as frozen copies, so the object you pass to `add` stays yours and a stored record never changes under you. Change one with `update`.
+
+A change is one of `add` (with `record`), `update` (`id`, `before` and `after`), `remove` (`record`) or `replace`. A `replace` has a `reason`, `history` for undo and redo or `reset`, and the ids it `added`, `updated` and `removed`.
+
+### One undo step
+
+The stores you get from `ctx.store` join the viewer's undo history. On its own each change is one step. To make several changes one step, annotations included, wrap them in `ctx.history.batch(fn)`, which `plugin.batch` calls. `fn` must be synchronous: changes made after an `await` inside it are not part of the batch.
+
+`ctx.onAnnotationEdit(fn)` runs inside the user's edit, so a record change made there undoes with the edit. It receives `add` (`annotation`), `update` (`id`, `before`, `after`) and `remove` (`annotation`, and `removed`: it and the replies removed with it). It never runs for undo and redo, which restore your records themselves. `annotates` builds on this. By hand, this puts a suggestion back up for review when the user deletes the redaction that accepted it:
+
+```ts
+ctx.onAnnotationEdit((edit) => {
+  const store = suggestions.get()
+  if (edit.kind !== 'remove' || !store) return
+  for (const a of edit.removed) {
+    const id = (a.custom?.review as { suggestionId?: string } | undefined)?.suggestionId
+    if (id && store.get(id)?.status === 'accepted')
+      store.update(id, { status: 'suggested' })
+  }
+})
+```
+
+The same works in controlled mode, where the host owns the annotation list.
+
+### Page layers
+
+`ctx.layer(spec)` adds a layer to every mounted page, above the annotations. Each page gets its own element, `div.ink-plugin-layer[data-plugin="<id>"]`, covering the page.
+
+- `render(el, page, transform)` draws into `el`. It runs when the page mounts, whenever the page's zoom or rotation changes, and when you call `invalidate`.
+- `destroy(el, page)` is optional and runs when the page unmounts.
+
+The handle's `invalidate(page)` redraws one page, or every mounted page without an argument. A layer added after pages have mounted, from `onDocument` say, appears on them at once.
+
+Keep your geometry in PDF user space: points, origin bottom-left, before the page's `/Rotate`, as annotations are. `transform`, a `PageTransform`, is the only conversion you need:
+
+- `toCssRect(rect)` returns `{ left, top, width, height }` in CSS pixels from the page's top-left corner.
+- `toCss(point)`, `toCssQuad(quad)` and `toCssLength(points)` convert a point, a quad or a length.
+- `fromCss(point)`, `fromCssRect(cssRect)` and `fromCssLength(px)` go the other way.
+- `cssWidth`, `cssHeight`, `zoom` and `rotation` describe the page as drawn.
+
+### Presses
+
+`ctx.onPress(fn)` and `ctx.onLongPress(fn)` tell you about a press on a page that nothing in Inkbar acted on. Listeners are removed when the plugin is torn down.
+
+```ts
+import { definePlugin } from '@inkbar/core/dom'
+
+export const pressLog = definePlugin('press-log', (plugin) => {
+  plugin.onPress(({ page, point, pointerType }) => {
+    console.log('press', page, point, pointerType)
+  })
+  plugin.onLongPress(({ page, point }) => {
+    console.log('long press', page, point)
+  })
+})
+```
+
+The payload is a `PagePress`: `page` is a zero-based index, `point` is in user space on that page, and `pointerType` is `'mouse'`, `'touch'` or `'pen'`.
+
+A press is a pointer going down and up on a page without moving more than a few pixels. A mouse click is a press. A touch or pen held still for about half a second is a long press instead. It fires while the finger is still down, and the release reports nothing more. A mouse never long-presses. A touch that becomes part of a pinch before a long press fires is neither, and so is one that starts a scroll.
+
+Both fire only under the text and rectangle select tools; any other tool owns every press. They also stay quiet when something else took the press: an annotation, a resize handle, a link, a form field, a mark or a text editor. A press that commits an open text editor or closes a popover reports nothing either. Inkbar leaves the browser's own long-press behaviour alone, so text selection and context menus still work.
+
+### Marks and the keyboard
+
+A mark is anything you put in a layer that the user can press or focus.
+
+- The layer lets presses through to the page and the tools underneath. The elements you put straight into it take presses back (`pointer-events: auto`), with or without `@inkbar/theme`. That rule has no specificity, so a rule of yours such as `pointer-events: none` on a mark wins.
+- The viewer's tools leave presses and keys on your marks alone. They still bubble up to the viewer's root, so stop propagation if listeners there should not see them. `plugin.marks` stops them for you.
+- A focusable mark is a Tab stop after the page's annotations, in DOM order. Use a `<button>`: it gets Enter and Space as a click.
+- Escape is yours to handle. A card opened with `createPopover`, as in [Your own popovers](https://inkbar.dev/pr-preview/pr-70/docs/frameworks/plain-dom.md#your-own-popovers), closes on Escape and `createFocusReturn` sends focus back to the mark.
+
+Replacing every mark on each render drops focus when a mark redraws. To keep it, reuse the marks that stay and only move them, as `plugin.marks` does.
+
+### Tools and decorations
+
+`ctx.tools.add(tool)` adds a tool under `<plugin>.<id>`. A tool has an `id`, a `cursor`, `activate(toolCtx)` and `deactivate()`, and optional `label`, `icon`, `kind` (`'sticky'`, the default, or `'one-shot'`), `claimsTouch` and pointer and key handlers. `toolCtx` gives it the annotation `store`, the `viewport` and more. The press handlers receive the page `hit`, whose `user` is the point in user space. Set `claimsTouch: true` to receive one-finger drags; the host then gives up one-finger scrolling over the document while the tool is active, and two fingers still scroll and zoom.
+
+```ts
+import type { PageHit, ToolContext } from '@inkbar/core/dom'
+
+class BoxTool {
+  id = 'box' // placed as `review.box`
+  label = 'Box'
+  cursor = 'crosshair'
+  #ctx: ToolContext | null = null
+
+  activate(ctx: ToolContext) {
+    this.#ctx = ctx
+  }
+  deactivate() {
+    this.#ctx = null
+  }
+  onPointerDown(e: PointerEvent, hit: PageHit | undefined, annotationId?: string) {
+    if (!this.#ctx || !hit || annotationId) return
+    const { x, y } = hit.user
+    const a = this.#ctx.store.add({
+      type: 'square',
+      page: hit.page,
+      rect: { x: x - 20, y: y - 20, width: 40, height: 40 },
+    })
+    this.#ctx.store.select([a.id])
+  }
+}
+
+ctx.tools.add(new BoxTool())
+```
+
+The host places it with a tool button (`tool="review.box"`), which shows the tool's own `label` and `icon`. It joins the viewer's tools on its own, so the host leaves it out of `tools`. Its methods run on your own object, so inside them `this.id` is the id you gave (`box`), and a class instance keeps its `#private` fields.
+
+`ctx.decorate(fn)` works like the host's `decorateAnnotation`, which [Plain DOM](https://inkbar.dev/pr-preview/pr-70/docs/frameworks/plain-dom.md#your-own-chrome) describes. Decorations apply after the host's own and earlier plugins', and the earlier ones win on a data key or description. They re-apply when the annotations change. Call `ctx.redecorate()` when one reads state of your own that changed.
+
+### Publishing a plugin
+
+A plugin you publish lists `@inkbar/core` under `peerDependencies`, so the app and every plugin share one copy. Add it under `devDependencies` too, for your own build and tests. Never list it under `dependencies`: a second copy would give your plugin its own `InkError` and `Readable` classes.
+
+```json
+{
+  "name": "@acme/inkbar-review",
+  "version": "1.0.0",
+  "type": "module",
+  "peerDependencies": {
+    "@inkbar/core": "^0.14.0"
+  },
+  "devDependencies": {
+    "@inkbar/core": "^0.14.0"
+  }
+}
+```
+
+The peer range says which Inkbar versions your plugin works with, and the package manager warns an app that installs it next to another. Import `definePlugin` from `@inkbar/core/dom`, and every type with `import type`, so the types add nothing to your bundle. Every type reachable from `InkPlugin`, `PluginContext`, `PluginApi` and `PluginOptions` is exported from `@inkbar/core` or `@inkbar/core/dom`, and Inkbar's tests keep it that way. Export the factory your users call:
+
+```ts
+import { definePlugin } from '@inkbar/core/dom'
+
+export const review = definePlugin('review', (plugin) => {
+  // …
+})
+```
+
+### Things to know
+
+- The framework packages run `setup` once the viewer has mounted in the browser, never during server rendering. Until then the plugin's commands are disabled, and anything `setup` creates, such as a store, does not exist yet.
+- A layer's `destroy` can run after the document's stores have closed, so check `store.get()` for `null` there.
+- An error thrown from your decoration, a layer's `render` or `destroy`, or an `onDocument` callback is logged, so one plugin cannot break the viewer or the others.
+
+### Errors
+
+| Code                  | When                                                                                       |
+| --------------------- | ------------------------------------------------------------------------------------------ |
+| `InvalidPluginId`     | `definePlugin` gets an id that is not lower-case kebab case                                |
+| `DuplicatePlugin`     | Two plugins with the same id are passed to one viewer                                      |
+| `InvalidCommandLabel` | `commands.add` gets an empty label                                                         |
+| `DuplicateId`         | A command, tool or store name is taken within the plugin, or `add` gets a record id in use |
+| `UnknownCommand`      | The host places a command id that no plugin registered. Logged, not thrown                 |
+
+Each is an `InkError` from `@inkbar/core`, with the code on `error.code`.
