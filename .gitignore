@@ -8,3 +8,4 @@ test-results
 !docs
 src/content/docs/docs/reference/api
 .superpowers
+changelog-run.json
