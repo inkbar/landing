@@ -1,0 +1,223 @@
+# Signatures
+
+> For AI agents: the full Inkbar documentation index is at https://inkbar.dev/pr-preview/pr-67/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/pr-preview/pr-67/docs/quickstart/ becomes https://inkbar.dev/pr-preview/pr-67/docs/quickstart.md.
+
+Let people draw, type or upload a signature, keep it for next time, and place it on the page or in a signature field.
+
+A signature in Inkbar is a mark on the page: a drawing, a name typed in a handwriting font, or an image of a scan. Someone creates it once, and Inkbar saves it as a template they can place again on any page. It does not sign the file with a certificate.
+
+## The signature menu
+
+`InkSignatureMenu` is a split button. The main button, Sign, turns on the `signature` tool with the chosen signature, or opens the menu if none is chosen yet. The arrow beside it, Choose signature, lists the saved signatures, each with a remove button, then Create signature, which opens the dialog.
+
+The menu needs `signatureTool()` from `@inkbar/core/dom` in the root's `tools`. Without it, the menu renders nothing. The signature dialog and signature fields work without it; the dialog then only saves the signature.
+
+Inkbar keeps the templates in the root's [`storage`](https://inkbar.dev/pr-preview/pr-67/docs/guides/storage.md). Pass a store that lasts, such as `createLocalStorage()`, and `signatureFonts` for the handwriting fonts the dialog offers. Both are optional: without them, signatures last until the page reloads and the dialog offers the browser's `cursive` font.
+
+**Vue**
+
+```vue
+<script setup lang="ts">
+import { createLocalStorage } from '@inkbar/core'
+import {
+  InkRoot,
+  InkSignatureMenu,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/vue'
+import { signatureTool } from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+defineProps<{ file: File }>()
+
+const tools = [signatureTool()]
+const storage = createLocalStorage('my-app')
+</script>
+
+<template>
+  <InkRoot
+    :src="file"
+    :assets="assets"
+    :tools="tools"
+    :storage="storage"
+    :signature-fonts="['Dancing Script']"
+  >
+    <InkToolbar>
+      <InkToolButton tool="select" />
+      <InkSignatureMenu />
+    </InkToolbar>
+    <InkViewport />
+  </InkRoot>
+</template>
+```
+
+**React**
+
+```tsx
+import { createLocalStorage } from '@inkbar/core'
+import {
+  InkRoot,
+  InkSignatureMenu,
+  InkToolbar,
+  InkToolButton,
+  InkViewport,
+} from '@inkbar/react'
+import { signatureTool } from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const tools = [signatureTool()]
+const storage = createLocalStorage('my-app')
+const fonts = ['Dancing Script']
+
+export function Viewer({ file }: { file: File }) {
+  return (
+    <InkRoot
+      src={file}
+      assets={assets}
+      tools={tools}
+      storage={storage}
+      signatureFonts={fonts}
+    >
+      <InkToolbar>
+        <InkToolButton tool="select" />
+        <InkSignatureMenu />
+      </InkToolbar>
+      <InkViewport />
+    </InkRoot>
+  )
+}
+```
+
+**Svelte**
+
+```svelte
+<script lang="ts">
+  import { createLocalStorage } from '@inkbar/core'
+  import {
+    InkRoot,
+    InkSignatureMenu,
+    InkToolbar,
+    InkToolButton,
+    InkViewport,
+  } from '@inkbar/svelte'
+  import { signatureTool } from '@inkbar/core/dom'
+  import { assets } from 'virtual:inkbar-assets'
+
+  let { file }: { file: File } = $props()
+
+  const tools = [signatureTool()]
+  const storage = createLocalStorage('my-app')
+</script>
+
+<InkRoot src={file} {assets} {tools} {storage} signatureFonts={['Dancing Script']}>
+  <InkToolbar>
+    <InkToolButton tool="select" />
+    <InkSignatureMenu />
+  </InkToolbar>
+  <InkViewport />
+</InkRoot>
+```
+
+**Plain DOM**
+
+```ts
+import { createLocalStorage } from '@inkbar/core'
+import {
+  createSignatureMenu,
+  createToolbar,
+  createToolButton,
+  createViewer,
+  signatureTool,
+} from '@inkbar/core/dom'
+import { assets } from 'virtual:inkbar-assets'
+
+const viewer = createViewer(el, {
+  source: file,
+  assets,
+  tools: [signatureTool()],
+  storage: createLocalStorage('my-app'),
+  signatureFonts: ['Dancing Script'],
+})
+
+const tools = createToolbar()
+tools.append(createToolButton(viewer, 'select'), createSignatureMenu(viewer))
+viewer.element.prepend(tools)
+```
+
+## Placing a signature
+
+With the `signature` tool on, a click on the page places the chosen signature about 150 pt wide, centred where you pressed. From the keyboard, `Enter` in the viewport places it at the centre of the current page. The new signature is selected, so you can move or resize it straight away, and placing it is one undo step.
+
+A drawn signature becomes an `ink` annotation and the others a `stamp`, both with `subject: 'Signature'`. Both keep their aspect ratio when resized. On a page the PDF rotates with `/Rotate`, the signature still reads upright. Placed signatures export and import with the other annotations.
+
+To place one from code, `placeSignature(template, page, centre)` from `@inkbar/core` returns the annotation to add. `centre` is a point in PDF user space. An optional fourth argument sets the width in points.
+
+```ts
+import { placeSignature } from '@inkbar/core'
+
+doc.annotations.add(placeSignature(template, 0, { x: 300, y: 120 }))
+```
+
+## Creating a signature
+
+The dialog has three tabs:
+
+- **Draw** has a pad to sign on with a mouse, pen or finger, and a Clear button.
+- **Type** takes a name and draws it in one of the `signatureFonts`.
+- **Image** takes a PNG or JPEG, such as a scan. Inkbar scales it to at most 1000 px on its long side before storing it.
+
+Save stores the template and makes it the chosen signature. Drawing needs a pointer. The Type and Image tabs work from the keyboard.
+
+To open the dialog from your own button, use `InkSignatureDialog`. Bind `open` the way your framework does (`v-model:open` in Vue, `open` with `onOpenChange` in React, `bind:open` in Svelte). It emits `save` with the new template. Set `select` to false to keep the new signature from becoming the chosen one. Without a framework, `createSignatureDialog(viewer)` returns a dialog with `open`, `close` and `destroy`.
+
+## Fonts for typed signatures
+
+Each entry in `signatureFonts` is a CSS font family name. Inkbar does not load fonts, so load each one with `@font-face` or your font service before you offer it. A menu or dialog can take its own `fonts` list in place of the root's.
+
+```css
+@font-face {
+  font-family: 'Dancing Script';
+  src: url('/fonts/dancing-script.woff2') format('woff2');
+}
+```
+
+## Where signatures are kept
+
+Your app owns the templates. Inkbar keeps them as an array in the root's [`storage`](https://inkbar.dev/pr-preview/pr-67/docs/guides/storage.md) under the key `signatures`, so they go wherever your store puts them:
+
+- With the default memory store they last until the page reloads.
+- `createLocalStorage(prefix)` keeps them in `localStorage` under `<prefix>:signatures`. Where the browser blocks storage, it keeps them in memory for the page's life.
+- A [store of your own](https://inkbar.dev/pr-preview/pr-67/docs/guides/storage.md#writing-your-own) can keep them on your server.
+
+When the store can't save, the dialog tells the person their signature wasn't saved. It says browser storage is full only when that's the reason; a refusal from your server gets a general message. Saves run one at a time, so two quick saves to a slow store both land. Inkbar skips any stored template it can't read and keeps it on the next write.
+
+A signature belongs to one person, so key the store by user when people share a browser.
+
+### Moving from `createLocalSignatureStore`
+
+0.13.0 removed `createLocalSignatureStore` and the root's `signatures` option. A template saved by `createLocalSignatureStore('my-app-signatures')` sits under that exact key, so copy it to the new key once if you want people to keep their saved signatures:
+
+```ts
+const old = localStorage.getItem('my-app-signatures')
+if (old !== null && localStorage.getItem('my-app:signatures') === null) {
+  localStorage.setItem('my-app:signatures', old)
+  localStorage.removeItem('my-app-signatures')
+}
+```
+
+### Templates
+
+A template is plain JSON. A drawn one holds its strokes in a unit box, and an image holds a data URL:
+
+```ts
+type SignatureTemplate =
+  | { id: string; kind: 'ink'; inklist: Point[][]; pressure?: number[][]; aspect: number }
+  | { id: string; kind: 'image'; imagedata: string; aspect: number }
+```
+
+`aspect` is the width over the height.
+
+## Signature fields
+
+A PDF form's signature field shows its own Sign button, which opens the same list of saved signatures and the same dialog. The chosen signature goes inside the field and stays locked to it. [Signature fields](https://inkbar.dev/pr-preview/pr-67/docs/guides/forms.md#signature-fields) in the forms guide has the details.
