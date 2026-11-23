@@ -333,7 +333,7 @@ Every message in the English set, by group. The table leaves out `lang`, which n
 | `viewer.applyRedactions` | Apply redactions |
 | `viewer.redactTitle` | Apply redactions? |
 | `viewer.redactSummary` (function) | This removes the content under {marks, plural, one {{marks} mark} other {{marks} marks}} on {pages, plural, one {{pages} page} other {{pages} pages}}. |
-| `viewer.redactLocked` (function) | one: {count} mark saved in this file earlier will be applied too. \| other: {count} marks saved in this file earlier will be applied too. |
+| `viewer.redactLocked` (function) | one: {count} mark saved in this file earlier will be applied too, unless another program made it. \| other: {count} marks saved in this file earlier will be applied too, unless another program made them. |
 | `viewer.redactPermanent` | It cannot be undone. |
 | `viewer.redactOverlapped` (function) | one: {count} other annotation under the marks will be removed too. \| other: {count} other annotations under the marks will be removed too. |
 | `viewer.redactSigned` | This file is signed. Its signature will stop verifying. |

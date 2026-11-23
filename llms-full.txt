@@ -22,7 +22,7 @@ To see it before you install anything, open the [sandbox](https://sandbox.inkbar
 | Notes             | Notes with reply threads                                                                                                                                                                                                                                                                     |
 | Redaction         | Text and area redaction marks. With `@inkbar/engine`, applying them removes the content under them and the file’s metadata, attached files and scripts, then checks the result. See [Redaction](/docs/guides/redaction/)                                                                     |
 | Drawing           | Freehand ink, shapes, lines, arrows, speech bubbles, loupes, masks and text boxes, with colour and line style menus. See [Drawing](/docs/guides/drawing/)                                                                                                                                    |
-| Annotations       | JSON export and import, and annotations from other programs shown as locked                                                                                                                                                                                                                  |
+| Annotations       | JSON export and import, and annotations from other programs shown as locked. Their unapplied redaction marks open as editable marks                                                                                                                                                          |
 | History           | Undo and redo with grouped steps, from the toolbar or Ctrl/Cmd+Z, whether Inkbar or your app holds the annotations. Field edits undo too                                                                                                                                                     |
 | Files             | Download and print the open PDF, from a button or Ctrl/Cmd+S and +P                                                                                                                                                                                                                          |
 | Saving            | With `@inkbar/engine`, annotations and form values are written into the PDF, and come back editable when the file is reopened. See [Saving](/docs/guides/saving/)                                                                                                                            |
@@ -3271,7 +3271,7 @@ A press asks first, in a dialog titled “Apply redactions?”. The dialog says:
 * that this cannot be undone,
 * how many other annotations go too, when the marks overlap any,
 * that the signature will stop verifying, when the file is signed,
-* how many marks saved earlier will be applied too, when an encrypted file holds them.
+* how many marks saved earlier will be applied too, when an encrypted file holds them. Marks there from another program are left.
 
 Focus starts on Cancel. If the marks change while the dialog is open, the viewer asks again about the marks there are now. If every mark has gone by then, nothing is applied. When the document closes or another one opens, the dialog closes and nothing is applied.
 
@@ -3283,7 +3283,7 @@ Once the apply succeeds:
 * The viewer reopens on the redacted file with the same file name, page, zoom, layout, rotation and tool, and the password the file was opened with.
 * The marks are gone and undo history starts again.
 * Download and Print give the redacted file.
-* The message box says how many redactions were applied. It adds a line when the file has hidden layers, and when marks from another program were left in place.
+* The message box says how many redactions were applied. It adds a line when the file has hidden layers, and when marks from another program stayed locked and were left in place.
 
 In [controlled mode](/docs/guides/controlled-mode/), Inkbar proposes your list without the marks it applied and the annotations removed with them, with `reason: 'redaction'`, before the redacted file opens. A mark added while the apply runs stays in that list. With the framework packages’ `history` on, your answer to that proposal starts the history; it is not an undo step.
 
@@ -3292,12 +3292,14 @@ In [controlled mode](/docs/guides/controlled-mode/), Inkbar proposes your list w
 The engine works on the file as it was opened:
 
 1. It removes the text, image samples and drawing under each mark, and leaves an opaque box in the mark’s fill colour in its place, with the mark’s overlay text if it has one.
-2. It removes every annotation a mark overlaps, Inkbar’s and the file’s own, except masks and other programs’ redaction marks, which stay. Then it writes the other annotations and the changed form values.
+2. It removes every annotation a mark overlaps, Inkbar’s and the file’s own, except masks and redaction marks from other programs that stayed locked. Then it writes the other annotations and the changed form values.
 3. It removes the file’s metadata, attached files, scripts, page thumbnails and private application data.
 4. It rewrites the whole file, so no earlier version stays inside it.
 5. It checks the saved bytes under each mark. The check reads the file’s objects, so content hidden under an opaque box counts. When it finds anything, the apply fails and hands nothing over.
 
-Marks Inkbar saved into the file earlier count as marks. In an encrypted file they come back locked, and the engine applies them too. Redact annotations from other programs stay in the file, unapplied, and are counted.
+Marks Inkbar saved into the file earlier count as marks. In an encrypted file they come back locked, and the engine applies them too.
+
+Unapplied Redact annotations from other programs open as marks and are applied with the rest. A few stay locked, and those stay in the file, unapplied, and are counted. [Saving](/docs/guides/saving/#opening-a-saved-file) lists which.
 
 The open document does not change. Its annotations, `doc.changed`, `doc.save()` and `doc.getData()` stay as they were; the viewer shows the redacted file by opening the new bytes.
 
@@ -3542,7 +3544,7 @@ An apply never overlaps a save, and a second call while an apply runs gets the s
 
 * `marks` and `pages`: the marks applied and the pages they were on. A mark with no area, or wholly off its page, is skipped.
 * `removed.session`: the ids of the session annotations removed with the content. `removed.file`: how many of the file’s own annotations went, pop-up windows included.
-* `foreignMarks`: other programs’ Redact annotations, left unapplied. `ownLockedMarks`: Inkbar’s earlier marks applied in an encrypted file.
+* `foreignMarks`: other programs’ Redact annotations that stayed locked and were left unapplied. `ownLockedMarks`: Inkbar’s earlier marks applied in an encrypted file.
 * `fieldsSkipped`: the names of changed form fields that were not written, because a mark removed their widgets.
 * `sanitised`: what was removed from the file.
 * `hiddenLayers` and `signed`: whether the file has hidden layers, and whether it held a digital signature.
@@ -4714,9 +4716,19 @@ In [controlled mode](/docs/guides/controlled-mode/), `onChange` proposes them on
 
 Some annotations stay locked:
 
-* Annotations made by other programs.
+* Annotations made by other programs, except unapplied Redact annotations (see below).
 * An annotation Inkbar saved that another program has since moved, edited, replied to or given a pop-up window. Inkbar’s own replies to a note that stays locked stay locked with it.
 * Inkbar’s own annotations in an encrypted file.
+
+An unapplied Redact annotation from another program opens as an editable redaction mark. It looks like Inkbar’s own marks and counts in the [apply confirmation](/docs/guides/redaction/). The mark keeps its area, fill colour and overlay text. The apply draws that text as it draws the text of Inkbar’s own marks, so the other program’s font, size and repeat setting do not carry over. A save with changes, or an apply, removes the other program’s copy and its pop-up window from the file and writes Inkbar’s mark.
+
+Such a mark stays locked in three cases:
+
+* The file is encrypted.
+* Another program’s annotation replies to it.
+* Its pop-up window is not listed on the same page, or does not name the mark as its parent.
+
+The page draws a locked mark as the other program left it, and the apply skips it and counts it in `foreignMarks`.
 
 ## Where the saved file differs from the screen
 
@@ -5365,32 +5377,32 @@ Every message in the English set, by group. The table leaves out `lang`, which n
 
 ### `viewer`
 
-| Key                                   | English                                                                                                                                                                                    |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `viewer.document`                     | Document                                                                                                                                                                                   |
-| `viewer.loading`                      | Loading document…                                                                                                                                                                          |
-| `viewer.openFailed`                   | This document could not be opened.                                                                                                                                                         |
-| `viewer.pageFailed` (function)        | Page {page} could not be shown.                                                                                                                                                            |
-| `viewer.saveFailed`                   | Your changes could not be written into this file.                                                                                                                                          |
-| `viewer.saveUnavailable`              | Saving is not available right now. Check your connection and try again.                                                                                                                    |
-| `viewer.preparingFile`                | Preparing your file…                                                                                                                                                                       |
-| `viewer.applyRedactions`              | Apply redactions                                                                                                                                                                           |
-| `viewer.redactTitle`                  | Apply redactions?                                                                                                                                                                          |
-| `viewer.redactSummary` (function)     | This removes the content under {marks, plural, one {{marks} mark} other {{marks} marks}} on {pages, plural, one {{pages} page} other {{pages} pages}}.                                     |
-| `viewer.redactLocked` (function)      | one: {count} mark saved in this file earlier will be applied too. \| other: {count} marks saved in this file earlier will be applied too.                                                  |
-| `viewer.redactPermanent`              | It cannot be undone.                                                                                                                                                                       |
-| `viewer.redactOverlapped` (function)  | one: {count} other annotation under the marks will be removed too. \| other: {count} other annotations under the marks will be removed too.                                                |
-| `viewer.redactSigned`                 | This file is signed. Its signature will stop verifying.                                                                                                                                    |
-| `viewer.redactConfirm`                | Apply                                                                                                                                                                                      |
-| `viewer.redactCancel`                 | Cancel                                                                                                                                                                                     |
-| `viewer.redacting`                    | Applying redactions…                                                                                                                                                                       |
-| `viewer.redactFailed`                 | The redactions could not be applied. Nothing was changed.                                                                                                                                  |
-| `viewer.redactUnremovable` (function) | one: {count} mark covers content that cannot be removed. Move or delete it and try again. \| other: {count} marks cover content that cannot be removed. Move or delete them and try again. |
-| `viewer.redactUnverified`             | Some content could not be removed, so nothing was changed.                                                                                                                                 |
-| `viewer.redactUnavailable`            | Redaction is not available right now. Check your connection and try again.                                                                                                                 |
-| `viewer.redactDone` (function)        | one: {marks} redaction applied. \| other: {marks} redactions applied.                                                                                                                      |
-| `viewer.redactHiddenLayers`           | This file has hidden layers. Their content was not removed.                                                                                                                                |
-| `viewer.redactForeign` (function)     | one: {count} redaction mark from another program was left in place. \| other: {count} redaction marks from another program were left in place.                                             |
+| Key                                   | English                                                                                                                                                                                                     |
+| ------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `viewer.document`                     | Document                                                                                                                                                                                                    |
+| `viewer.loading`                      | Loading document…                                                                                                                                                                                           |
+| `viewer.openFailed`                   | This document could not be opened.                                                                                                                                                                          |
+| `viewer.pageFailed` (function)        | Page {page} could not be shown.                                                                                                                                                                             |
+| `viewer.saveFailed`                   | Your changes could not be written into this file.                                                                                                                                                           |
+| `viewer.saveUnavailable`              | Saving is not available right now. Check your connection and try again.                                                                                                                                     |
+| `viewer.preparingFile`                | Preparing your file…                                                                                                                                                                                        |
+| `viewer.applyRedactions`              | Apply redactions                                                                                                                                                                                            |
+| `viewer.redactTitle`                  | Apply redactions?                                                                                                                                                                                           |
+| `viewer.redactSummary` (function)     | This removes the content under {marks, plural, one {{marks} mark} other {{marks} marks}} on {pages, plural, one {{pages} page} other {{pages} pages}}.                                                      |
+| `viewer.redactLocked` (function)      | one: {count} mark saved in this file earlier will be applied too, unless another program made it. \| other: {count} marks saved in this file earlier will be applied too, unless another program made them. |
+| `viewer.redactPermanent`              | It cannot be undone.                                                                                                                                                                                        |
+| `viewer.redactOverlapped` (function)  | one: {count} other annotation under the marks will be removed too. \| other: {count} other annotations under the marks will be removed too.                                                                 |
+| `viewer.redactSigned`                 | This file is signed. Its signature will stop verifying.                                                                                                                                                     |
+| `viewer.redactConfirm`                | Apply                                                                                                                                                                                                       |
+| `viewer.redactCancel`                 | Cancel                                                                                                                                                                                                      |
+| `viewer.redacting`                    | Applying redactions…                                                                                                                                                                                        |
+| `viewer.redactFailed`                 | The redactions could not be applied. Nothing was changed.                                                                                                                                                   |
+| `viewer.redactUnremovable` (function) | one: {count} mark covers content that cannot be removed. Move or delete it and try again. \| other: {count} marks cover content that cannot be removed. Move or delete them and try again.                  |
+| `viewer.redactUnverified`             | Some content could not be removed, so nothing was changed.                                                                                                                                                  |
+| `viewer.redactUnavailable`            | Redaction is not available right now. Check your connection and try again.                                                                                                                                  |
+| `viewer.redactDone` (function)        | one: {marks} redaction applied. \| other: {marks} redactions applied.                                                                                                                                       |
+| `viewer.redactHiddenLayers`           | This file has hidden layers. Their content was not removed.                                                                                                                                                 |
+| `viewer.redactForeign` (function)     | one: {count} redaction mark from another program was left in place. \| other: {count} redaction marks from another program were left in place.                                                              |
 
 ### `toolbar`
 

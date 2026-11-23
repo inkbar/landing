@@ -62,7 +62,7 @@
 <li>that this cannot be undone,</li>
 <li>how many other annotations go too, when the marks overlap any,</li>
 <li>that the signature will stop verifying, when the file is signed,</li>
-<li>how many marks saved earlier will be applied too, when an encrypted file holds them.</li>
+<li>how many marks saved earlier will be applied too, when an encrypted file holds them. Marks there from another program are left.</li>
 </ul>
 <p>Focus starts on Cancel. If the marks change while the dialog is open, the viewer asks again about the marks there are now. If every mark has gone by then, nothing is applied. When the document closes or another one opens, the dialog closes and nothing is applied.</p>
 <p>While the marks are applied, the button says “Applying redactions…” and keeps focus, and another press does nothing. The document takes no input: the pages take no presses or keys and do not scroll, undo and redo are off, an open comment thread closes, and Download and Print are disabled.</p>
@@ -72,19 +72,20 @@
 <li>The viewer reopens on the redacted file with the same file name, page, zoom, layout, rotation and tool, and the password the file was opened with.</li>
 <li>The marks are gone and undo history starts again.</li>
 <li>Download and Print give the redacted file.</li>
-<li>The message box says how many redactions were applied. It adds a line when the file has hidden layers, and when marks from another program were left in place.</li>
+<li>The message box says how many redactions were applied. It adds a line when the file has hidden layers, and when marks from another program stayed locked and were left in place.</li>
 </ul>
 <p>In <a href="/docs/guides/controlled-mode/">controlled mode</a>, Inkbar proposes your list without the marks it applied and the annotations removed with them, with <code dir="auto">reason: 'redaction'</code>, before the redacted file opens. A mark added while the apply runs stays in that list. With the framework packages’ <code dir="auto">history</code> on, your answer to that proposal starts the history; it is not an undo step.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="what-applying-removes">What applying removes</h2><a class="sl-anchor-link" href="#what-applying-removes"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “What applying removes”</span></a></div>
 <p>The engine works on the file as it was opened:</p>
 <ol>
 <li>It removes the text, image samples and drawing under each mark, and leaves an opaque box in the mark’s fill colour in its place, with the mark’s overlay text if it has one.</li>
-<li>It removes every annotation a mark overlaps, Inkbar’s and the file’s own, except masks and other programs’ redaction marks, which stay. Then it writes the other annotations and the changed form values.</li>
+<li>It removes every annotation a mark overlaps, Inkbar’s and the file’s own, except masks and redaction marks from other programs that stayed locked. Then it writes the other annotations and the changed form values.</li>
 <li>It removes the file’s metadata, attached files, scripts, page thumbnails and private application data.</li>
 <li>It rewrites the whole file, so no earlier version stays inside it.</li>
 <li>It checks the saved bytes under each mark. The check reads the file’s objects, so content hidden under an opaque box counts. When it finds anything, the apply fails and hands nothing over.</li>
 </ol>
-<p>Marks Inkbar saved into the file earlier count as marks. In an encrypted file they come back locked, and the engine applies them too. Redact annotations from other programs stay in the file, unapplied, and are counted.</p>
+<p>Marks Inkbar saved into the file earlier count as marks. In an encrypted file they come back locked, and the engine applies them too.</p>
+<p>Unapplied Redact annotations from other programs open as marks and are applied with the rest. A few stay locked, and those stay in the file, unapplied, and are counted. <a href="/docs/guides/saving/#opening-a-saved-file">Saving</a> lists which.</p>
 <p>The open document does not change. Its annotations, <code dir="auto">doc.changed</code>, <code dir="auto">doc.save()</code> and <code dir="auto">doc.getData()</code> stay as they were; the viewer shows the redacted file by opening the new bytes.</p>
 <div class="sl-heading-wrapper level-h2"><h2 id="marks-the-engine-refuses">Marks the engine refuses</h2><a class="sl-anchor-link" href="#marks-the-engine-refuses"><span aria-hidden="true" class="sl-anchor-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="m12.11 15.39-3.88 3.88a2.52 2.52 0 0 1-3.5 0 2.47 2.47 0 0 1 0-3.5l3.88-3.88a1 1 0 1 0-1.42-1.42l-3.88 3.89a4.48 4.48 0 0 0 6.33 6.33l3.89-3.88a1 1 0 0 0-1.42-1.42m8.58-12.08a4.49 4.49 0 0 0-6.33 0l-3.89 3.88a1 1 0 1 0 1.42 1.42l3.88-3.88a2.52 2.52 0 0 1 3.5 0 2.47 2.47 0 0 1 0 3.5l-3.88 3.88a1 1 0 0 0 0 1.42 1 1 0 0 0 1.42 0l3.88-3.89a4.49 4.49 0 0 0 0-6.33M8.83 15.17a1 1 0 0 0 .71.29 1 1 0 0 0 .71-.29l4.92-4.92a1 1 0 1 0-1.42-1.42l-4.92 4.92a1 1 0 0 0 0 1.42"></path></svg></span><span class="sr-only" data-pagefind-ignore>Section titled “Marks the engine refuses”</span></a></div>
 <p>The apply removes text, blanks image samples and cuts paths. A file can also define content once and paint it through a reference, and cutting the shape that paints it would leave that content in the file. So before anything changes, the engine refuses a mark that touches:</p>
@@ -154,7 +155,7 @@
 <ul>
 <li><code dir="auto">marks</code> and <code dir="auto">pages</code>: the marks applied and the pages they were on. A mark with no area, or wholly off its page, is skipped.</li>
 <li><code dir="auto">removed.session</code>: the ids of the session annotations removed with the content. <code dir="auto">removed.file</code>: how many of the file’s own annotations went, pop-up windows included.</li>
-<li><code dir="auto">foreignMarks</code>: other programs’ Redact annotations, left unapplied. <code dir="auto">ownLockedMarks</code>: Inkbar’s earlier marks applied in an encrypted file.</li>
+<li><code dir="auto">foreignMarks</code>: other programs’ Redact annotations that stayed locked and were left unapplied. <code dir="auto">ownLockedMarks</code>: Inkbar’s earlier marks applied in an encrypted file.</li>
 <li><code dir="auto">fieldsSkipped</code>: the names of changed form fields that were not written, because a mark removed their widgets.</li>
 <li><code dir="auto">sanitised</code>: what was removed from the file.</li>
 <li><code dir="auto">hiddenLayers</code> and <code dir="auto">signed</code>: whether the file has hidden layers, and whether it held a digital signature.</li>

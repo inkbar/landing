@@ -120,9 +120,19 @@ In [controlled mode](https://inkbar.dev/docs/guides/controlled-mode.md), `onChan
 
 Some annotations stay locked:
 
-- Annotations made by other programs.
+- Annotations made by other programs, except unapplied Redact annotations (see below).
 - An annotation Inkbar saved that another program has since moved, edited, replied to or given a pop-up window. Inkbar's own replies to a note that stays locked stay locked with it.
 - Inkbar's own annotations in an encrypted file.
+
+An unapplied Redact annotation from another program opens as an editable redaction mark. It looks like Inkbar's own marks and counts in the [apply confirmation](https://inkbar.dev/docs/guides/redaction.md). The mark keeps its area, fill colour and overlay text. The apply draws that text as it draws the text of Inkbar's own marks, so the other program's font, size and repeat setting do not carry over. A save with changes, or an apply, removes the other program's copy and its pop-up window from the file and writes Inkbar's mark.
+
+Such a mark stays locked in three cases:
+
+- The file is encrypted.
+- Another program's annotation replies to it.
+- Its pop-up window is not listed on the same page, or does not name the mark as its parent.
+
+The page draws a locked mark as the other program left it, and the apply skips it and counts it in `foreignMarks`.
 
 ## Where the saved file differs from the screen
 
