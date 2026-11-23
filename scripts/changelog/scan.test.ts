@@ -39,3 +39,29 @@ test('each rule flags its own line', () => {
   )
   assert.equal(scanNotes('Fixed in #448.')[0]?.match, '#448')
 })
+
+test('raw HTML at the end of a line is flagged', () => {
+  assert.deepEqual(
+    scanNotes('Adds a <script').map(({ rule }) => rule),
+    ['html']
+  )
+})
+
+test('links and bare URLs are flagged', () => {
+  assert.deepEqual(
+    scanNotes('See [the docs](/docs/).').map(({ rule }) => rule),
+    ['link']
+  )
+  assert.deepEqual(
+    scanNotes('See https://inkbar.dev.').map(({ rule }) => rule),
+    ['link']
+  )
+})
+
+test('cubic Bézier curves are not a vendor', () => {
+  assert.deepEqual(scanNotes('Ink strokes fit cubic Bézier curves.'), [])
+  assert.deepEqual(
+    scanNotes('Reviewed by cubic.').map(({ rule }) => rule),
+    ['vendor']
+  )
+})

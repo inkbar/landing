@@ -1,7 +1,13 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { collectChanges, type GitHubGet, listReleases, openPrBranches } from './github.ts'
+import {
+  collectChanges,
+  GitHubError,
+  type GitHubGet,
+  listReleases,
+  openPrBranches,
+} from './github.ts'
 
 function fakeGet(responses: Record<string, unknown>): GitHubGet & { calls: string[] } {
   const calls: string[] = []
@@ -96,5 +102,61 @@ test('openPrBranches maps each version in an open changelog pull request to its 
       ['0.1.0', 'changelog/backfill'],
       ['0.1.1', 'changelog/backfill'],
     ])
+  )
+})
+
+test('a compare cut short fails instead of drafting from part of a release', async () => {
+  const get = fakeGet({
+    '/repos/inkbar/inkbar/compare/v0.1.0...v0.2.0': {
+      total_commits: 300,
+      commits: [commit('feat: x')],
+    },
+  })
+  await assert.rejects(collectChanges(get, '0.1.0', '0.2.0'), /300 commits/)
+})
+
+test('a number that is not a pull request leaves the commit without one', async () => {
+  const responses: Record<string, unknown> = {
+    '/repos/inkbar/inkbar/compare/v0.1.0...v0.2.0': {
+      total_commits: 1,
+      commits: [commit('fix: issue (#99)')],
+    },
+  }
+  const get: GitHubGet = (path) =>
+    path in responses
+      ? Promise.resolve(responses[path])
+      : Promise.reject(new GitHubError(404, path))
+  assert.deepEqual(await collectChanges(get, '0.1.0', '0.2.0'), [
+    { subject: 'fix: issue (#99)', body: '' },
+  ])
+})
+
+test('a revert reads the pull request that made the revert', async () => {
+  const get = fakeGet({
+    '/repos/inkbar/inkbar/compare/v0.1.0...v0.2.0': {
+      total_commits: 1,
+      commits: [commit('Revert "feat: x (#12)" (#15)')],
+    },
+    '/repos/inkbar/inkbar/pulls/15': { title: 'Revert x', body: '' },
+  })
+  const [change] = await collectChanges(get, '0.1.0', '0.2.0')
+  assert.equal(change?.pr?.title, 'Revert x')
+})
+
+test('listReleases leaves out draft releases', async () => {
+  const get = fakeGet({
+    '/repos/inkbar/inkbar/releases?per_page=100': [
+      { tag_name: 'v0.3.0', published_at: null, prerelease: false, draft: true },
+      {
+        tag_name: 'v0.2.0',
+        published_at: '2026-10-17T10:00:00Z',
+        prerelease: false,
+        draft: false,
+      },
+    ],
+  })
+  assert.deepEqual(
+    (await listReleases(get)).map(({ version }) => version),
+    ['0.2.0']
   )
 })

@@ -45,3 +45,20 @@ test('every GitHub read finishes before the first Claude call', async () => {
     { version: '0.3.0', date: '2026-10-17', notes: '- X.' },
   ])
 })
+
+test('a release with no publish date fails rather than writing an empty date', async () => {
+  const get: GitHubGet = () => Promise.resolve({ total_commits: 0, commits: [] })
+  const client = {} as NotesClient
+  await assert.rejects(
+    draftReleases(
+      get,
+      client,
+      ['0.2.0'],
+      [
+        { version: '0.1.0', publishedAt: '2026-10-15T10:00:00Z', prerelease: false },
+        { version: '0.2.0', publishedAt: '', prerelease: false },
+      ]
+    ),
+    /0\.2\.0 has no publish date/
+  )
+})
