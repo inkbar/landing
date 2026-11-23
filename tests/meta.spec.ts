@@ -24,6 +24,21 @@ test('the landing page carries its search and social metadata', async ({ page })
   await expect(page.locator('meta[name="robots"]')).toHaveCount(0)
 })
 
+test('the landing page describes Inkbar as structured data', async ({ page }) => {
+  await page.goto('/')
+  const json = await page.locator('head script[type="application/ld+json"]').textContent()
+  const { '@graph': graph } = JSON.parse(json!) as {
+    '@graph': { '@type': string | string[]; name: string }[]
+  }
+  expect(graph.find((node) => node['@type'] === 'WebSite')?.name).toBe('Inkbar')
+  const app = graph.find((node) => [node['@type']].flat().includes('SoftwareApplication'))
+  expect(app).toMatchObject({
+    name: 'Inkbar',
+    applicationCategory: 'DeveloperApplication',
+    offers: { price: '0' },
+  })
+})
+
 test('docs pages carry a canonical URL and the social image', async ({ page }) => {
   await page.goto('/docs/quickstart/')
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
