@@ -106,13 +106,13 @@ export async function collectChanges(
   return changes
 }
 
-/** The releases whose notes sit in an open changelog pull request on inkbar/landing. */
-export async function openPrVersions(get: GitHubGet): Promise<Set<string>> {
+/** Each release whose notes sit in an open changelog pull request on inkbar/landing, and its branch. */
+export async function openPrBranches(get: GitHubGet): Promise<Map<string, string>> {
   const pulls = (await get('/repos/inkbar/landing/pulls?state=open&per_page=100')) as {
     number: number
     head: { ref: string }
   }[]
-  const versions = new Set<string>()
+  const branches = new Map<string, string>()
   for (const pull of pulls.filter(({ head }) => head.ref.startsWith('changelog/'))) {
     const files = (await get(
       `/repos/inkbar/landing/pulls/${pull.number}/files?per_page=100`
@@ -121,8 +121,8 @@ export async function openPrVersions(get: GitHubGet): Promise<Set<string>> {
     }[]
     for (const { filename } of files) {
       const version = /^src\/content\/changelog\/(.+)\.md$/.exec(filename)?.[1]
-      if (version) versions.add(version)
+      if (version) branches.set(version, pull.head.ref)
     }
   }
-  return versions
+  return branches
 }
