@@ -1,6 +1,9 @@
 ---
 title: Annotations
 description: Which annotations Inkbar creates and displays, how to save them, how to follow changes and how the tools work from the keyboard.
+head:
+  - tag: title
+    content: 'PDF annotations in the browser | Inkbar'
 ---
 
 Annotations are plain typed objects. Every coordinate is in PDF user space: points, origin bottom-left, before the page's `/Rotate`. The numbers stay the same at any zoom, rotation or screen size.

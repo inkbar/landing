@@ -1,6 +1,9 @@
 ---
 title: Theming
 description: Import the default stylesheet and restyle it with your own tokens and CSS.
+head:
+  - tag: title
+    content: 'Theme the PDF viewer with CSS | Inkbar'
 ---
 
 `@inkbar/theme` holds the default styles for the Inkbar components: one stylesheet, no JavaScript.

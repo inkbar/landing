@@ -1,6 +1,9 @@
 ---
 title: Vue
 description: Use Inkbar in a Vue 3 app with components and composables.
+head:
+  - tag: title
+    content: 'Vue PDF viewer and editor | Inkbar'
 ---
 
 Vue 3 components and composables for Inkbar. The components are unstyled primitives built on `@inkbar/core`.

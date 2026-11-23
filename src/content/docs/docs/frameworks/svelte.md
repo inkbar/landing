@@ -1,6 +1,9 @@
 ---
 title: Svelte
 description: Use Inkbar in a Svelte 5 app with components and hooks.
+head:
+  - tag: title
+    content: 'Svelte PDF viewer and editor | Inkbar'
 ---
 
 Svelte 5 components and hooks for Inkbar. The components are unstyled primitives built on `@inkbar/core`.

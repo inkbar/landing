@@ -1,6 +1,9 @@
 ---
 title: React
 description: Use Inkbar in a React 19 app with components and hooks.
+head:
+  - tag: title
+    content: 'React PDF viewer and editor | Inkbar'
 ---
 
 React components and hooks for Inkbar. The components are unstyled primitives built on `@inkbar/core`.

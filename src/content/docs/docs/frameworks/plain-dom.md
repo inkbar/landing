@@ -1,6 +1,9 @@
 ---
 title: Plain DOM
 description: Use Inkbar without a framework package, with createViewer and its toolbar controls, or mountViewer for your own chrome.
+head:
+  - tag: title
+    content: 'JavaScript PDF viewer with no framework | Inkbar'
 ---
 
 `@inkbar/core` has these entry points:
