@@ -1,4 +1,6 @@
 ---
+import { getCollection } from 'astro:content'
+
 import { url } from '../../lib/url'
 import Logo from './Logo.astro'
 
@@ -8,6 +10,8 @@ interface Props {
 
 const { variant = 'full' } = Astro.props
 const full = variant === 'full'
+// The changelog page exists only once it has notes.
+const hasChangelog = (await getCollection('changelog')).length > 0
 ---
 
 <footer class="foot" data-variant={variant}>
@@ -50,6 +54,7 @@ const full = variant === 'full'
         <nav aria-label="Project">
           <h2>Project</h2>
           <a href="https://github.com/inkbar/inkbar">GitHub</a>
+          {hasChangelog && <a href={url('/changelog/')}>Changelog</a>}
           <a href="https://github.com/inkbar/inkbar/releases">Releases</a>
           <a href="https://github.com/inkbar/inkbar/issues">Issues</a>
           <a href="https://github.com/inkbar/inkbar/blob/main/LICENSE">MIT licence</a>
