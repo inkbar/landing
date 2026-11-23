@@ -61,6 +61,26 @@ test('the strip lists the supported frameworks', async ({ page }) => {
   }
 })
 
+test('the framework names link to their docs pages', async ({ page }) => {
+  const strip = page.locator('[data-section="works-with"]')
+  for (const [name, slug] of [
+    ['Vue', 'vue'],
+    ['React', 'react'],
+    ['Svelte', 'svelte'],
+    ['Plain DOM', 'plain-dom'],
+  ]) {
+    await expect(strip.getByRole('link', { name, exact: true })).toHaveAttribute(
+      'href',
+      new RegExp(`/docs/frameworks/${slug}/$`)
+    )
+  }
+})
+
+// Whether each link resolves is checked by the internal links test below.
+test('feature headings with a guide link to it', async ({ page }) => {
+  await expect(page.locator('#features .cell h3 a[href*="/docs/"]')).toHaveCount(15)
+})
+
 test('every section heading from the canvas is present, in order', async ({ page }) => {
   const headings = await page.locator('main h2').allTextContents()
   expect(headings.map((text) => text.replace(/\s+/g, ' ').trim())).toEqual([
