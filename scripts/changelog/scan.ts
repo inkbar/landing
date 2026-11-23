@@ -24,8 +24,10 @@ const rules: [rule: string, pattern: RegExp][] = [
 export function scanNotes(notes: string): Finding[] {
   const findings: Finding[] = []
   notes.split('\n').forEach((text, index) => {
+    // Code formatting shows a tag as text, so the html rule reads the line without code spans.
+    const prose = text.replace(/(`+)[\s\S]*?\1/g, '')
     for (const [rule, pattern] of rules) {
-      const match = pattern.exec(text)?.[0]
+      const match = pattern.exec(rule === 'html' ? prose : text)?.[0]
       if (match) findings.push({ line: index + 1, rule, match })
     }
   })
