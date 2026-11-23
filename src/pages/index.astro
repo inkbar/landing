@@ -9,12 +9,45 @@ import ViewerMock from '../components/landing/ViewerMock.astro'
 import WorksWith from '../components/landing/WorksWith.astro'
 import Landing from '../layouts/Landing.astro'
 import { agentNote, siteUrl } from '../lib/markdown-twin'
+
+// Tells search engines the site's name and what Inkbar is. Free and open source, so the
+// offer is zero.
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      name: 'Inkbar',
+      url: 'https://inkbar.dev/',
+    },
+    {
+      '@type': ['SoftwareApplication', 'SoftwareSourceCode'],
+      name: 'Inkbar',
+      description:
+        'Open-source PDF viewer and editor for the web, with forms, notes, signatures and redaction, for Vue, React, Svelte or no framework.',
+      url: 'https://inkbar.dev/',
+      applicationCategory: 'DeveloperApplication',
+      operatingSystem: 'Web browser',
+      programmingLanguage: 'TypeScript',
+      codeRepository: 'https://github.com/inkbar/inkbar',
+      license: 'https://opensource.org/license/mit',
+      isAccessibleForFree: true,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      author: { '@type': 'Person', name: 'Edward Coleridge Smith' },
+    },
+  ],
+}
 ---
 
 <Landing
   title="Inkbar: open-source PDF viewer and editor for the web"
   description="Open-source PDF viewer and editor for the web, with forms, notes, signatures and redaction. For Vue, React, Svelte or no framework. Free under the MIT licence."
 >
+  <script
+    slot="head"
+    type="application/ld+json"
+    set:html={JSON.stringify(structuredData)}
+  />
   <p class="visually-hidden" aria-hidden="true" data-agent-note>
     {agentNote(siteUrl(import.meta.env.BASE_URL))}
   </p>
