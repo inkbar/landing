@@ -16,5 +16,23 @@ test('findings are listed first, by release and line', () => {
     new Map([['0.18.0', [{ line: 3, rule: 'pr-number', match: '#448' }]]]),
     ['0.18.0']
   )
-  assert.match(body, /^### Check these\n\n- 0\.18\.0 line 3: pr-number "#448"\n/)
+  assert.match(
+    body,
+    /^### Check these\n\n- `src\/content\/changelog\/0\.18\.0\.md` line 8/
+  )
+})
+
+test('findings name the file and its line, with the match in code', () => {
+  const body = prBody(
+    new Map([['0.18.0', [{ line: 3, rule: 'pr-number', match: '#448' }]]]),
+    ['0.18.0']
+  )
+  assert.match(body, /- `src\/content\/changelog\/0\.18\.0\.md` line 8: pr-number `#448`/)
+})
+
+test('the body says a redraft replaces only that release', () => {
+  assert.match(
+    prBody(new Map(), ['0.18.0']),
+    /replaces that release's notes on this branch/
+  )
 })

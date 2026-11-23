@@ -11,7 +11,7 @@ const stableVersion = /^\d+\.\d+\.\d+$/
 
 /** " v0.18.0 " → "0.18.0", so a version typed in the Actions tab still matches. */
 export function normaliseVersion(input: string): string {
-  return input.trim().replace(/^v/, '')
+  return input.trim().replace(/^v/i, '')
 }
 
 function stable(releases: Release[]): Release[] {
@@ -40,7 +40,7 @@ export function resolveVersions(
 ): { version: string; overwrite: boolean }[] {
   const published = stable(releases).map(({ version }) => version)
   const untouched = (version: string) => !onMain.has(version) && !inOpenPrs.has(version)
-  if (request.versions.trim() === 'missing') {
+  if (request.versions.trim().toLowerCase() === 'missing') {
     return published.filter(untouched).map((version) => ({ version, overwrite: false }))
   }
   const named = request.versions.split(',').map(normaliseVersion).filter(Boolean)

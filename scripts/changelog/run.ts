@@ -25,6 +25,7 @@ export async function draftReleases(
   for (const version of versions) {
     const release = releases.find((candidate) => candidate.version === version)
     if (!release) throw new Error(`${version} is not a published release`)
+    if (!release.publishedAt) throw new Error(`${version} has no publish date`)
     const base = previousVersion(version, releases)
     inputs.push({
       version,

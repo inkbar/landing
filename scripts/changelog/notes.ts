@@ -64,6 +64,9 @@ export async function draftNotes(
   return cleanReply(text)
 }
 
+/** How many lines of frontmatter come before the notes in a changelog file. */
+export const FRONTMATTER_LINES = 5
+
 /** The changelog file for a release: its frontmatter, then the notes. */
 export function notesFile(version: string, date: string, notes: string): string {
   return `---\nversion: ${version}\ndate: ${date}\n---\n\n${notes.trim()}\n`

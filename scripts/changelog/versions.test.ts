@@ -73,3 +73,16 @@ test('an unknown version fails, naming it', () => {
     /0\.9\.9 is not a published release/
   )
 })
+
+test('missing and versions are matched without regard to case', () => {
+  assert.equal(normaliseVersion('V0.18.0'), '0.18.0')
+  assert.deepEqual(
+    resolveVersions(
+      { versions: ' Missing ', trigger: 'manual' },
+      releases,
+      new Set(),
+      new Set()
+    ).map(({ version }) => version),
+    ['0.1.0', '0.1.1', '0.2.0']
+  )
+})

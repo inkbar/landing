@@ -14,8 +14,11 @@ const rules: [rule: string, pattern: RegExp][] = [
   ['dash', /[—–]/],
   ['plan-label', /\b(1a|1b|Track [AB]|sub-project|milestone)\b/i],
   ['ai', /\bAI\b/],
-  ['vendor', /\b(BrowserStack|Cloudflare|cubic|GitHub Actions)\b/i],
-  ['html', /<[a-z][\w-]*[\s>/]/i],
+  // cubic the reviewer, not a cubic Bézier curve.
+  ['vendor', /\b(BrowserStack|Cloudflare|GitHub Actions|cubic(?! B[ée]zier))\b/i],
+  ['html', /<[a-z][\w-]*(?=[\s>/]|$)/i],
+  // The page adds the one link a release needs; Astro would turn a bare URL into another.
+  ['link', /\]\(|https?:\/\//],
 ]
 
 export function scanNotes(notes: string): Finding[] {
