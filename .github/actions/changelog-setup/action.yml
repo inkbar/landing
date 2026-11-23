@@ -1,0 +1,32 @@
+# Fetches a GitHub OIDC token for the Anthropic API, for the changelog draft.
+#
+# Claude is reached through Workload Identity Federation, so no API key is stored anywhere. The
+# SDK exchanges this token for a short-lived Anthropic one; it also needs
+# ANTHROPIC_FEDERATION_RULE_ID and ANTHROPIC_ORGANIZATION_ID in the job's env (repository
+# variables), and the job needs `id-token: write`. The rule only accepts tokens from main. Never
+# set ANTHROPIC_API_KEY in a job that uses this: it would take precedence over federation.
+#
+# The token lasts about 5 minutes and can be exchanged once, so this runs just before drafting.
+name: Changelog setup
+description: Fetch an OIDC token for the Anthropic API
+
+runs:
+  using: composite
+  steps:
+    - name: Fetch an OIDC token for the Anthropic API
+      shell: bash
+      run: |
+        if [ -z "${ACTIONS_ID_TOKEN_REQUEST_URL:-}" ]; then
+          echo "::error::No OIDC token available: the job needs permissions id-token: write"
+          exit 1
+        fi
+        file="$RUNNER_TEMP/anthropic-oidc.jwt"
+        umask 077
+        curl -sSf -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+          "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=https://api.anthropic.com" \
+          | jq -r .value > "$file"
+        if [ ! -s "$file" ] || [ "$(cat "$file")" = "null" ]; then
+          echo "::error::GitHub returned no OIDC token for the Anthropic API"
+          exit 1
+        fi
+        echo "ANTHROPIC_IDENTITY_TOKEN_FILE=$file" >> "$GITHUB_ENV"

@@ -1,0 +1,63 @@
+name: changelog
+
+# Drafts friendly notes for Inkbar releases with Claude and opens a pull request with them.
+# inkbar/inkbar's release workflow dispatches inkbar-release when a release is published; the
+# Actions tab runs it by hand for one release, a list, or "missing" (every release with no
+# notes yet). A dispatch and "missing" never overwrite notes on main or in an open pull request;
+# naming a release by hand redrafts it and replaces its branch.
+on:
+  repository_dispatch:
+    types: [inkbar-release]
+  workflow_dispatch:
+    inputs:
+      versions:
+        description: A version, a comma-separated list, or missing
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  id-token: write # Workload Identity Federation for the Anthropic API
+
+concurrency:
+  group: changelog
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    steps:
+      # The App's token, unlike GITHUB_TOKEN, starts CI and the preview on the pull request.
+      - name: Mint App token
+        id: app-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.IB_APP_CLIENT_ID }}
+          private-key: ${{ secrets.IB_APP_PRIVATE_KEY }}
+          owner: inkbar
+          repositories: landing
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+          token: ${{ steps.app-token.outputs.token }}
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - uses: ./.github/actions/changelog-setup
+      # Inputs reach the shell through env, never through interpolation.
+      - name: Draft the notes
+        env:
+          VERSIONS: ${{ github.event.client_payload.version || inputs.versions }}
+          TRIGGER: ${{ github.event_name == 'repository_dispatch' && 'dispatch' || 'manual' }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          ANTHROPIC_FEDERATION_RULE_ID: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
+          ANTHROPIC_ORGANIZATION_ID: ${{ vars.ANTHROPIC_ORGANIZATION_ID }}
+        run: pnpm changelog:draft --versions "$VERSIONS" --trigger "$TRIGGER"
+      - name: Open or update the pull request
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
+          APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
+        run: bash .github/scripts/changelog-pr.sh
