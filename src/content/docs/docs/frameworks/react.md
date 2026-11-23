@@ -1,6 +1,6 @@
 ---
 title: React
-description: Use Inkbar in a React 19 app with components and hooks.
+description: "Add a PDF viewer and editor to a React 19 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction."
 head:
   - tag: title
     content: 'React PDF viewer and editor | Inkbar'

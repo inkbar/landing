@@ -1,6 +1,6 @@
 ---
 title: Theming
-description: Import the default stylesheet and restyle it with your own tokens and CSS.
+description: "Import Inkbar's default stylesheet, then restyle the PDF viewer with your own design tokens and CSS."
 head:
   - tag: title
     content: 'Theme the PDF viewer with CSS | Inkbar'
