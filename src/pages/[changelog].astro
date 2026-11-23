@@ -1,0 +1,113 @@
+---
+// The changelog, at /changelog/. The route exists only once there are notes, so the page,
+// its footer link and its sitemap entry all appear with the first release's notes.
+import { getCollection, render } from 'astro:content'
+
+import Landing from '../layouts/Landing.astro'
+import { checkVersionIds, newestFirst, releaseAnchor, releaseUrl } from '../lib/changelog'
+
+export async function getStaticPaths() {
+  const entries = await getCollection('changelog')
+  if (entries.length === 0) return []
+  checkVersionIds(entries)
+  return [{ params: { changelog: 'changelog' } }]
+}
+
+const releases = await Promise.all(
+  newestFirst(await getCollection('changelog')).map(async (entry) => ({
+    entry,
+    Content: (await render(entry)).Content,
+  }))
+)
+const dateFormat = new Intl.DateTimeFormat('en-GB', {
+  dateStyle: 'long',
+  timeZone: 'UTC',
+})
+---
+
+<Landing
+  title="Changelog: what's new in each Inkbar release"
+  description="What changed in each Inkbar release, from new editing tools to fixes, in plain words. Newest release first."
+>
+  <div class="container changelog">
+    <h1>Changelog</h1>
+    {releases.map(({ entry, Content }) => (
+      <section id={releaseAnchor(entry.data.version)} class="release">
+        <header>
+          <h2>{entry.data.version}</h2>
+          <time datetime={entry.data.date.toISOString().slice(0, 10)}>
+            {dateFormat.format(entry.data.date)}
+          </time>
+        </header>
+        <div class="notes">
+          <Content />
+        </div>
+        <a class="text-link" href={releaseUrl(entry.data.version)}>
+          Full changelog on GitHub
+        </a>
+      </section>
+    ))}
+  </div>
+</Landing>
+
+<style>
+  .changelog {
+    max-width: 760px;
+    padding-block: clamp(56px, 8vw, 112px);
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+  }
+  h1 {
+    font-size: clamp(40px, 6vw, 76px);
+    letter-spacing: -0.03em;
+  }
+  .release {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px 16px;
+  }
+  h2 {
+    font-size: clamp(28px, 3.4vw, 40px);
+    letter-spacing: -0.02em;
+  }
+  time {
+    color: var(--caption);
+    font-size: 15px;
+  }
+  .notes {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--body);
+  }
+  .notes :global(h3) {
+    margin-top: 8px;
+    font-family: var(--font-body);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .notes :global(ul) {
+    margin: 0;
+    padding-left: 1.25em;
+  }
+  .notes :global(li + li) {
+    margin-top: 6px;
+  }
+  .notes :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--ink);
+  }
+</style>

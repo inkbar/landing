@@ -1,6 +1,13 @@
+import { readdirSync } from 'node:fs'
+
 import { expect, test } from '@playwright/test'
 
 import { sidebar } from '../src/lib/docs-sidebar'
+
+// The changelog page exists only once it has notes.
+const hasChangelog = readdirSync(
+  new URL('../src/content/changelog/', import.meta.url)
+).some((name) => name.endsWith('.md'))
 
 test('the landing page carries its search and social metadata', async ({ page }) => {
   await page.goto('/')
@@ -74,6 +81,7 @@ test('every page has a description that fits a search result', async ({ page }) 
     '/',
     '/docs/',
     ...sidebar.flatMap(({ items }) => items.map(({ slug }) => `/${slug}/`)),
+    ...(hasChangelog ? ['/changelog/'] : []),
   ]
   for (const path of [...new Set(paths)]) {
     await page.goto(path)
