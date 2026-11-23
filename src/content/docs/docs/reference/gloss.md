@@ -1,6 +1,6 @@
 ---
 title: Gloss format
-description: Inkbar exports and imports annotations as Gloss, an open JSON format for PDF annotations. What Inkbar adds to Gloss, what it leaves out, and how to validate an export.
+description: Inkbar exports and imports annotations as Gloss, an open JSON format for PDF annotations. What Inkbar adds, what it leaves out, and how to validate an export.
 head:
   - tag: title
     content: 'Gloss: a JSON format for PDF annotations | Inkbar'

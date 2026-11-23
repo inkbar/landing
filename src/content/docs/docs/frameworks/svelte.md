@@ -1,6 +1,6 @@
 ---
 title: Svelte
-description: Use Inkbar in a Svelte 5 app with components and hooks.
+description: "Add a PDF viewer and editor to a Svelte 5 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction."
 head:
   - tag: title
     content: 'Svelte PDF viewer and editor | Inkbar'

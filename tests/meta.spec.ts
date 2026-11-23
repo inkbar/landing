@@ -52,6 +52,24 @@ test('docs pages share under their full title', async ({ page }) => {
   }
 })
 
+// Search results cut a description off at about 160 characters, and a very short one wastes
+// the snippet.
+test('every page has a description that fits a search result', async ({ page }) => {
+  const paths = [
+    '/',
+    '/docs/',
+    ...sidebar.flatMap(({ items }) => items.map(({ slug }) => `/${slug}/`)),
+  ]
+  for (const path of [...new Set(paths)]) {
+    await page.goto(path)
+    const description = await page
+      .locator('meta[name="description"]')
+      .getAttribute('content')
+    expect(description?.length, path).toBeGreaterThanOrEqual(50)
+    expect(description?.length, path).toBeLessThanOrEqual(160)
+  }
+})
+
 test('the static files for the host and for crawlers are served', async ({ request }) => {
   const robots = await request.get('/robots.txt')
   expect(robots.status()).toBe(200)

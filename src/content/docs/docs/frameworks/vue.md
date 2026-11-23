@@ -1,6 +1,6 @@
 ---
 title: Vue
-description: Use Inkbar in a Vue 3 app with components and composables.
+description: "Add a PDF viewer and editor to a Vue 3 app with Inkbar's components and composables: toolbars, annotations, forms and redaction."
 head:
   - tag: title
     content: 'Vue PDF viewer and editor | Inkbar'
