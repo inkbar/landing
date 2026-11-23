@@ -65,3 +65,14 @@ test('cubic Bézier curves are not a vendor', () => {
     ['vendor']
   )
 })
+
+test('HTML inside code formatting is not flagged', () => {
+  assert.deepEqual(
+    scanNotes('Replaces a native `<select>` with `<InkCommand id="x">`.'),
+    []
+  )
+  assert.deepEqual(
+    scanNotes('Replaces a native <select> here.').map(({ rule }) => rule),
+    ['html']
+  )
+})

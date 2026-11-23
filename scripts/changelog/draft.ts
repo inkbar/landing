@@ -14,6 +14,7 @@ import { parseArgs } from 'node:util'
 import Anthropic from '@anthropic-ai/sdk'
 
 import { chooseBranch } from './branch.ts'
+import { formatFile } from './format.ts'
 import { githubGet, listReleases, openPrBranches } from './github.ts'
 import { type NotesClient, notesFile } from './notes.ts'
 import { prBody } from './pr-body.ts'
@@ -81,8 +82,9 @@ async function main(): Promise<void> {
   }
   const findings = new Map<string, Finding[]>()
   for (const { version, date, notes } of drafts) {
-    writeFileSync(new URL(`${version}.md`, changelogDir), notesFile(version, date, notes))
-    const found = scanNotes(notes)
+    const file = await formatFile(notesFile(version, date, notes))
+    writeFileSync(new URL(`${version}.md`, changelogDir), file)
+    const found = scanNotes(file)
     if (found.length > 0) findings.set(version, found)
   }
   const range =

@@ -1,5 +1,4 @@
 // The description of the pull request a changelog run opens.
-import { FRONTMATTER_LINES } from './notes.ts'
 
 import type { Finding } from './scan.ts'
 
@@ -7,7 +6,7 @@ export function prBody(findings: Map<string, Finding[]>, versions: string[]): st
   const checks = [...findings].flatMap(([version, list]) =>
     list.map(
       ({ line, rule, match }) =>
-        `- \`src/content/changelog/${version}.md\` line ${line + FRONTMATTER_LINES}: ${rule} \`${match}\``
+        `- \`src/content/changelog/${version}.md\` line ${line}: ${rule} \`${match}\``
     )
   )
   const releases = versions.length === 1 ? versions[0] : `${versions.length} releases`
