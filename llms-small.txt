@@ -8,7 +8,7 @@ Inkbar is a PDF viewer and editor for the browser, with form filling, annotation
 
 # Quickstart
 
-> Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar.
+> Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar, in Vue, React, Svelte or with no framework.
 
 Put a PDF on screen with tools above it and page and zoom controls below. This page assumes a Vite project. ## 1. Install the packages You need the core, the theme and the package for your framework. The packages share one version number. * Vue 
   ```sh
@@ -3027,7 +3027,7 @@ export const review = definePlugin({
 
 # Theming
 
-> Import the default stylesheet and restyle it with your own tokens and CSS.
+> Import Inkbar's default stylesheet, then restyle the PDF viewer with your own design tokens and CSS.
 
 `@inkbar/theme` holds the default styles for the Inkbar components: one stylesheet, no JavaScript. Install it as the [Quickstart](/docs/quickstart/) shows. Import the stylesheet once in your app: 
 ```ts
@@ -3337,7 +3337,7 @@ definePlugin('review', (plugin) => {
 
 # Vue
 
-> Use Inkbar in a Vue 3 app with components and composables.
+> Add a PDF viewer and editor to a Vue 3 app with Inkbar's components and composables: toolbars, annotations, forms and redaction.
 
 Vue 3 components and composables for Inkbar. The components are unstyled primitives built on `@inkbar/core`. Install the packages as the [Quickstart](/docs/quickstart/) shows. Vue 3.5 or later is a peer dependency. Add the Vite plugin from `@inkbar/core/vite` so PDF.js can load its worker and fonts; [Loading assets](/docs/loading-assets/) covers it. ## Usage 
 ```vue
@@ -3424,7 +3424,7 @@ const decorate: DecorateAnnotation = (a) =>
 
 # React
 
-> Use Inkbar in a React 19 app with components and hooks.
+> Add a PDF viewer and editor to a React 19 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction.
 
 React components and hooks for Inkbar. The components are unstyled primitives built on `@inkbar/core`. Install the packages as the [Quickstart](/docs/quickstart/) shows. React 19 and React DOM 19 are peer dependencies. Add the Vite plugin from `@inkbar/core/vite` so PDF.js can load its worker and fonts; [Loading assets](/docs/loading-assets/) covers it. The package is marked `'use client'`, so a React Server Components app can import it from a server component. ## Usage 
 ```tsx
@@ -3509,7 +3509,7 @@ const decorate: DecorateAnnotation = (a) =>
 
 # Svelte
 
-> Use Inkbar in a Svelte 5 app with components and hooks.
+> Add a PDF viewer and editor to a Svelte 5 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction.
 
 Svelte 5 components and hooks for Inkbar. The components are unstyled primitives built on `@inkbar/core`. Install the packages as the [Quickstart](/docs/quickstart/) shows. Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/core/vite` so PDF.js can load its worker and fonts; [Loading assets](/docs/loading-assets/) covers it. The package ships `.svelte` sources, so your bundler compiles them for your target, including the server. ## Usage 
 ```svelte
@@ -3731,7 +3731,7 @@ const json = doc.exportAnnotations('json')
 
 # Gloss format
 
-> Inkbar exports and imports annotations as Gloss, an open JSON format for PDF annotations. What Inkbar adds to Gloss, what it leaves out, and how to validate an export.
+> Inkbar exports and imports annotations as Gloss, an open JSON format for PDF annotations. What Inkbar adds, what it leaves out, and how to validate an export.
 
 `exportAnnotations` writes a [Gloss](https://gloss-format.org) document, and `importAnnotations` reads one. Gloss is an open JSON format for PDF annotations, with the same annotation types and coordinates as XFDF. The [Gloss docs](https://gloss-format.org) describe every field. This page covers what Inkbar does on top of them. 
 ```json

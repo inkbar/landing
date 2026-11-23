@@ -2,7 +2,7 @@
 
 > For AI agents: the full Inkbar documentation index is at https://inkbar.dev/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/docs/quickstart/ becomes https://inkbar.dev/docs/quickstart.md.
 
-Use Inkbar in a React 19 app with components and hooks.
+Add a PDF viewer and editor to a React 19 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction.
 
 React components and hooks for Inkbar. The components are unstyled primitives built on `@inkbar/core`.
 

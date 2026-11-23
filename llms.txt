@@ -11,7 +11,7 @@ Start with the [Introduction](https://inkbar.dev/docs.md) and the [Quickstart](h
 ## Getting started
 
 - [Introduction](https://inkbar.dev/docs.md): What Inkbar does today, what comes next, which packages it ships and where to start.
-- [Quickstart](https://inkbar.dev/docs/quickstart.md): Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar.
+- [Quickstart](https://inkbar.dev/docs/quickstart.md): Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar, in Vue, React, Svelte or with no framework.
 - [Loading assets](https://inkbar.dev/docs/loading-assets.md): Serve the PDF.js worker, fonts and decoders with the Vite plugin or from your own server.
 
 ## Guides
@@ -32,19 +32,19 @@ Start with the [Introduction](https://inkbar.dev/docs.md) and the [Quickstart](h
 - [Writing a plugin](https://inkbar.dev/docs/guides/writing-a-plugin.md): Write an Inkbar plugin with records, commands, marks and cards, once for every framework.
 - [Saving](https://inkbar.dev/docs/guides/saving.md): Write annotations and form values into the PDF with @inkbar/engine, so Download, Print and doc.save() give the file as it looks on screen.
 - [Storage](https://inkbar.dev/docs/guides/storage.md): Choose where Inkbar keeps saved signatures, sidebar widths and plugin settings between visits, from memory to localStorage to your own server.
-- [Theming](https://inkbar.dev/docs/guides/theming.md): Import the default stylesheet and restyle it with your own tokens and CSS.
+- [Theming](https://inkbar.dev/docs/guides/theming.md): Import Inkbar's default stylesheet, then restyle the PDF viewer with your own design tokens and CSS.
 - [Translations](https://inkbar.dev/docs/guides/translations.md): Show Inkbar in your own language with the French and German sets, override single strings, switch language live, and translate the labels you supply.
 
 ## Frameworks
 
-- [Vue](https://inkbar.dev/docs/frameworks/vue.md): Use Inkbar in a Vue 3 app with components and composables.
-- [React](https://inkbar.dev/docs/frameworks/react.md): Use Inkbar in a React 19 app with components and hooks.
-- [Svelte](https://inkbar.dev/docs/frameworks/svelte.md): Use Inkbar in a Svelte 5 app with components and hooks.
+- [Vue](https://inkbar.dev/docs/frameworks/vue.md): Add a PDF viewer and editor to a Vue 3 app with Inkbar's components and composables: toolbars, annotations, forms and redaction.
+- [React](https://inkbar.dev/docs/frameworks/react.md): Add a PDF viewer and editor to a React 19 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction.
+- [Svelte](https://inkbar.dev/docs/frameworks/svelte.md): Add a PDF viewer and editor to a Svelte 5 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction.
 - [Plain DOM](https://inkbar.dev/docs/frameworks/plain-dom.md): Use Inkbar without a framework package, with createViewer and its toolbar controls, or mountViewer for your own chrome.
 
 ## Reference
 
-- [Gloss format](https://inkbar.dev/docs/reference/gloss.md): Inkbar exports and imports annotations as Gloss, an open JSON format for PDF annotations. What Inkbar adds to Gloss, what it leaves out, and how to validate an export.
+- [Gloss format](https://inkbar.dev/docs/reference/gloss.md): Inkbar exports and imports annotations as Gloss, an open JSON format for PDF annotations. What Inkbar adds, what it leaves out, and how to validate an export.
 - [Theme tokens](https://inkbar.dev/docs/reference/theme-tokens.md): The shadcn-compatible tokens and the annotation colour variables that Inkbar's stylesheet reads.
 - [Icons](https://inkbar.dev/docs/reference/icons.md): The 52 icons the toolbar controls show, which control shows each one, and how to use them on your own buttons.
 

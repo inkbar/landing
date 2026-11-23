@@ -2,7 +2,7 @@
 
 > For AI agents: the full Inkbar documentation index is at https://inkbar.dev/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/docs/quickstart/ becomes https://inkbar.dev/docs/quickstart.md.
 
-Import the default stylesheet and restyle it with your own tokens and CSS.
+Import Inkbar's default stylesheet, then restyle the PDF viewer with your own design tokens and CSS.
 
 `@inkbar/theme` holds the default styles for the Inkbar components: one stylesheet, no JavaScript.
 

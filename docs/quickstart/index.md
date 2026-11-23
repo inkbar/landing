@@ -2,7 +2,7 @@
 
 > For AI agents: the full Inkbar documentation index is at https://inkbar.dev/llms.txt. Every docs page is also available as Markdown: replace the trailing slash with `.md`, so https://inkbar.dev/docs/quickstart/ becomes https://inkbar.dev/docs/quickstart.md.
 
-Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar.
+Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar, in Vue, React, Svelte or with no framework.
 
 Put a PDF on screen with tools above it and page and zoom controls below. This page assumes a Vite project.
 

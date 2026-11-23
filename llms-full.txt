@@ -59,7 +59,7 @@ Follow the [Quickstart](/docs/quickstart/) to put a document on screen with a to
 
 # Quickstart
 
-> Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar.
+> Install Inkbar, add the Vite plugin and put a PDF on screen with a toolbar, in Vue, React, Svelte or with no framework.
 
 Put a PDF on screen with tools above it and page and zoom controls below. This page assumes a Vite project.
 
@@ -4935,7 +4935,7 @@ Every plugin shares the page with your app, so scoping keeps plugins from clashi
 
 # Theming
 
-> Import the default stylesheet and restyle it with your own tokens and CSS.
+> Import Inkbar's default stylesheet, then restyle the PDF viewer with your own design tokens and CSS.
 
 `@inkbar/theme` holds the default styles for the Inkbar components: one stylesheet, no JavaScript.
 
@@ -5676,7 +5676,7 @@ Every message in the English set, by group. The table leaves out `lang`, which n
 
 # Vue
 
-> Use Inkbar in a Vue 3 app with components and composables.
+> Add a PDF viewer and editor to a Vue 3 app with Inkbar's components and composables: toolbars, annotations, forms and redaction.
 
 Vue 3 components and composables for Inkbar. The components are unstyled primitives built on `@inkbar/core`.
 
@@ -5838,7 +5838,7 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 # React
 
-> Use Inkbar in a React 19 app with components and hooks.
+> Add a PDF viewer and editor to a React 19 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction.
 
 React components and hooks for Inkbar. The components are unstyled primitives built on `@inkbar/core`.
 
@@ -5998,7 +5998,7 @@ Components carry state on data attributes, for example `[data-annotation][data-s
 
 # Svelte
 
-> Use Inkbar in a Svelte 5 app with components and hooks.
+> Add a PDF viewer and editor to a Svelte 5 app with Inkbar's components and hooks: toolbars, annotations, forms and redaction.
 
 Svelte 5 components and hooks for Inkbar. The components are unstyled primitives built on `@inkbar/core`.
 
@@ -6370,7 +6370,7 @@ const json = doc.exportAnnotations('json')
 
 # Gloss format
 
-> Inkbar exports and imports annotations as Gloss, an open JSON format for PDF annotations. What Inkbar adds to Gloss, what it leaves out, and how to validate an export.
+> Inkbar exports and imports annotations as Gloss, an open JSON format for PDF annotations. What Inkbar adds, what it leaves out, and how to validate an export.
 
 `exportAnnotations` writes a [Gloss](https://gloss-format.org) document, and `importAnnotations` reads one. Gloss is an open JSON format for PDF annotations, with the same annotation types and coordinates as XFDF. The [Gloss docs](https://gloss-format.org) describe every field. This page covers what Inkbar does on top of them.
 
