@@ -34,6 +34,17 @@ export const collections = {
         // The link text in the footer's Use cases column.
         label: z.string(),
         order: z.number(),
+        // The heading's one [marked] phrase is drawn with the page's own tool.
+        mark: z.enum(['redact', 'field', 'signature', 'highlight']),
+        // The overview page: one line under the heading, and where its screenshot crop centres.
+        summary: z.string().max(110),
+        focus: z.string().regex(/^\d+% \d+%$/),
+        users: z.array(z.string()).min(1),
+        app: z.array(z.string()).min(1),
+        // Margin notes beside the example: the limits, and anything a reader must know first.
+        notes: z.array(z.object({ heading: z.string(), text: z.string() })).min(1),
+        exampleIntro: z.string().optional(),
+        example: z.string(),
       }),
   }),
 }

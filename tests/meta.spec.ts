@@ -8,6 +8,7 @@ import { sidebar } from '../src/lib/docs-sidebar'
 const useCasePaths = readdirSync(new URL('../src/content/use-cases/', import.meta.url))
   .filter((name) => name.endsWith('.md'))
   .map((name) => `/use-cases/${name.slice(0, -'.md'.length)}/`)
+  .concat('/use-cases/')
 
 // The changelog page exists only once it has notes.
 const hasChangelog = readdirSync(

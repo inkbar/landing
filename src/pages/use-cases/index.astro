@@ -1,0 +1,132 @@
+---
+// The use-case overview: each job Inkbar does inside an app, with a crop of its screenshot.
+import { Image } from 'astro:assets'
+import { getCollection } from 'astro:content'
+
+import Install from '../../components/landing/Install.astro'
+import MarkedHeading from '../../components/use-cases/MarkedHeading.astro'
+import Landing from '../../layouts/Landing.astro'
+import { url } from '../../lib/url'
+
+const pages = (await getCollection('useCases')).sort(
+  (a, b) => a.data.order - b.data.order
+)
+const plain = (heading: string) => heading.replace(/\[([^\]]+)\]/g, '$1')
+---
+
+<Landing
+  title="PDF viewer and editor use cases | Inkbar"
+  description="Redact, fill in, sign and review PDFs inside your own web app with Inkbar, the open-source PDF viewer and editor. Free under the MIT licence."
+>
+  <div class="container overview">
+    <header>
+      <MarkedHeading text="What you can [build] with Inkbar" mark="highlight" />
+      <p class="lede">
+        Jobs your users do with PDFs, done inside your app instead of in another program.
+        Each runs in the browser and is free under the MIT licence.
+      </p>
+    </header>
+    <ul class="grid">
+      {pages.map(({ id, data }) => (
+        <li>
+          <a class="entry" href={url(`/use-cases/${id}/`)}>
+            <span class="crop">
+              <Image
+                src={data.screenshot}
+                alt=""
+                widths={[640, 1080]}
+                sizes="(min-width: 900px) 560px, calc(100vw - 40px)"
+                style={`transform-origin: ${data.focus}`}
+              />
+            </span>
+            <h2>{plain(data.heading)}</h2>
+            <p>{data.summary}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+  <Install />
+</Landing>
+
+<style>
+  .overview {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(40px, 6vw, 72px);
+    padding-block: clamp(48px, 8vw, 112px);
+  }
+  header {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  header :global(h1) {
+    max-width: 16ch;
+    font-size: clamp(40px, 6.4vw, 84px);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
+  }
+  .lede {
+    max-width: 620px;
+    font-size: clamp(18px, 1.9vw, 21px);
+    line-height: 1.55;
+    color: var(--body);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+    gap: clamp(40px, 5vw, 64px) clamp(24px, 4vw, 48px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .entry {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: inherit;
+    text-decoration: none;
+  }
+  .crop {
+    display: block;
+    margin-bottom: 8px;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--viewer-ground);
+    box-shadow: 0 18px 40px -26px rgb(13 16 38 / 0.45);
+  }
+  .crop :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.35);
+  }
+  h2 {
+    font-size: clamp(24px, 2.4vw, 30px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 6px;
+    transition: text-decoration-color 150ms;
+  }
+  .entry:hover h2,
+  .entry:focus-visible h2 {
+    text-decoration-color: var(--ballpoint);
+  }
+  .entry p {
+    max-width: 52ch;
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--body);
+  }
+  .entry:focus-visible {
+    outline-offset: 6px;
+    border-radius: 6px;
+  }
+</style>

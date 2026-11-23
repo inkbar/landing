@@ -55,6 +55,7 @@ for (const path of docsPaths) {
 const useCasePaths = readdirSync(new URL('../src/content/use-cases/', import.meta.url))
   .filter((name) => name.endsWith('.md'))
   .map((name) => `/use-cases/${name.slice(0, -'.md'.length)}/`)
+  .concat('/use-cases/')
 
 for (const path of useCasePaths) {
   test(`${path} fits 320px wide`, async ({ page }) => {
