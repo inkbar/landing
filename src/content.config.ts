@@ -39,6 +39,8 @@ export const collections = {
         // The overview page: one line under the heading, and where its screenshot crop centres.
         summary: z.string().max(110),
         focus: z.string().regex(/^\d+% \d+%$/),
+        // The address the screenshot's browser frame shows: a made-up page in the reader's own app.
+        address: z.string().regex(/^app\.example\.com\//),
         users: z.array(z.string()).min(1),
         app: z.array(z.string()).min(1),
         // Margin notes beside the example: the limits, and anything a reader must know first.

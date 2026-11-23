@@ -5,6 +5,7 @@ heading: Let people [sign] PDFs in your app
 mark: signature
 summary: Draw, type or upload a signature, then place it on a page or in a signature field.
 focus: 35% 72%
+address: app.example.com/letters/tenancy-renewal/sign
 lede: People draw their signature, type their name in a handwriting font or upload a scan. They save it once and place it on any page, or in a form's signature field.
 screenshot: ../../assets/use-cases/sign-pdfs.png
 alt: A tenancy letter in the Inkbar viewer with a drawn signature placed and selected between Yours sincerely and the sender's printed name.
