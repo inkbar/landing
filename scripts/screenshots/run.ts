@@ -16,29 +16,49 @@ import { shots, shotUrl } from './shots.ts'
 const out = (slug: string) =>
   fileURLToPath(new URL(`../../src/assets/use-cases/${slug}.png`, import.meta.url))
 
-/** Waits for fonts and for every page in view to have drawn something on its canvas. */
-export async function waitForDrawn(page: Page): Promise<void> {
+/**
+ * Waits for fonts, then for every page in view to have drawn something and stopped changing:
+ * two samples of its pixels a quarter of a second apart must match. A canvas without a 2D
+ * context fails the shot rather than counting as drawn.
+ */
+async function waitForDrawn(page: Page): Promise<void> {
   await page.evaluate(() => document.fonts.ready)
-  await page.waitForFunction(() => {
-    const canvases = [
-      ...document.querySelectorAll<HTMLCanvasElement>('#viewer canvas'),
-    ].filter((canvas) => {
-      const box = canvas.getBoundingClientRect()
-      return box.bottom > 0 && box.top < innerHeight && canvas.width > 0
+  const sample = () =>
+    page.evaluate(() => {
+      const canvases = [
+        ...document.querySelectorAll<HTMLCanvasElement>('#viewer canvas'),
+      ].filter((canvas) => {
+        const box = canvas.getBoundingClientRect()
+        return box.bottom > 0 && box.top < innerHeight && canvas.width > 0
+      })
+      if (canvases.length === 0) return null
+      let sum = 0
+      for (const canvas of canvases) {
+        const context = canvas.getContext('2d')
+        if (!context) throw new Error('A page canvas has no 2D context')
+        const { data } = context.getImageData(0, 0, canvas.width, canvas.height)
+        let inked = false
+        for (let i = 0; i < data.length; i += 4 * 97) {
+          sum = (sum * 31 + data[i]) % 1_000_000_007
+          if (data[i] < 250) inked = true
+        }
+        if (!inked) return null
+      }
+      return sum
     })
-    if (canvases.length === 0) return false
-    return canvases.every((canvas) => {
-      const context = canvas.getContext('2d')
-      if (!context) return true
-      const { data } = context.getImageData(0, 0, canvas.width, canvas.height)
-      for (let i = 0; i < data.length; i += 4 * 97) if (data[i] < 250) return true
-      return false
-    })
-  })
-  await page.waitForTimeout(300)
+  let previous: number | null = null
+  for (let tries = 0; tries < 80; tries++) {
+    const current = await sample()
+    if (current !== null && current === previous) return
+    previous = current
+    await page.waitForTimeout(250)
+  }
+  throw new Error('The pages never finished drawing')
 }
 
 const wanted = process.argv.slice(2)
+// Errors the capture page throws; any of them fails the run once every shot has been tried.
+const errors: string[] = []
 const server = await createServer({
   configFile: fileURLToPath(new URL('vite.config.ts', import.meta.url)),
 })
@@ -58,7 +78,7 @@ try {
     ({ slug }) => wanted.length === 0 || wanted.includes(slug)
   )) {
     const page = await context.newPage()
-    page.on('pageerror', (error) => console.error(`${shot.slug}: ${error.message}`))
+    page.on('pageerror', (error) => errors.push(`${shot.slug}: ${error.message}`))
     await page.goto(shotUrl(base, shot))
     await page.waitForFunction(() => window.viewer?.document.get() != null)
     await waitForDrawn(page)
@@ -71,4 +91,8 @@ try {
 } finally {
   await browser.close()
   await server.close()
+}
+if (errors.length > 0) {
+  console.error(errors.join('\n'))
+  process.exitCode = 1
 }

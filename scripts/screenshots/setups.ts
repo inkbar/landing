@@ -11,21 +11,21 @@ export const setups: Record<Shot['slug'], (page: Page) => Promise<void>> = {
       const [ni] = await doc.search('QQ123456C').all()
       const [email] = await doc.search('m.okafor@example.com').all()
       const [address] = await doc.search('41 Quillon Row, Marlowby ZZ1 1ZZ').all()
+      if (!ni || !email || !address) throw new Error('The customer records moved')
       for (const hit of [ni, email]) {
-        if (hit) doc.annotations.add({ type: 'redact', page: hit.page, quads: hit.quads })
+        doc.annotations.add({ type: 'redact', page: hit.page, quads: hit.quads })
       }
-      if (address)
-        doc.annotations.add({ type: 'redact', page: address.page, rect: address.rect })
+      doc.annotations.add({ type: 'redact', page: address.page, rect: address.rect })
     })
     await page.getByRole('button', { name: 'Apply redactions' }).click()
-    await page.getByRole('dialog').waitFor()
+    await page.getByRole('dialog').getByText('3 marks on 1 page').waitFor()
   },
   'fill-pdf-forms': async (page) => {
     // Typed and ticked as a person would, into the fields Inkbar renders over the page. The
     // fields are found by their names in the form; the last one keeps the focus.
     const viewer = page.locator('#viewer')
     await viewer.getByLabel('name', { exact: true }).fill('Alex Sample')
-    await viewer.getByLabel('Email', { exact: true }).fill('alex.sample@example.com')
+    await viewer.getByLabel('Email', { exact: true }).fill('alex@example.com')
     await viewer.getByLabel('agree', { exact: true }).click()
     await viewer
       .getByLabel('notes', { exact: true })
@@ -54,6 +54,7 @@ export const setups: Record<Shot['slug'], (page: Page) => Promise<void>> = {
     const sign = page.getByRole('button', { name: 'Sign', exact: true })
     if ((await sign.getAttribute('aria-pressed')) !== 'true') await sign.click()
     await page.mouse.click(name.x + 90, (signOff.y + signOff.height + name.y) / 2)
+    await page.locator('#viewer .ink-annotation').first().waitFor()
   },
   'review-pdfs': async (page) => {
     // Two highlights from search hits, one carrying a comment and then a reply from someone
@@ -92,7 +93,7 @@ export const setups: Record<Shot['slug'], (page: Page) => Promise<void>> = {
     await page
       .getByRole('button', { name: 'Highlight with comment by Sam Rivera' })
       .click()
-    await page.waitForTimeout(400)
+    await page.getByText('The person running the instrument decides.').waitFor()
   },
 }
 

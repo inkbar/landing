@@ -1,3 +1,5 @@
+import { readdirSync } from 'node:fs'
+
 import { expect, test } from '@playwright/test'
 
 import { expectNoAxeViolations, expectNoHorizontalScroll } from './helpers'
@@ -46,5 +48,18 @@ for (const path of docsPaths) {
         .map((link) => link.textContent?.trim())
     })
     expect(covered, 'header links covered or outside the header').toEqual([])
+  })
+}
+
+// Every use-case page, from its Markdown file: a long heading must still fit a small phone.
+const useCasePaths = readdirSync(new URL('../src/content/use-cases/', import.meta.url))
+  .filter((name) => name.endsWith('.md'))
+  .map((name) => `/use-cases/${name.slice(0, -'.md'.length)}/`)
+
+for (const path of useCasePaths) {
+  test(`${path} fits 320px wide`, async ({ page }) => {
+    await page.goto(path)
+    await expectNoHorizontalScroll(page)
+    await expectNoAxeViolations(page)
   })
 }

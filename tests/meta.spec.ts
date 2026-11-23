@@ -126,6 +126,17 @@ test('the sitemap lists the landing page and the Quickstart', async ({ request }
   expect(sitemap).toContain('<loc>https://inkbar.dev/docs/quickstart/</loc>')
 })
 
+test('the sitemap lists and dates every use-case page', async ({ request }) => {
+  const index = await (await request.get('/sitemap-index.xml')).text()
+  const first = /<loc>https:\/\/inkbar\.dev(\/sitemap-\d+\.xml)<\/loc>/.exec(index)?.[1]
+  const sitemap = await (await request.get(first as string)).text()
+  for (const path of useCasePaths) {
+    expect(sitemap).toMatch(
+      new RegExp(`<loc>https://inkbar\\.dev${path}</loc><lastmod>\\d{4}-`)
+    )
+  }
+})
+
 test('every sitemap entry is dated', async ({ request }) => {
   const index = await (await request.get('/sitemap-index.xml')).text()
   const first = /<loc>https:\/\/inkbar\.dev(\/sitemap-\d+\.xml)<\/loc>/.exec(index)?.[1]

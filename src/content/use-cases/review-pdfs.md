@@ -13,7 +13,7 @@ order: 4
 ## What your users can do
 
 - Highlight text by selecting it with the Highlight tool on, or select it and press Enter.
-- Pin a note to the page, then reply, edit and delete in a thread beside it. Each comment shows its author and when it was written.
+- Pin a note to the page, or comment on a highlight, and reply in a thread beside it. Each comment shows its author and when it was written.
 - Read the comments a PDF already holds from other programs. They show locked, so nobody moves or deletes them by mistake.
 
 ## What your app gets
