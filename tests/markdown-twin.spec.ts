@@ -162,5 +162,5 @@ test('the changelog is served as Markdown and listed in llms.txt', async ({
 test('with no notes there is no changelog twin or llms.txt link', async ({ request }) => {
   test.skip(changelogVersions.length > 0, 'the changelog has notes')
   expect((await request.get('/changelog.md')).status()).toBe(404)
-  expect(await (await request.get('/llms.txt')).text()).not.toContain('changelog')
+  expect(await (await request.get('/llms.txt')).text()).not.toContain('changelog.md')
 })

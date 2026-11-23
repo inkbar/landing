@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: read # the draft step lists open changelog pull requests
   id-token: write # Workload Identity Federation for the Anthropic API
 
 concurrency:
@@ -26,6 +27,7 @@ concurrency:
 jobs:
   draft:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       # The App's token, unlike GITHUB_TOKEN, starts CI and the preview on the pull request.
       - name: Mint App token
@@ -52,7 +54,8 @@ jobs:
         env:
           VERSIONS: ${{ github.event.client_payload.version || inputs.versions }}
           TRIGGER: ${{ github.event_name == 'repository_dispatch' && 'dispatch' || 'manual' }}
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          # Read-only: this step runs model output and a third-party SDK. Only the next step writes.
+          GITHUB_TOKEN: ${{ github.token }}
           ANTHROPIC_FEDERATION_RULE_ID: ${{ vars.ANTHROPIC_FEDERATION_RULE_ID }}
           ANTHROPIC_ORGANIZATION_ID: ${{ vars.ANTHROPIC_ORGANIZATION_ID }}
         run: pnpm changelog:draft --versions "$VERSIONS" --trigger "$TRIGGER"

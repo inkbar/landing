@@ -5,6 +5,7 @@ import { getCollection, render } from 'astro:content'
 
 import Landing from '../layouts/Landing.astro'
 import { checkVersionIds, newestFirst, releaseAnchor, releaseUrl } from '../lib/changelog'
+import { agentNote, siteUrl } from '../lib/markdown-twin'
 
 export async function getStaticPaths() {
   const entries = await getCollection('changelog')
@@ -29,6 +30,9 @@ const dateFormat = new Intl.DateTimeFormat('en-GB', {
   title="Changelog: what's new in each Inkbar release"
   description="What changed in each Inkbar release, from new editing tools to fixes, in plain words. Newest release first."
 >
+  <p class="visually-hidden" aria-hidden="true" data-agent-note>
+    {agentNote(siteUrl(import.meta.env.BASE_URL))}
+  </p>
   <div class="container changelog">
     <h1>Changelog</h1>
     {releases.map(({ entry, Content }) => (
