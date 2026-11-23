@@ -33,6 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+        with:
+          # The sitemap dates each page by the last commit to its source.
+          fetch-depth: 0
       - if: github.event.action != 'closed'
         uses: pnpm/action-setup@v6
       - if: github.event.action != 'closed'
