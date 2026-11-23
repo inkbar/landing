@@ -1,4 +1,5 @@
 import { satteri } from '@astrojs/markdown-satteri'
+import sitemap from '@astrojs/sitemap'
 import starlight from '@astrojs/starlight'
 import svelte from '@astrojs/svelte'
 import { defineConfig } from 'astro/config'
@@ -10,6 +11,7 @@ import { fileURLToPath } from 'node:url'
 import { docsIndex } from './src/lib/docs-index.ts'
 import { sidebar } from './src/lib/docs-sidebar.ts'
 import { siteUrl, twinPath } from './src/lib/markdown-twin.ts'
+import { lastCommitDate, pageSources } from './src/lib/sitemap-lastmod.ts'
 import { baseLinks } from './src/markdown/base-links.ts'
 
 // Pull request previews are served from /pr-preview/pr-<number>/; the site itself from the root.
@@ -94,5 +96,14 @@ export default defineConfig({
       sidebar,
     }),
     svelte(),
+    // Starlight adds this integration itself unless the config already has it. It is here to
+    // date each page by the last commit to its source, so crawlers can tell what changed.
+    sitemap({
+      serialize(item) {
+        const path = new URL(item.url).pathname.slice(base.length - 1)
+        const lastmod = lastCommitDate(pageSources(path))
+        return lastmod ? { ...item, lastmod: lastmod.toISOString() } : item
+      },
+    }),
   ],
 })

@@ -97,6 +97,17 @@ test('the sitemap lists the landing page and the Quickstart', async ({ request }
   expect(sitemap).toContain('<loc>https://inkbar.dev/docs/quickstart/</loc>')
 })
 
+test('every sitemap entry is dated', async ({ request }) => {
+  const index = await (await request.get('/sitemap-index.xml')).text()
+  const first = /<loc>https:\/\/inkbar\.dev(\/sitemap-\d+\.xml)<\/loc>/.exec(index)?.[1]
+  const sitemap = await (await request.get(first as string)).text()
+  const entries = sitemap.match(/<url>.*?<\/url>/g) ?? []
+  expect(entries.length).toBeGreaterThan(20)
+  for (const entry of entries) {
+    expect(entry).toMatch(/<lastmod>\d{4}-\d{2}-\d{2}T[^<]+<\/lastmod>/)
+  }
+})
+
 test('the 404 page is kept out of the index', async ({ page }) => {
   await page.goto('/no-such-page/')
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', 'noindex')
