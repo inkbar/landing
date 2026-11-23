@@ -45,7 +45,11 @@ if [ "$existing" = true ]; then
   fi
   run_step git commit -m "$title"
   run_step git push origin "$branch"
-  number=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number')
+  if [ "${DRY_RUN:-}" = 1 ]; then
+    number="<open pull request>"
+  else
+    number=$(gh pr list --head "$branch" --state open --json number --jq '.[0].number')
+  fi
   run_step gh pr comment "$number" --body-file "$body_file"
 else
   # A branch of this name can only be left from a closed pull request, so replacing it is safe.

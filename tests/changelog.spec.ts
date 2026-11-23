@@ -57,3 +57,9 @@ test('the changelog fits a phone and has no accessibility violations', async ({
   await expectNoHorizontalScroll(page)
   await expectNoAxeViolations(page)
 })
+
+test('the changelog carries the hidden note for agents', async ({ page }) => {
+  test.skip(!hasNotes, 'the changelog has no notes yet')
+  await page.goto('/changelog/')
+  await expect(page.locator('[data-agent-note]')).toContainText('llms.txt')
+})
