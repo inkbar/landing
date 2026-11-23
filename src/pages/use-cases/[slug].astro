@@ -5,6 +5,7 @@ import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import { codeToHtml, type ThemeRegistration } from 'shiki'
 
+import BrowserFrame from '../../components/use-cases/BrowserFrame.astro'
 import MarkedHeading from '../../components/use-cases/MarkedHeading.astro'
 import Landing from '../../layouts/Landing.astro'
 import inkbarInk from '../../shiki/inkbar-ink.json'
@@ -40,15 +41,17 @@ const text = (line: string) => inline(line, url)
 
     <div class="stage">
       <div class="container">
-        <Image
-          class="shot"
-          src={data.screenshot}
-          alt={data.alt}
-          widths={[720, 1440, 2160]}
-          sizes="(min-width: 1248px) 1152px, calc(100vw - 40px)"
-          loading="eager"
-          fetchpriority="high"
-        />
+        <BrowserFrame address={data.address}>
+          <Image
+            class="shot"
+            src={data.screenshot}
+            alt={data.alt}
+            widths={[720, 1440, 2160]}
+            sizes="(min-width: 1248px) 1152px, calc(100vw - 40px)"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </BrowserFrame>
       </div>
     </div>
 
@@ -74,9 +77,11 @@ const text = (line: string) => inline(line, url)
     </section>
 
     <section class="container example" aria-label="Example">
-      <div class="code-column">
+      <div class="example-head">
         <h2>A short example</h2>
         {data.exampleIntro && <p set:html={text(data.exampleIntro)} />}
+      </div>
+      <div class="code-column">
         <div
           class="code"
           tabindex="0"
@@ -148,15 +153,9 @@ const text = (line: string) => inline(line, url)
   .stage {
     background: linear-gradient(to bottom, transparent 55%, var(--ink) 55%);
   }
-  .shot {
-    display: block;
+  .stage :global(.shot) {
     width: 100%;
     height: auto;
-    border-radius: var(--radius-card);
-    border: 1px solid var(--line);
-    box-shadow:
-      0 1px 2px rgb(13 16 38 / 0.06),
-      0 28px 60px -28px rgb(13 16 38 / 0.45);
   }
 
   .ink {
@@ -217,6 +216,20 @@ const text = (line: string) => inline(line, url)
     .example {
       grid-template-columns: minmax(0, 1fr);
     }
+  }
+  /* The heading spans the row above, so the code panel and the note start level. */
+  .example-head {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: -16px;
+  }
+  .example-head p {
+    max-width: 640px;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--body);
   }
   .code-column {
     display: flex;

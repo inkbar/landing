@@ -5,6 +5,7 @@ heading: Review and [comment on] PDFs in your app
 mark: highlight
 summary: Highlight passages, pin notes and reply in threads, stored in your own backend.
 focus: 42% 58%
+address: app.example.com/handbook/review
 lede: People highlight passages, pin notes to the page and reply to each other in a thread beside the text. Your app stores the comments wherever it keeps its data.
 screenshot: ../../assets/use-cases/review-pdfs.png
 alt: A field handbook in the Inkbar viewer with two highlighted passages and an open comment thread, where Sam Rivera asks a question and Alex Sample replies.
@@ -28,5 +29,8 @@ example: |
   await saveToYourBackend(doc.key, data)
 
   // On the next open
-  doc.importAnnotations(await loadFromYourBackend(doc.key), { mode: 'replace' })
+  doc.importAnnotations(
+    await loadFromYourBackend(doc.key),
+    { mode: 'replace' }
+  )
 ---
