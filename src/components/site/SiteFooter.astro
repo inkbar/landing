@@ -35,7 +35,11 @@ const hasChangelog = (await getCollection('changelog')).length > 0
         </nav>
         {useCases.length > 0 && (
           <nav aria-label="Use cases">
-            <h2>Use cases</h2>
+            <h2>
+              <a class="heading-link" href={url('/use-cases/')}>
+                Use cases
+              </a>
+            </h2>
             {useCases.map(({ id, data }) => (
               <a href={url(`/use-cases/${id}/`)}>{data.label}</a>
             ))}
@@ -142,6 +146,18 @@ const hasChangelog = (await getCollection('changelog')).length > 0
     font-size: 14px;
     font-weight: 700;
     color: #ffffff;
+  }
+  h2 .heading-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    /* A 24px touch target that keeps the column's links level with the others. */
+    margin-block: -5px;
+    color: inherit;
+    text-decoration: none;
+  }
+  h2 .heading-link:hover {
+    text-decoration: underline;
   }
   nav a {
     min-height: 44px;

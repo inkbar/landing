@@ -9,3 +9,10 @@ test('a use-case page is dated by its copy and its screenshot', () => {
     'src/assets/use-cases/redact-pdfs.png',
   ])
 })
+
+test('the use-case overview is dated by every page and its own source', () => {
+  assert.deepEqual(pageSources('/use-cases/'), [
+    'src/content/use-cases',
+    'src/pages/use-cases/index.astro',
+  ])
+})

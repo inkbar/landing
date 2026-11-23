@@ -51,11 +51,40 @@ for (const { slug, guide } of pages) {
 
 test('the footer lists the use-case pages in order', async ({ page }) => {
   await page.goto('/')
-  const links = page.getByRole('navigation', { name: 'Use cases' }).getByRole('link')
+  // The page links, not the column heading's link to the overview.
+  const links = page.locator('nav[aria-label="Use cases"] > a')
   const hrefs = await links.evaluateAll((all) =>
     all.map((link) => link.getAttribute('href'))
   )
   expect(hrefs.map((href) => href?.replace(/^.*\/use-cases\//, ''))).toEqual(
     pages.map(({ slug }) => `${slug}/`)
   )
+})
+
+test('the overview lists every use-case page in order and the footer links to it', async ({
+  page,
+}) => {
+  expect((await page.goto('/use-cases/'))?.status()).toBe(200)
+  await expect(page.locator('h1')).toHaveCount(1)
+  const hrefs = await page
+    .locator('main ul a')
+    .evaluateAll((all) => all.map((link) => link.getAttribute('href')))
+  expect(hrefs.map((href) => href?.replace(/^.*\/use-cases\//, ''))).toEqual(
+    pages.map(({ slug }) => `${slug}/`)
+  )
+  await expectNoHorizontalScroll(page)
+  await expectNoAxeViolations(page)
+  await page.goto('/')
+  await expect(
+    page
+      .getByRole('navigation', { name: 'Use cases' })
+      .getByRole('link', { name: 'Use cases' })
+  ).toHaveAttribute('href', /\/use-cases\/$/)
+})
+
+test('each use-case heading carries its mark', async ({ page }) => {
+  for (const { slug } of pages) {
+    await page.goto(`/use-cases/${slug}/`)
+    await expect(page.locator('h1 .mark')).toHaveCount(1)
+  }
 })

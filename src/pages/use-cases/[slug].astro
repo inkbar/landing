@@ -1,11 +1,15 @@
 ---
 // A use-case page: the outcome and a real screenshot first, for someone deciding whether the
-// job can be built, then what it takes, a short sample and the guide that goes further.
+// job can be built, then what it takes, a short example beside the limits, and the cost.
 import { Image } from 'astro:assets'
-import { getCollection, render } from 'astro:content'
+import { getCollection } from 'astro:content'
+import { codeToHtml, type ThemeRegistration } from 'shiki'
 
+import MarkedHeading from '../../components/use-cases/MarkedHeading.astro'
 import Landing from '../../layouts/Landing.astro'
+import inkbarInk from '../../shiki/inkbar-ink.json'
 import { url } from '../../lib/url'
+import { inline } from '../../lib/use-case-text'
 
 export async function getStaticPaths() {
   const entries = await getCollection('useCases')
@@ -13,7 +17,6 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props
-const { Content } = await render(entry)
 const { data } = entry
 const guideNames = {
   redaction: 'Redaction',
@@ -21,109 +24,298 @@ const guideNames = {
   signatures: 'Signatures',
   annotations: 'Annotations',
 } as const
+const code = await codeToHtml(data.example.trimEnd(), {
+  lang: 'ts',
+  theme: inkbarInk as ThemeRegistration,
+})
+const text = (line: string) => inline(line, url)
 ---
 
 <Landing title={data.title} description={data.description}>
-  <article class="container use-case">
-    <header>
-      <h1>{data.heading}</h1>
+  <article>
+    <header class="container hero">
+      <MarkedHeading text={data.heading} mark={data.mark} />
       <p class="lede">{data.lede}</p>
     </header>
-    <Image
-      class="shot"
-      src={data.screenshot}
-      alt={data.alt}
-      widths={[720, 1440, 2160]}
-      sizes="(min-width: 1040px) 960px, calc(100vw - 2 * var(--gutter, 16px))"
-      loading="eager"
-    />
-    <div class="body">
-      <Content />
+
+    <div class="stage">
+      <div class="container">
+        <Image
+          class="shot"
+          src={data.screenshot}
+          alt={data.alt}
+          widths={[720, 1440, 2160]}
+          sizes="(min-width: 1248px) 1152px, calc(100vw - 40px)"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
     </div>
-    <p class="next">
-      <a class="text-link" href={url(`/docs/guides/${data.guide}/`)}>
-        Read the {guideNames[data.guide]} guide
-      </a>
-      <a class="text-link" href="https://sandbox.inkbar.dev">
-        Try it in the sandbox
-      </a>
-    </p>
+
+    <section class="ink" aria-label="What it does">
+      <div class="container columns">
+        <div>
+          <h2>What your users can do</h2>
+          <ul>
+            {data.users.map((line) => (
+              <li set:html={text(line)} />
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h2>What your app gets</h2>
+          <ul>
+            {data.app.map((line) => (
+              <li set:html={text(line)} />
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="container example" aria-label="Example">
+      <div class="code-column">
+        <h2>A short example</h2>
+        {data.exampleIntro && <p set:html={text(data.exampleIntro)} />}
+        <div
+          class="code"
+          tabindex="0"
+          role="region"
+          aria-label="Example code"
+          set:html={code}
+        />
+        <p class="frameworks">
+          The same viewer comes as components for{' '}
+          <a href={url('/docs/frameworks/vue/')}>Vue</a>,{' '}
+          <a href={url('/docs/frameworks/react/')}>React</a> and{' '}
+          <a href={url('/docs/frameworks/svelte/')}>Svelte</a>.
+        </p>
+      </div>
+      <aside class="notes">
+        {data.notes.map((note) => (
+          <div class="note">
+            <h2>{note.heading}</h2>
+            {note.text.split(/\n\s*\n/).map((paragraph) => (
+              <p set:html={text(paragraph.trim())} />
+            ))}
+          </div>
+        ))}
+      </aside>
+    </section>
+
+    <section class="cost" aria-label="Cost">
+      <div class="container cost-row">
+        <div>
+          <h2>Free under MIT.</h2>
+          <p>Inkbar is open source. There is no licence fee and no per-seat price.</p>
+        </div>
+        <p class="next">
+          <a class="text-link" href={url(`/docs/guides/${data.guide}/`)}>
+            Read the {guideNames[data.guide]} guide
+          </a>
+          <a class="text-link" href="https://sandbox.inkbar.dev">
+            Try it in the sandbox
+          </a>
+        </p>
+      </div>
+    </section>
   </article>
 </Landing>
 
 <style>
-  .use-case {
-    max-width: 1040px;
-    padding-block: clamp(48px, 7vw, 104px);
+  .hero {
     display: flex;
     flex-direction: column;
-    gap: clamp(32px, 4vw, 48px);
+    gap: 24px;
+    padding-top: clamp(48px, 8vw, 112px);
+    padding-bottom: clamp(32px, 4vw, 48px);
   }
-  header {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    max-width: 780px;
-  }
-  h1 {
-    font-size: clamp(36px, 5.2vw, 64px);
-    line-height: 1.04;
-    letter-spacing: -0.03em;
+  .hero :global(h1) {
+    max-width: 19ch;
+    font-size: clamp(40px, 6.4vw, 84px);
+    line-height: 1.1;
+    letter-spacing: -0.035em;
     overflow-wrap: break-word;
   }
   .lede {
-    font-size: clamp(18px, 2vw, 21px);
+    max-width: 640px;
+    font-size: clamp(18px, 1.9vw, 21px);
     line-height: 1.55;
     color: var(--body);
   }
+
+  /* The screenshot sits on the paper and the ink band starts behind its lower half. */
+  .stage {
+    background: linear-gradient(to bottom, transparent 55%, var(--ink) 55%);
+  }
   .shot {
+    display: block;
     width: 100%;
     height: auto;
+    border-radius: var(--radius-card);
     border: 1px solid var(--line);
-    border-radius: 16px;
-    box-shadow: 0 24px 48px -24px rgb(15 23 42 / 0.25);
+    box-shadow:
+      0 1px 2px rgb(13 16 38 / 0.06),
+      0 28px 60px -28px rgb(13 16 38 / 0.45);
   }
-  .body {
-    max-width: 720px;
+
+  .ink {
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+  .columns {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+    gap: 48px clamp(40px, 6vw, 96px);
+    padding-block: clamp(56px, 7vw, 96px);
+  }
+  .ink h2 {
+    margin-bottom: 20px;
+    color: #ffffff;
+    font-size: clamp(26px, 2.6vw, 32px);
+    letter-spacing: -0.02em;
+  }
+  .ink ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
     display: flex;
     flex-direction: column;
     gap: 16px;
+  }
+  .ink li {
+    position: relative;
+    padding-left: 28px;
     font-size: 17px;
-    line-height: 1.65;
+    line-height: 1.6;
+  }
+  /* A short highlighter stroke as the bullet, the mark the product makes. */
+  .ink li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.72em;
+    width: 14px;
+    height: 6px;
+    border-radius: 2px;
+    background: var(--highlighter);
+  }
+  .ink :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: #ffffff;
+  }
+
+  .example {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    gap: 40px clamp(40px, 5vw, 72px);
+    align-items: start;
+    padding-block: clamp(56px, 8vw, 112px);
+  }
+  @media (max-width: 899.98px) {
+    .example {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+  .code-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+  .example h2 {
+    font-size: clamp(26px, 2.6vw, 32px);
+    letter-spacing: -0.02em;
+  }
+  .code-column > p {
+    font-size: 17px;
+    line-height: 1.6;
     color: var(--body);
   }
-  .body :global(h2) {
-    margin-top: 24px;
-    font-size: clamp(24px, 2.6vw, 30px);
-    letter-spacing: -0.02em;
-    color: var(--ink);
-  }
-  .body :global(ul) {
+  .code :global(pre) {
+    overflow-x: auto;
     margin: 0;
-    padding-left: 1.25em;
+    padding: 24px;
+    border-radius: var(--radius-card);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    line-height: 1.65;
   }
-  .body :global(li + li) {
-    margin-top: 6px;
+  .code:focus-visible {
+    outline-offset: 4px;
+    border-radius: var(--radius-card);
   }
-  .body :global(code) {
+  .example :global(code) {
     font-family: var(--font-mono);
     font-size: 0.9em;
     color: var(--ink);
   }
-  .body :global(pre) {
-    overflow-x: auto;
-    padding: 20px;
-    border-radius: 12px;
-    font-size: 14px;
-    line-height: 1.6;
-  }
-  .body :global(a) {
+  .frameworks a,
+  .note :global(a) {
     color: var(--ink);
+    text-decoration-color: var(--ballpoint);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+  }
+
+  /* Margin notes, drawn like the product's own comment thread beside the page. */
+  .notes {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .note {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px 24px 24px 28px;
+    border-radius: 4px 14px 14px 4px;
+    background: var(--sheet);
+    border-left: 4px solid var(--strike);
+    box-shadow: 0 10px 30px -18px rgb(13 16 38 / 0.35);
+  }
+  .note h2 {
+    font-size: 20px;
+    letter-spacing: -0.01em;
+  }
+  .note p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--body);
+  }
+
+  .cost {
+    background: var(--highlighter);
+    color: var(--ink);
+  }
+  .cost-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px 64px;
+    padding-block: clamp(48px, 7vw, 88px);
+  }
+  .cost h2 {
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .cost p {
+    max-width: 520px;
+    margin-top: 14px;
+    font-size: 18px;
+    line-height: 1.55;
   }
   .next {
     display: flex;
     flex-wrap: wrap;
-    gap: 12px 32px;
+    gap: 8px 28px;
     font-size: 17px;
+  }
+  .cost .text-link {
+    text-decoration-color: var(--ink);
   }
 </style>
