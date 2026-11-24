@@ -29,6 +29,8 @@ export const collections = {
         heading: z.string(),
         lede: z.string(),
         screenshot: image(),
+        // The same state captured on a phone, shown in a phone frame on narrow screens.
+        phoneScreenshot: image(),
         alt: z.string().min(1),
         guide: z.enum(['redaction', 'forms', 'signatures', 'annotations']),
         // The link text in the footer's Use cases column.

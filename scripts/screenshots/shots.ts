@@ -29,6 +29,40 @@ export const shots: Shot[] = [
   },
 ]
 
-export function shotUrl(base: string, shot: Shot): string {
-  return `${base}?shot=${shot.slug}`
+export type Device = 'desktop' | 'phone'
+
+/**
+ * The screens each shot is captured on. The phone's height is a phone screen less the status
+ * bar and the browser's address bar, which the page's phone frame draws round it.
+ */
+export const devices: Record<
+  Device,
+  {
+    viewport: { width: number; height: number }
+    deviceScaleFactor: number
+    isMobile: boolean
+    hasTouch: boolean
+  }
+> = {
+  desktop: {
+    viewport: { width: 1440, height: 900 },
+    deviceScaleFactor: 2,
+    isMobile: false,
+    hasTouch: false,
+  },
+  phone: {
+    viewport: { width: 390, height: 728 },
+    deviceScaleFactor: 3,
+    isMobile: true,
+    hasTouch: true,
+  },
+}
+
+export function shotUrl(base: string, shot: Shot, device: Device = 'desktop'): string {
+  return `${base}?shot=${shot.slug}${device === 'phone' ? '&device=phone' : ''}`
+}
+
+/** The file in src/assets/use-cases/ a shot is saved to. */
+export function imageName(slug: Shot['slug'], device: Device): string {
+  return device === 'phone' ? `${slug}-phone.png` : `${slug}.png`
 }

@@ -55,6 +55,6 @@ pnpm exec playwright install chromium
 pnpm screenshots
 ```
 
-Pass one or more page slugs, such as `pnpm screenshots sign-pdfs`, to capture only those. The script writes `src/assets/use-cases/<slug>.png`. Look at each image before you commit it.
+It captures each page twice: on a desktop screen as `src/assets/use-cases/<slug>.png`, and on a phone as `<slug>-phone.png`, which the pages show in a phone frame below 640px. Pass page slugs, such as `pnpm screenshots sign-pdfs`, to capture only those, and `--desktop` or `--phone` for one screen. Look at each image before you commit it.
 
 The sample PDFs live in `scripts/screenshots/documents/`. `application.pdf` comes from `node scripts/screenshots/documents/application.ts`. `redactions.pdf`, `letter.pdf` and `handbook.pdf` are copies of the sandbox's made-up documents in [inkbar/inkbar](https://github.com/inkbar/inkbar) (`apps/sandbox/vite/documents/`). To make them again, run the sandbox's `makeDocument(name)` from `apps/sandbox` there and copy the bytes in.

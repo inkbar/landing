@@ -1,10 +1,9 @@
 ---
 // The use-case overview: each job Inkbar does inside an app, with a crop of its screenshot.
-import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 
 import Install from '../../components/landing/Install.astro'
-import BrowserFrame from '../../components/use-cases/BrowserFrame.astro'
+import DeviceFrame from '../../components/use-cases/DeviceFrame.astro'
 import MarkedHeading from '../../components/use-cases/MarkedHeading.astro'
 import Landing from '../../layouts/Landing.astro'
 import { url } from '../../lib/url'
@@ -31,19 +30,22 @@ const plain = (heading: string) => heading.replace(/\[([^\]]+)\]/g, '$1')
       {pages.map(({ id, data }) => (
         <li>
           <a class="entry" href={url(`/use-cases/${id}/`)}>
-            <BrowserFrame address={data.address} size="compact">
-              <span class="crop">
-                <Image
-                  src={data.screenshot}
-                  alt=""
-                  widths={[640, 1080]}
-                  sizes="(min-width: 900px) 560px, calc(100vw - 40px)"
-                  style={`transform-origin: ${data.focus}`}
-                />
-              </span>
-            </BrowserFrame>
-            <h2>{plain(data.heading)}</h2>
-            <p>{data.summary}</p>
+            <DeviceFrame
+              address={data.address}
+              desktop={data.screenshot}
+              phone={data.phoneScreenshot}
+              alt=""
+              size="compact"
+              focus={data.focus}
+              sizes={{
+                desktop: '(min-width: 900px) 560px, calc(100vw - 40px)',
+                phone: '112px',
+              }}
+            />
+            <span class="text">
+              <h2>{plain(data.heading)}</h2>
+              <p>{data.summary}</p>
+            </span>
           </a>
         </li>
       ))}
@@ -91,21 +93,13 @@ const plain = (heading: string) => heading.replace(/\[([^\]]+)\]/g, '$1')
     color: inherit;
     text-decoration: none;
   }
-  .entry :global(.frame) {
+  .entry :global(.device) {
     margin-bottom: 8px;
   }
-  .crop {
-    display: block;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: var(--viewer-ground);
-  }
-  .crop :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: scale(1.35);
+  .text {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
   h2 {
     font-size: clamp(24px, 2.4vw, 30px);
@@ -130,5 +124,23 @@ const plain = (heading: string) => heading.replace(/\[([^\]]+)\]/g, '$1')
   .entry:focus-visible {
     outline-offset: 6px;
     border-radius: 6px;
+  }
+  /* On a phone each entry is a small phone beside its heading and summary. */
+  @media (max-width: 639px) {
+    .entry {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr);
+      align-items: start;
+      gap: 20px;
+    }
+    .entry :global(.device) {
+      margin-bottom: 0;
+    }
+    h2 {
+      font-size: 22px;
+    }
+    .entry p {
+      font-size: 16px;
+    }
   }
 </style>

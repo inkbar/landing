@@ -8,6 +8,7 @@ focus: 50% 45%
 address: app.example.com/membership/apply
 lede: Text fields, checkboxes, radio buttons, lists and signature fields work in the viewer. The form's own scripts run too, so totals add up and checks work as the form's author intended.
 screenshot: ../../assets/use-cases/fill-pdf-forms.png
+phoneScreenshot: ../../assets/use-cases/fill-pdf-forms-phone.png
 alt: A membership application in the Inkbar viewer with the name, contact and emergency contact fields filled in, Adult membership picked, the I agree box ticked and the cursor in the notes field.
 guide: forms
 label: Fill PDF forms

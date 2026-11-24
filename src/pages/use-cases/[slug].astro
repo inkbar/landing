@@ -1,11 +1,10 @@
 ---
 // A use-case page: the outcome and a real screenshot first, for someone deciding whether the
 // job can be built, then what it takes, a short example beside the limits, and the cost.
-import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import { codeToHtml, type ThemeRegistration } from 'shiki'
 
-import BrowserFrame from '../../components/use-cases/BrowserFrame.astro'
+import DeviceFrame from '../../components/use-cases/DeviceFrame.astro'
 import MarkedHeading from '../../components/use-cases/MarkedHeading.astro'
 import Landing from '../../layouts/Landing.astro'
 import inkbarInk from '../../shiki/inkbar-ink.json'
@@ -41,17 +40,17 @@ const text = (line: string) => inline(line, url)
 
     <div class="stage">
       <div class="container">
-        <BrowserFrame address={data.address}>
-          <Image
-            class="shot"
-            src={data.screenshot}
-            alt={data.alt}
-            widths={[720, 1440, 2160]}
-            sizes="(min-width: 1248px) 1152px, calc(100vw - 40px)"
-            loading="eager"
-            fetchpriority="high"
-          />
-        </BrowserFrame>
+        <DeviceFrame
+          address={data.address}
+          desktop={data.screenshot}
+          phone={data.phoneScreenshot}
+          alt={data.alt}
+          sizes={{
+            desktop: '(min-width: 1248px) 1152px, calc(100vw - 40px)',
+            phone: '300px',
+          }}
+          eager
+        />
       </div>
     </div>
 
@@ -152,10 +151,6 @@ const text = (line: string) => inline(line, url)
   /* The screenshot sits on the paper and the ink band starts behind its lower half. */
   .stage {
     background: linear-gradient(to bottom, transparent 55%, var(--ink) 55%);
-  }
-  .stage :global(.shot) {
-    width: 100%;
-    height: auto;
   }
 
   .ink {

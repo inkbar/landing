@@ -32,7 +32,8 @@ const factories = {
   signature: signatureTool,
 } satisfies Record<ToolName, () => unknown>
 
-const slug = new URLSearchParams(location.search).get('shot')
+const query = new URLSearchParams(location.search)
+const slug = query.get('shot')
 const shot = shots.find((candidate) => candidate.slug === slug)
 if (!shot) throw new Error(`No shot named ${slug}`)
 
@@ -40,7 +41,8 @@ const source = new Uint8Array(await (await fetch(`/${shot.document}`)).arrayBuff
 const viewer = createViewer(document.getElementById('viewer')!, {
   source,
   assets,
-  zoom: 1.25,
+  // On a phone the page fills the screen's width, as a person would read it.
+  zoom: query.get('device') === 'phone' ? 'fit-width' : 1.25,
   tools: shot.tools.map((tool) => factories[tool]()),
   ...(shot.engine ? { engine: () => import('@inkbar/engine') } : {}),
 })

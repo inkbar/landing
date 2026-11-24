@@ -1,20 +1,22 @@
 // Captures the screenshots on the use-case pages from the released packages:
 //
-//   pnpm screenshots [slug...]
+//   pnpm screenshots [--desktop | --phone] [slug...]
 //
-// It serves the capture page with Vite, opens each shot at 1440 by 900 CSS pixels and device
-// scale 2, sets up that shot's state through the toolbar and the viewer's public API, and saves
-// src/assets/use-cases/<slug>.png. Rerun it after upgrading the @inkbar packages.
+// It serves the capture page with Vite, opens each shot on a desktop screen (1440 by 900 CSS
+// pixels, device scale 2) and on a phone (390 pixels wide, device scale 3, touch), sets up that
+// shot's state through the toolbar and the viewer's public API, and saves
+// src/assets/use-cases/<slug>.png and <slug>-phone.png. Rerun it after upgrading the @inkbar
+// packages.
 import { fileURLToPath } from 'node:url'
 
 import { chromium, type Page } from '@playwright/test'
 import { createServer } from 'vite'
 
 import { setups } from './setups.ts'
-import { shots, shotUrl } from './shots.ts'
+import { devices, imageName, shots, shotUrl, type Device } from './shots.ts'
 
-const out = (slug: string) =>
-  fileURLToPath(new URL(`../../src/assets/use-cases/${slug}.png`, import.meta.url))
+const out = (name: string) =>
+  fileURLToPath(new URL(`../../src/assets/use-cases/${name}`, import.meta.url))
 
 /**
  * Waits for fonts, then for every page in view to have drawn something and stopped changing:
@@ -56,7 +58,12 @@ async function waitForDrawn(page: Page): Promise<void> {
   throw new Error('The pages never finished drawing')
 }
 
-const wanted = process.argv.slice(2)
+const args = process.argv.slice(2)
+const wanted = args.filter((arg) => !arg.startsWith('--'))
+const only = (['desktop', 'phone'] as const).filter((device) =>
+  args.includes(`--${device}`)
+)
+const screens: Device[] = only.length > 0 ? only : ['desktop', 'phone']
 // Errors the capture page throws; any of them fails the run once every shot has been tried.
 const errors: string[] = []
 const server = await createServer({
@@ -66,27 +73,30 @@ await server.listen()
 const base = `http://localhost:${server.config.server.port}/`
 const browser = await chromium.launch()
 try {
-  const context = await browser.newContext({
-    viewport: { width: 1440, height: 900 },
-    deviceScaleFactor: 2,
-    colorScheme: 'light',
-    // Dates in threads render the same on any machine.
-    locale: 'en-GB',
-    timezoneId: 'Europe/London',
-  })
-  for (const shot of shots.filter(
-    ({ slug }) => wanted.length === 0 || wanted.includes(slug)
-  )) {
-    const page = await context.newPage()
-    page.on('pageerror', (error) => errors.push(`${shot.slug}: ${error.message}`))
-    await page.goto(shotUrl(base, shot))
-    await page.waitForFunction(() => window.viewer?.document.get() != null)
-    await waitForDrawn(page)
-    await setups[shot.slug](page)
-    await waitForDrawn(page)
-    await page.locator('#viewer').screenshot({ path: out(shot.slug) })
-    console.log(`Saved ${shot.slug}.png`)
-    await page.close()
+  for (const device of screens) {
+    const context = await browser.newContext({
+      ...devices[device],
+      colorScheme: 'light',
+      // Dates in threads render the same on any machine.
+      locale: 'en-GB',
+      timezoneId: 'Europe/London',
+    })
+    for (const shot of shots.filter(
+      ({ slug }) => wanted.length === 0 || wanted.includes(slug)
+    )) {
+      const name = imageName(shot.slug, device)
+      const page = await context.newPage()
+      page.on('pageerror', (error) => errors.push(`${name}: ${error.message}`))
+      await page.goto(shotUrl(base, shot, device))
+      await page.waitForFunction(() => window.viewer?.document.get() != null)
+      await waitForDrawn(page)
+      await setups[shot.slug](page, device)
+      await waitForDrawn(page)
+      await page.locator('#viewer').screenshot({ path: out(name) })
+      console.log(`Saved ${name}`)
+      await page.close()
+    }
+    await context.close()
   }
 } finally {
   await browser.close()

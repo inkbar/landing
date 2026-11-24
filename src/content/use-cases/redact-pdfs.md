@@ -8,6 +8,7 @@ focus: 50% 62%
 address: app.example.com/customers/C-30918/redact
 lede: Your users mark the names, numbers and passages that have to go, then apply the marks. Inkbar removes the content under them, checks the file it wrote and opens the redacted copy in the same viewer.
 screenshot: ../../assets/use-cases/redact-pdfs.png
+phoneScreenshot: ../../assets/use-cases/redact-pdfs-phone.png
 alt: A page of customer records in the Inkbar viewer with three redaction marks over an NI number, an email address and a postal address, and a dialog asking to apply redactions to 3 marks on 1 page.
 guide: redaction
 label: Redact PDFs
