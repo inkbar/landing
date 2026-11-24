@@ -21,15 +21,21 @@ export const setups: Record<Shot['slug'], (page: Page) => Promise<void>> = {
     await page.getByRole('dialog').getByText('3 marks on 1 page').waitFor()
   },
   'fill-pdf-forms': async (page) => {
-    // Typed and ticked as a person would, into the fields Inkbar renders over the page. The
-    // fields are found by their names in the form; the last one keeps the focus.
+    // Typed, picked and ticked as a person would, into the fields Inkbar renders over the
+    // page, found by their tooltips. The notes field keeps the focus, halfway through a line.
     const viewer = page.locator('#viewer')
-    await viewer.getByLabel('name', { exact: true }).fill('Alex Sample')
+    await viewer.getByLabel('Full name', { exact: true }).fill('Alex Sample')
     await viewer.getByLabel('Email', { exact: true }).fill('alex@example.com')
-    await viewer.getByLabel('agree', { exact: true }).click()
+    await viewer.getByLabel('Phone', { exact: true }).fill('07700 900123')
+    await viewer.getByLabel('Date of birth', { exact: true }).fill('14/03/1991')
+    // The options share the group's name, so pick Adult by its place in the group.
+    await viewer.getByRole('radio', { name: 'Membership' }).first().click()
+    await viewer.getByLabel('Contact name', { exact: true }).fill('Sam Sample')
+    await viewer.getByLabel('Contact phone', { exact: true }).fill('07700 900456')
+    await viewer.getByRole('checkbox', { name: /I agree/ }).click()
     await viewer
-      .getByLabel('notes', { exact: true })
-      .fill('Joining for the spring season.')
+      .getByLabel('Anything we should know', { exact: true })
+      .fill('I rowed at school and would like to')
   },
   'sign-pdfs': async (page) => {
     // Draw a signature on the real signature pad, then place it between the sign-off and the
