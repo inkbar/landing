@@ -44,21 +44,36 @@ export const setups: Record<Shot['slug'], (page: Page) => Promise<void>> = {
     await dialog.getByRole('button', { name: 'Save' }).click()
     await dialog.waitFor({ state: 'hidden' })
 
+    // Scroll the sign-off to the middle of the frame, then click halfway between it and the
+    // printed name, a name's width in from the left so the signature sits over the name.
     const viewer = page.locator('#viewer')
-    await page.mouse.move(720, 500)
-    await page.mouse.wheel(0, 420)
+    const frame = page.viewportSize()!
+    const before = await viewer.getByText('Yours sincerely,').boundingBox()
+    if (!before) throw new Error('The letter has no sign-off')
+    await page.mouse.move(frame.width / 2, frame.height / 2)
+    await page.mouse.wheel(0, before.y - frame.height / 2)
     await page.waitForTimeout(400)
     const signOff = await viewer.getByText('Yours sincerely,').boundingBox()
     const name = await viewer.getByText('Priya Shah').boundingBox()
     if (!signOff || !name) throw new Error('The letter has no sign-off')
     const sign = page.getByRole('button', { name: 'Sign', exact: true })
     if ((await sign.getAttribute('aria-pressed')) !== 'true') await sign.click()
-    await page.mouse.click(name.x + 90, (signOff.y + signOff.height + name.y) / 2)
-    await page.locator('#viewer .ink-annotation').first().waitFor()
+    await page.mouse.click(name.x + name.width, (signOff.y + signOff.height + name.y) / 2)
+    // The signature lands centred on the click. Drag it so its left edge lines up with the
+    // printed name, as a person would straighten it.
+    const placed = page.locator('#viewer .ink-annotation').first()
+    const box = await placed.boundingBox()
+    if (!box) throw new Error('The signature was not placed')
+    const centre = { x: box.x + box.width / 2, y: box.y + box.height / 2 }
+    await page.mouse.move(centre.x, centre.y)
+    await page.mouse.down()
+    await page.mouse.move(centre.x + name.x - box.x, centre.y, { steps: 8 })
+    await page.mouse.up()
   },
   'review-pdfs': async (page) => {
-    // Two highlights from search hits, one carrying a comment and then a reply from someone
-    // else, as a host would load them from its own store. The clock is set before each, so the
+    // Two highlights from search hits, the first carrying a comment and then a reply from
+    // someone else, as a host would load them from its own store. The thread opens by the
+    // first, clear of the second. The clock is set before each, so the
     // thread shows the same times on every run. Then open that thread as a reviewer would.
     await page.clock.setFixedTime(new Date('2026-11-18T09:12:00Z'))
     const commented = await page.evaluate(async () => {
@@ -67,15 +82,15 @@ export const setups: Record<Shot['slug'], (page: Page) => Promise<void>> = {
       const [second] = await doc.search('Agree the roles before you arrive').all()
       if (!first || !second) throw new Error('The handbook text moved')
       window.viewer.viewport.get()?.scrollToPage(first.page)
-      doc.annotations.add({ type: 'highlight', page: first.page, quads: first.quads })
+      doc.annotations.add({ type: 'highlight', page: second.page, quads: second.quads })
       const comment = doc.annotations.add({
         type: 'highlight',
-        page: second.page,
-        quads: second.quads,
+        page: first.page,
+        quads: first.quads,
         author: 'Sam Rivera',
-        contents: 'Can we say who decides if the roles change on site?',
+        contents: 'Can we say where the crew finds the brief?',
       })
-      return { id: comment.id, page: second.page, rect: second.rect }
+      return { id: comment.id, page: first.page, rect: first.rect }
     })
     await page.clock.setFixedTime(new Date('2026-11-18T10:40:00Z'))
     await page.evaluate((comment) => {
@@ -85,15 +100,14 @@ export const setups: Record<Shot['slug'], (page: Page) => Promise<void>> = {
         rect: comment.rect,
         inReplyTo: comment.id,
         author: 'Alex Sample',
-        contents:
-          'Good point. The person running the instrument decides. I will add a line.',
+        contents: 'Good point. It goes out with the job sheet. I will add a line.',
       })
     }, commented)
     await page.waitForTimeout(400)
     await page
       .getByRole('button', { name: 'Highlight with comment by Sam Rivera' })
       .click()
-    await page.getByText('The person running the instrument decides.').waitFor()
+    await page.getByText('It goes out with the job sheet.').waitFor()
   },
 }
 

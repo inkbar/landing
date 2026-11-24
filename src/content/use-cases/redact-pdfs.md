@@ -23,7 +23,7 @@ app:
   - Applying also strips the file's metadata, attached files, scripts and page thumbnails, and rewrites the whole file so no earlier version stays inside it.
 notes:
   - heading: The limits
-    text: Read these before you rely on a redacted file. Inkbar does not clean hidden layers. The removed words can still appear in bookmark titles, comments on other annotations, form values and alternate text. A scanned page has no text to remove, only the pixels under the mark. A signed file's signature stops verifying. The [Redaction guide](/docs/guides/redaction/#limits) lists every limit.
+    text: Read these before you rely on a redacted file. Inkbar does not clean hidden layers. The removed words can still appear in bookmark titles, comments on other annotations, form values and alternate text. A scanned page has no text to remove, only the pixels under the mark. A signed file's signature stops verifying. Inkbar removes what lies under each mark and does not look for copies of that content elsewhere in the file. The check after an apply has limits too, so don't describe a file as safe because the apply succeeded. The [Redaction guide](/docs/guides/redaction/#limits) lists every limit.
 example: |
   import {
     createApplyRedactionsButton,

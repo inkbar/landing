@@ -1,5 +1,5 @@
 ---
-title: Fill PDF forms in your web app | Inkbar
+title: Add PDF form filling to your web app | Inkbar
 description: Let people fill in PDF forms in the browser, with the form's own scripts running, and keep the values in your app or in the PDF. Open source and free.
 heading: Let people [fill in] PDF forms inside your app
 mark: field

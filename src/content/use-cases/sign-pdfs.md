@@ -1,5 +1,5 @@
 ---
-title: Sign PDFs in your web app | Inkbar
+title: Add PDF signing to your web app | Inkbar
 description: Let people draw, type or upload a signature and place it on any page or in a signature field of a PDF, in the browser. Open source and free.
 heading: Let people [sign] PDFs in your app
 mark: signature

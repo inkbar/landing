@@ -45,3 +45,16 @@ pnpm lint
 pnpm format:check
 pnpm typecheck
 ```
+
+## Use-case screenshots
+
+The screenshots on the use-case pages come from the released `@inkbar` packages, not from drawings. After you upgrade those packages, capture them again:
+
+```sh
+pnpm exec playwright install chromium
+pnpm screenshots
+```
+
+Pass one or more page slugs, such as `pnpm screenshots sign-pdfs`, to capture only those. The script writes `src/assets/use-cases/<slug>.png`. Look at each image before you commit it.
+
+The sample PDFs live in `scripts/screenshots/documents/`. `redactions.pdf`, `letter.pdf` and `handbook.pdf` are copies of the sandbox's made-up documents in [inkbar/inkbar](https://github.com/inkbar/inkbar) (`apps/sandbox/vite/documents/`). To make them again, run the sandbox's `makeDocument(name)` from `apps/sandbox` there and copy the bytes in.
