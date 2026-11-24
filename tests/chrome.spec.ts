@@ -1,23 +1,45 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
 import { expectNoAxeViolations } from './helpers'
 
-test('the landing header links to the docs and the page sections', async ({ page }) => {
+/** The site header's links, in order, by accessible name and where they go. */
+async function headerLinks(page: Page): Promise<[string, string | null][]> {
+  const links = page.getByRole('navigation', { name: 'Site' }).getByRole('link')
+  const out: [string, string | null][] = []
+  for (const link of await links.all()) {
+    out.push([(await link.textContent())?.trim() ?? '', await link.getAttribute('href')])
+  }
+  return out
+}
+
+const GITHUB = 'https://github.com/inkbar/inkbar'
+
+test('the landing header links to pages, not to sections of the home page', async ({
+  page,
+}) => {
   await page.goto('/')
-  const nav = page.getByRole('navigation', { name: 'Site' })
-  await expect(nav.getByRole('link', { name: 'Docs' })).toHaveAttribute('href', '/docs/')
-  await expect(nav.getByRole('link', { name: 'Developers' })).toHaveAttribute(
-    'href',
-    '/#developers'
-  )
-  await expect(nav.getByRole('link', { name: 'Why Inkbar' })).toHaveAttribute(
-    'href',
-    '/#why'
-  )
-  await expect(nav.getByRole('link', { name: 'GitHub' })).toHaveAttribute(
-    'href',
-    'https://github.com/inkbar/inkbar'
-  )
+  expect(await headerLinks(page)).toEqual([
+    ['Docs', '/docs/'],
+    ['Use cases', '/use-cases/'],
+    ['Changelog', '/changelog/'],
+    ['Sandbox', 'https://sandbox.inkbar.dev'],
+    ['Get started', '/docs/quickstart/'],
+    ['GitHub', GITHUB],
+  ])
+})
+
+test('the GitHub link is the logo on a wide screen and the word on a phone', async ({
+  page,
+}) => {
+  await page.goto('/use-cases/')
+  const github = page
+    .getByRole('navigation', { name: 'Site' })
+    .getByRole('link', { name: 'GitHub', exact: true })
+  const phone = (page.viewportSize()?.width ?? 0) < 640
+  await expect(github.locator('svg')).toBeVisible({ visible: !phone })
+  // On a wide screen the word is there for screen readers only, a 1px box.
+  const word = await github.getByText('GitHub').boundingBox()
+  expect((word?.width ?? 0) > 2).toBe(phone)
 })
 
 test('the footer credits Redactr once and never mentions Pro', async ({ page }) => {
@@ -42,6 +64,12 @@ test('the docs use the site header with search and mark Docs as current', async 
     'aria-current',
     'page'
   )
+  expect(await headerLinks(page)).toEqual([
+    ['Docs', '/docs/'],
+    ['Use cases', '/use-cases/'],
+    ['Changelog', '/changelog/'],
+    ['GitHub', GITHUB],
+  ])
   await expect(
     page.getByRole('banner').getByRole('button', { name: /search/i })
   ).toBeVisible()
