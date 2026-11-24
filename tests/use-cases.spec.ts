@@ -1,6 +1,6 @@
 import { readdirSync, readFileSync } from 'node:fs'
 
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
 
 import { expectNoAxeViolations, expectNoHorizontalScroll } from './helpers'
 
@@ -40,6 +40,14 @@ for (const { slug, guide } of pages) {
     expect((await request.get(`/docs/guides/${guide}/`)).status()).toBe(200)
   })
 
+  test(`/use-cases/${slug}/ shows the phone screenshot in a phone on a phone, and the browser window otherwise`, async ({
+    page,
+  }) => {
+    await page.goto(`/use-cases/${slug}/`)
+    const phone = (page.viewportSize()?.width ?? 0) < 640
+    await expectFramedFor(page, phone)
+  })
+
   test(`/use-cases/${slug}/ fits the screen and has no accessibility violations`, async ({
     page,
   }) => {
@@ -72,6 +80,7 @@ test('the overview lists every use-case page in order and the footer links to it
   expect(hrefs.map((href) => href?.replace(/^.*\/use-cases\//, ''))).toEqual(
     pages.map(({ slug }) => `${slug}/`)
   )
+  await expectFramedFor(page, (page.viewportSize()?.width ?? 0) < 640)
   await expectNoHorizontalScroll(page)
   await expectNoAxeViolations(page)
   await page.goto('/')
@@ -88,3 +97,20 @@ test('each use-case heading carries its mark', async ({ page }) => {
     await expect(page.locator('h1 .mark')).toHaveCount(1)
   }
 })
+
+/**
+ * Every screenshot on the page has loaded the image for this screen, the phone capture on a
+ * phone and the desktop one otherwise, inside the matching frame.
+ */
+async function expectFramedFor(page: Page, phone: boolean): Promise<void> {
+  const frames = page.locator('main .device')
+  expect(await frames.count()).toBeGreaterThan(0)
+  for (const frame of await frames.all()) {
+    const shot = frame.locator('picture img')
+    await expect(shot).toHaveJSProperty('complete', true)
+    const src = await shot.evaluate((img: HTMLImageElement) => img.currentSrc)
+    expect(src.includes('-phone'), src).toBe(phone)
+    await expect(frame.locator('.browser-bar')).toBeVisible({ visible: !phone })
+    await expect(frame.locator('.phone-bar')).toBeVisible({ visible: phone })
+  }
+}
