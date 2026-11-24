@@ -57,4 +57,4 @@ pnpm screenshots
 
 Pass one or more page slugs, such as `pnpm screenshots sign-pdfs`, to capture only those. The script writes `src/assets/use-cases/<slug>.png`. Look at each image before you commit it.
 
-The sample PDFs live in `scripts/screenshots/documents/`. `redactions.pdf`, `letter.pdf` and `handbook.pdf` are copies of the sandbox's made-up documents in [inkbar/inkbar](https://github.com/inkbar/inkbar) (`apps/sandbox/vite/documents/`). To make them again, run the sandbox's `makeDocument(name)` from `apps/sandbox` there and copy the bytes in.
+The sample PDFs live in `scripts/screenshots/documents/`. `application.pdf` comes from `node scripts/screenshots/documents/application.ts`. `redactions.pdf`, `letter.pdf` and `handbook.pdf` are copies of the sandbox's made-up documents in [inkbar/inkbar](https://github.com/inkbar/inkbar) (`apps/sandbox/vite/documents/`). To make them again, run the sandbox's `makeDocument(name)` from `apps/sandbox` there and copy the bytes in.

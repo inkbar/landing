@@ -5,7 +5,7 @@ export type ToolName = 'highlight' | 'note' | 'redact-area' | 'signature'
 
 export interface Shot {
   slug: 'redact-pdfs' | 'fill-pdf-forms' | 'sign-pdfs' | 'review-pdfs'
-  /** A file in documents/, generated from the sandbox's made-up sample documents. */
+  /** A made-up sample in documents/. The README says where each one comes from. */
   document: string
   tools: ToolName[]
   /** Loads @inkbar/engine, which the apply-redactions dialog needs. */
@@ -19,7 +19,7 @@ export const shots: Shot[] = [
     tools: ['redact-area'],
     engine: true,
   },
-  { slug: 'fill-pdf-forms', document: 'form.pdf', tools: [], engine: false },
+  { slug: 'fill-pdf-forms', document: 'application.pdf', tools: [], engine: false },
   { slug: 'sign-pdfs', document: 'letter.pdf', tools: ['signature'], engine: false },
   {
     slug: 'review-pdfs',
