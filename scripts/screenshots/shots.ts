@@ -8,25 +8,13 @@ export interface Shot {
   /** A made-up sample in documents/. The README says where each one comes from. */
   document: string
   tools: ToolName[]
-  /** Loads @inkbar/engine, which the apply-redactions dialog needs. */
-  engine: boolean
 }
 
 export const shots: Shot[] = [
-  {
-    slug: 'redact-pdfs',
-    document: 'redactions.pdf',
-    tools: ['redact-area'],
-    engine: true,
-  },
-  { slug: 'fill-pdf-forms', document: 'application.pdf', tools: [], engine: false },
-  { slug: 'sign-pdfs', document: 'letter.pdf', tools: ['signature'], engine: false },
-  {
-    slug: 'review-pdfs',
-    document: 'handbook.pdf',
-    tools: ['highlight', 'note'],
-    engine: false,
-  },
+  { slug: 'redact-pdfs', document: 'redactions.pdf', tools: ['redact-area'] },
+  { slug: 'fill-pdf-forms', document: 'application.pdf', tools: [] },
+  { slug: 'sign-pdfs', document: 'letter.pdf', tools: ['signature'] },
+  { slug: 'review-pdfs', document: 'handbook.pdf', tools: ['highlight', 'note'] },
 ]
 
 export type Device = 'desktop' | 'phone'

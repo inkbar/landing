@@ -10,7 +10,7 @@ Vue 3 components and composables for Inkbar. The components are unstyled primiti
 
 Install the packages as the [Quickstart](/docs/quickstart/) shows.
 
-Vue 3.5 or later is a peer dependency. Add the Vite plugin from `@inkbar/core/vite` so PDF.js can load its worker and fonts; [Loading assets](/docs/loading-assets/) covers it.
+Vue 3.5 or later is a peer dependency. Add the Vite plugin from `@inkbar/core/vite` so Inkbar can load its engine, fonts and form script sandbox; [Loading assets](/docs/loading-assets/) covers it.
 
 ## Usage
 

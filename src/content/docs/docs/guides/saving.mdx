@@ -1,89 +1,22 @@
 ---
 title: Saving
-description: Write annotations and form values into the PDF with @inkbar/engine, so Download, Print and doc.save() give the file as it looks on screen.
+description: Write annotations and form values into the PDF, so Download, Print and doc.save() give the file as it looks on screen.
 head:
   - tag: title
     content: 'Save annotations and form values into the PDF | Inkbar'
 ---
 
-import { TabItem, Tabs } from '@astrojs/starlight/components'
-
 Inkbar writes a session's annotations and changed form values into the PDF. Download, Print and `doc.save()` then give a file that looks as it does on screen, and other programs can read what was added. Open that file in Inkbar again and its annotations come back ready to edit.
 
-Saving is opt-in. It needs `@inkbar/engine`, a build of PDFium that runs in the browser. The same engine [applies redactions](/docs/guides/redaction/). Without it, Download and Print give the file as it was opened, and redaction marks cannot be applied.
+Inkbar's engine, a build of PDFium that runs in the browser, writes the file. It is the same engine that reads and draws every file, so there is nothing to install or turn on: the engine's files come with the [assets](/docs/loading-assets/) you already pass.
 
-## Turn it on
+The download and print buttons, Ctrl or Cmd+S and Ctrl or Cmd+P hand over the file with the session's changes written into it. `doc.save()` resolves with the same bytes.
 
-Install the engine:
-
-```sh
-pnpm add @inkbar/engine
-```
-
-Then pass a function that imports it as `engine`:
-
-<Tabs syncKey="framework">
-  <TabItem label="Vue">
-
-```vue
-<script setup lang="ts">
-const engine = () => import('@inkbar/engine')
-</script>
-
-<template>
-  <InkRoot :src="url" :assets="assets" :engine="engine">
-    <!-- … -->
-  </InkRoot>
-</template>
-```
-
-  </TabItem>
-  <TabItem label="React">
-
-```tsx
-const engine = () => import('@inkbar/engine')
-
-<InkRoot src={url} assets={assets} engine={engine}>
-  {/* … */}
-</InkRoot>
-```
-
-  </TabItem>
-  <TabItem label="Svelte">
-
-```svelte
-<script lang="ts">
-  const engine = () => import('@inkbar/engine')
-</script>
-
-<InkRoot src={url} {assets} {engine}>
-  <!-- … -->
-</InkRoot>
-```
-
-  </TabItem>
-  <TabItem label="Plain DOM">
-
-```ts
-const viewer = createViewer(el, {
-  source,
-  assets,
-  engine: () => import('@inkbar/engine'),
-})
-```
-
-  </TabItem>
-</Tabs>
-
-The download and print buttons, Ctrl or Cmd+S and Ctrl or Cmd+P then hand over the file with the session's changes written into it. `doc.save()` resolves with the same bytes.
-
-Inkbar loads the engine on the first save that has changes, or the first apply of redactions. A visit that does neither never loads it, and a save with no changes gives the bytes the file was opened from. The engine's binary is 2.9 MB gzipped. A bundler picks up its wasm and worker from the package, so there is nothing to set up. To serve those files from a path of your own, see the [`@inkbar/engine` README](https://github.com/inkbar/inkbar/tree/main/packages/engine#serving-the-files).
-
-Inkbar reads `engine` when a document opens. Without it, `doc.save()` rejects with `EngineUnavailable` once there are changes. With or without it, `doc.getData()` gives the bytes the file was opened from.
+With no changes, a save gives the bytes the file was opened from. With changes, it writes through the document's engine, so that engine must be running: while the viewer has [stopped working](#when-the-viewer-stops-working), `doc.save()` rejects with `EngineUnavailable`. `doc.getData()` always gives the bytes the file was opened from.
 
 `doc.changed` is a readable that is true while the session differs from the file: its annotations from those it opened with, or a form value from the file's. The file's values are the ones the form holds when `ready` resolves. A value you set after that is a change, and so is one you pass at open.
 
-### Opening documents yourself
+## Opening documents yourself
 
 A host that calls `openDocument` itself passes one more option, `pictures`. In a browser, `savePictures(document)` from `@inkbar/core/dom` supplies it. `createViewer` and the framework packages pass it for you.
 
@@ -93,7 +26,6 @@ import { savePictures } from '@inkbar/core/dom'
 
 const doc = await openDocument(file, {
   assets,
-  engine: () => import('@inkbar/engine'),
   pictures: savePictures(document),
 })
 ```
@@ -111,7 +43,7 @@ const doc = await openDocument(file, {
 Saving does not redact. The text and images under a redaction mark are still in the saved file, and anyone can copy them. Applying the marks removes them: see [Redaction](/docs/guides/redaction/).
 :::
 
-An encrypted file keeps its password. With `engine`, the open document holds the password until it closes, because a save opens the file again in the engine.
+An encrypted file keeps its password. The open document holds the password until it closes, because a save, and a restart after the engine stops, open the file again in the engine.
 
 ### Signed files
 
@@ -161,10 +93,9 @@ XFA forms are not supported.
 
 ## When a save fails
 
-When the engine cannot be loaded or cannot write the file, `doc.save()` rejects with `SaveFailed`:
+When the engine cannot write the file, `doc.save()` rejects with `SaveFailed`:
 
-- `details.stage` is `'engine'` when the engine could not be loaded or started, as when offline.
-- `details.stage` is `'write'` when the engine could not open or write this file.
+- `details.stage` is `'write'`: the engine could not open or write this file, or an annotation could not be drawn for it.
 - `details.annotation` holds an annotation's id when that annotation is the cause.
 
 Download and Print then hand over nothing. The viewer says why in its message box, and your error handler (`onError`, or the `error` event in Vue) hears the error.
@@ -173,6 +104,16 @@ While a copy is being written, the download and print buttons show they are busy
 
 The three messages are `saveFailed`, `saveUnavailable` and `preparingFile`, in the `viewer` group. [Translations](/docs/guides/translations/) shows how to change them.
 
-## Without the engine
+## When the viewer stops working
 
-You can still keep a session without writing into the PDF. Store the annotations and form values as JSON in your own backend and import them on the next open: [Annotations](/docs/guides/annotations/#saving-annotations) and [Forms](/docs/guides/forms/#save-values-as-gloss) show how.
+The engine runs in a worker. If it stops while a file is open, Inkbar starts a new one and opens the file in it again, and the reader sees nothing. When that fails, or the engine has stopped three times within 60 seconds, the document is stopped: `doc.engineStopped`, a readable, is true, every read rejects with `EngineUnavailable`, and the status stays `ready`.
+
+The viewer then shows a notice over the pages: "The viewer stopped working. Your changes are kept.", with a Try again button. While it is up, annotating pauses, but scrolling, zooming and the sidebars keep working, and pages already drawn keep their image. A save with changes and an apply of redactions fail with `EngineUnavailable`, and the download and print buttons say saving is not available. Your error handler (`onError`, or the `error` event in Vue) hears `EngineUnavailable` once each time the document stops.
+
+Try again calls `doc.restartEngine()`, which you can also call from your own code. It starts a new engine and opens the file in it again, resolving once the document reads again and rejecting with `EngineUnavailable` when it does not. Either way the session's annotations, form values and history stay as they were.
+
+The notice's words are `engineStopped`, `engineRetry` and `engineRestarting`, in the `viewer` group. [Translations](/docs/guides/translations/) shows how to change them.
+
+## Keeping a session outside the file
+
+You can also keep a session without writing into the PDF. Store the annotations and form values as JSON in your own backend and import them on the next open: [Annotations](/docs/guides/annotations/#saving-annotations) and [Forms](/docs/guides/forms/#save-values-as-gloss) show how.

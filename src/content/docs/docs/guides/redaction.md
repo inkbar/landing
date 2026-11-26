@@ -12,7 +12,7 @@ Redaction in Inkbar has two steps. People draw marks over what should go, then a
 A mark on its own removes nothing. The text under it still renders, and anyone can select and copy it. Download, Print and `doc.save()` write a mark into the PDF as a Redact annotation and leave the content under it in the file. Only applying the marks removes that content.
 :::
 
-Applying needs `@inkbar/engine`. [Saving](/docs/guides/saving/#turn-it-on) shows how to install it and pass it as `engine`. Inkbar loads the engine on the first apply, or on the first save that has changes.
+Inkbar's engine, which reads and draws every file, applies the marks. There is nothing to install or turn on.
 
 ## Drawing marks
 
@@ -27,7 +27,7 @@ A mark from your own detector is a `redact` annotation too, added through the sa
 
 ## Applying marks
 
-The Apply redactions button applies every mark in the session. It is disabled while no document is ready, without `engine`, and while there is no mark.
+The Apply redactions button applies every mark in the session. It is disabled while no document is ready and while there is no mark.
 
 A press asks first, in a dialog titled "Apply redactions?". The dialog says:
 
@@ -119,7 +119,6 @@ const viewer = createViewer(el, {
   source,
   assets,
   tools: [redactAreaTool()],
-  engine: () => import('@inkbar/engine'),
   onRedacted: ({ bytes }) => upload(bytes),
 })
 
@@ -145,7 +144,6 @@ import { assets } from 'virtual:inkbar-assets'
 defineProps<{ file: File }>()
 
 const tools = [redactAreaTool()]
-const engine = () => import('@inkbar/engine')
 </script>
 
 <template>
@@ -153,7 +151,6 @@ const engine = () => import('@inkbar/engine')
     :src="file"
     :assets="assets"
     :tools="tools"
-    :engine="engine"
     @redacted="({ bytes }) => upload(bytes)"
   >
     <InkToolbar>
@@ -181,7 +178,6 @@ import {
 import { assets } from 'virtual:inkbar-assets'
 
 const tools = [redactAreaTool()]
-const engine = () => import('@inkbar/engine')
 
 export function Viewer({ file }: { file: File }) {
   return (
@@ -189,7 +185,6 @@ export function Viewer({ file }: { file: File }) {
       src={file}
       assets={assets}
       tools={tools}
-      engine={engine}
       onRedacted={({ bytes }) => upload(bytes)}
     >
       <InkToolbar>
@@ -219,10 +214,9 @@ export function Viewer({ file }: { file: File }) {
   let { file }: { file: File } = $props()
 
   const tools = [redactAreaTool()]
-  const engine = () => import('@inkbar/engine')
 </script>
 
-<InkRoot src={file} {assets} {tools} {engine} onRedacted={({ bytes }) => upload(bytes)}>
+<InkRoot src={file} {assets} {tools} onRedacted={({ bytes }) => upload(bytes)}>
   <InkToolbar>
     <InkToolButton tool="redact-area" />
     <InkApplyRedactions />
@@ -246,7 +240,6 @@ const viewer = createViewer(el, {
   source,
   assets,
   tools: [redactAreaTool()],
-  engine: () => import('@inkbar/engine'),
   redactionConfirm: async (preview) =>
     window.confirm(
       `Remove the content under ${preview.marks} marks? This cannot be undone.`
@@ -281,7 +274,7 @@ function RedactButton() {
 
 ### From the document
 
-Without a viewer, `doc.redactionPreview()` gives the counts a confirmation needs without loading the engine, and `doc.applyRedactions()` applies every mark and resolves with `{ bytes, result }`. Open the bytes to show the redacted file.
+Without a viewer, `doc.redactionPreview()` gives the counts a confirmation needs without calling the engine, and `doc.applyRedactions()` applies every mark and resolves with `{ bytes, result }`. Open the bytes to show the redacted file.
 
 ```ts
 const preview = doc.redactionPreview()
@@ -307,10 +300,9 @@ An apply never overlaps a save, and a second call while an apply runs gets the s
 
 When the apply fails, nothing is handed over and the open document stays as it was. The viewer says why in its message box, and your error handler (`onError`, or the `error` event in Vue) hears one of these errors:
 
-- `EngineUnavailable`: there is no `engine`.
+- `EngineUnavailable`: the viewer has [stopped working](/docs/guides/saving/#when-the-viewer-stops-working).
 - `NothingToRedact`: there is no mark, or the engine applied none because every mark has no area or lies wholly off its page.
 - `RedactionFailed`: the engine could not finish. `details.stage` says where:
-  - `'engine'` when the engine could not be loaded or started, as when offline.
   - `'apply'` when the engine refused the marks, or could not apply them or write the rest. `details.page` and `details.annotation` name the page and the annotation when one was the cause.
   - `'verify'` when the check could not run or did not find every mark's place clean. `details.regions` lists the page and rectangle of each place it did not find clean, and `details.page` names a page the check could not read.
 
@@ -320,7 +312,7 @@ The words in the button, the dialog and the message box are in the `viewer` grou
 
 ## Checking a file from elsewhere
 
-`checkRedaction` from `@inkbar/engine` reports what it finds under redactions in any PDF. Without `regions`, it looks for candidates itself: Redact annotations, filled boxes in the page content, and Square, Highlight and Stamp annotations drawn as one opaque filled box. That is the use for a file Inkbar did not just produce.
+`checkRedaction` from `@inkbar/engine` reports what it finds under redactions in any PDF. Without `regions`, it looks for candidates itself: Redact annotations, filled boxes in the page content, and Square, Highlight and Stamp annotations drawn as one opaque filled box. That is the use for a file Inkbar did not just produce. To import it, add `@inkbar/engine` to your own dependencies, at the version `@inkbar/core` uses.
 
 A crafted file can make the check take a long time, so run it on an engine of its own, in its own worker (the default in a browser), with a timeout, and destroy that engine when the timeout fires:
 

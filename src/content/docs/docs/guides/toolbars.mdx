@@ -18,7 +18,7 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 | `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                           |
 | `InkDownloadButton`          | Downloads the open PDF, with the session's changes when [saving](/docs/guides/saving/) is on. `filename` names the file |
 | `InkPrintButton`             | Prints the open PDF with the browser's print dialog                                                                     |
-| `InkApplyRedactions`         | Applies the redaction marks after a confirmation. Needs `engine`. See [Redaction](/docs/guides/redaction/)              |
+| `InkApplyRedactions`         | Applies the redaction marks after a confirmation. See [Redaction](/docs/guides/redaction/)                              |
 | `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                             |
 | `InkPageInput`               | The current page number, which the user can type into                                                                   |
 | `InkPageCount`               | "of N", the page count                                                                                                  |
@@ -41,7 +41,7 @@ Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one rea
 
 Ctrl or Cmd with Z undoes, and Ctrl or Cmd with Shift and Z, or Ctrl with Y, redoes. Both work on every platform. The keys do what `InkUndo` and `InkRedo` do, from anywhere inside `InkRoot`, toolbars included. In a text field, a select or editable content, they act on that element instead.
 
-Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file's name, or the last part of its URL, or `document.pdf`. Printing opens the browser's print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. With `@inkbar/engine`, both give the file with this session's annotations and changed form values written into it: see [Saving](/docs/guides/saving/). Without it, both give the file as it was opened.
+Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file's name, or the last part of its URL, or `document.pdf`. Printing opens the browser's print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. Both give the file with this session's annotations and changed form values written into it: see [Saving](/docs/guides/saving/).
 
 ## Choosing tools
 
