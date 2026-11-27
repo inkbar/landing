@@ -6,7 +6,7 @@ head:
     content: 'Inkbar docs: an open-source PDF viewer and editor for the web'
 ---
 
-Inkbar is a PDF viewer and editor for the browser, with form filling, annotations and redaction. It is written in TypeScript, built on PDF.js and released under the MIT licence.
+Inkbar is a PDF viewer and editor for the browser, with form filling, annotations and redaction. It is written in TypeScript, reads and writes files with PDFium compiled to WebAssembly, and is released under the MIT licence.
 
 To see it before you install anything, open the [sandbox](https://sandbox.inkbar.dev). It runs the Vue, React, Svelte and plain DOM viewers on a sample document, and you can drop in your own PDF. The file stays in your browser.
 
@@ -22,12 +22,12 @@ To see it before you install anything, open the [sandbox](https://sandbox.inkbar
 | Signatures        | Draw, type or upload a signature, save it and place it on any page or in a signature field. See [Signatures](/docs/guides/signatures/)                                                                                                                                                       |
 | Markup            | Highlights, underlines, strikeouts and squiggly underlines from a text selection                                                                                                                                                                                                             |
 | Notes             | Notes with reply threads                                                                                                                                                                                                                                                                     |
-| Redaction         | Text and area redaction marks. With `@inkbar/engine`, applying them removes the content under them and the file's metadata, attached files and scripts, then checks the result. See [Redaction](/docs/guides/redaction/)                                                                     |
+| Redaction         | Text and area redaction marks. Applying them removes the content under them and the file's metadata, attached files and scripts, then checks the result. See [Redaction](/docs/guides/redaction/)                                                                                            |
 | Drawing           | Freehand ink, shapes, lines, arrows, speech bubbles, loupes, masks and text boxes, with colour and line style menus. See [Drawing](/docs/guides/drawing/)                                                                                                                                    |
 | Annotations       | JSON export and import, and annotations from other programs shown as locked. Their unapplied redaction marks open as editable marks                                                                                                                                                          |
 | History           | Undo and redo with grouped steps, from the toolbar or Ctrl/Cmd+Z, whether Inkbar or your app holds the annotations. Field edits undo too                                                                                                                                                     |
 | Files             | Download and print the open PDF, from a button or Ctrl/Cmd+S and +P                                                                                                                                                                                                                          |
-| Saving            | With `@inkbar/engine`, annotations and form values are written into the PDF, and come back editable when the file is reopened. See [Saving](/docs/guides/saving/)                                                                                                                            |
+| Saving            | Annotations and form values are written into the PDF, and come back editable when the file is reopened. See [Saving](/docs/guides/saving/)                                                                                                                                                   |
 | Locked files      | A password dialog for encrypted PDFs, or your own flow. See [Locked files](/docs/guides/locked-files/)                                                                                                                                                                                       |
 | Toolbars          | Composable controls for tools, undo and redo, pages and zoom, with icons you can swap for your own                                                                                                                                                                                           |
 | Keyboard          | Zoom, page and annotation shortcuts, and `Enter` to apply the active tool. See [Tools and keyboard](/docs/guides/annotations/#tools-and-keyboard)                                                                                                                                            |
@@ -43,17 +43,17 @@ You build the toolbars from Inkbar's controls and place them where they fit your
 
 ## Packages
 
-| Package          | Purpose                                                                            |
-| ---------------- | ---------------------------------------------------------------------------------- |
-| `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency.    |
-| `@inkbar/vue`    | Vue 3 components and composables to build your viewer.                             |
-| `@inkbar/react`  | React 19 components and hooks to build your viewer.                                |
-| `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                                |
-| `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.          |
-| `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.         |
-| `@inkbar/engine` | Optional. Writes annotations and form values into the PDF, and applies redactions. |
+| Package          | Purpose                                                                             |
+| ---------------- | ----------------------------------------------------------------------------------- |
+| `@inkbar/core`   | Document model, rendering, annotations and tools, with no framework dependency.     |
+| `@inkbar/vue`    | Vue 3 components and composables to build your viewer.                              |
+| `@inkbar/react`  | React 19 components and hooks to build your viewer.                                 |
+| `@inkbar/svelte` | Svelte 5 components and hooks to build your viewer.                                 |
+| `@inkbar/theme`  | Default stylesheet. Zero specificity, compatible with shadcn token names.           |
+| `@inkbar/icons`  | The icons the toolbar controls show, as data, for use on your own buttons.          |
+| `@inkbar/engine` | PDFium compiled to WebAssembly. Core reads, draws, saves and redacts files with it. |
 
-The packages are released together and share one version number. The framework packages take `@inkbar/core` as a peer dependency, so your app installs one copy of it.
+The packages are released together and share one version number. The framework packages take `@inkbar/core` as a peer dependency, so your app installs one copy of it. `@inkbar/core` depends on `@inkbar/engine`, so you do not install the engine yourself.
 
 ## Where to start
 

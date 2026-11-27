@@ -9,31 +9,31 @@ Inkbar has no fixed toolbar. You put `InkToolbar` wherever it fits your layout, 
 
 ## Controls
 
-| Component                    | What it does                                                                                                            |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                                    |
-| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                                        |
-| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                                 |
-| `InkToolbarButton`           | Your own button, in the toolbar's arrow-key order. See [Your own buttons](#your-own-buttons)                            |
-| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                           |
-| `InkDownloadButton`          | Downloads the open PDF, with the session's changes when [saving](/docs/guides/saving/) is on. `filename` names the file |
-| `InkPrintButton`             | Prints the open PDF with the browser's print dialog                                                                     |
-| `InkApplyRedactions`         | Applies the redaction marks after a confirmation. Needs `engine`. See [Redaction](/docs/guides/redaction/)              |
-| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                             |
-| `InkPageInput`               | The current page number, which the user can type into                                                                   |
-| `InkPageCount`               | "of N", the page count                                                                                                  |
-| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                                                   |
-| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                                                   |
-| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                                            |
-| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](/docs/guides/search/)                                      |
-| `InkHighlightMenu`           | Turns on the `highlight` tool, and picks highlight, underline, strikethrough or squiggly and the markup colour          |
-| `InkShapeMenu`               | Turns on the `shape` tool, and picks the kind. See [Drawing](/docs/guides/drawing/)                                     |
-| `InkLineStyleMenu`           | Line weight, solid or dashed, and arrowheads for the active tool or the selection                                       |
-| `InkColorMenu`               | The `border`, `fill` or `textColor` colour, given as `property`                                                         |
-| `InkTextStyleMenu`           | A text box's font, size, colour, bold, italic, underline and alignment                                                  |
-| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](/docs/guides/signatures/)                       |
-| `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                                                            |
-| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                                |
+| Component                    | What it does                                                                                                                 |
+| ---------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `InkToolbar`                 | Groups its buttons into one Tab stop, with arrow keys between them. `label` names it                                         |
+| `InkToolButton`              | Sets the tool given as `tool`, pressed while that tool is active                                                             |
+| `InkToolbarSeparator`        | Divides groups of controls in a toolbar                                                                                      |
+| `InkToolbarButton`           | Your own button, in the toolbar's arrow-key order. See [Your own buttons](#your-own-buttons)                                 |
+| `InkUndo`, `InkRedo`         | Undo and redo, disabled when there is nothing to undo or redo                                                                |
+| `InkDownloadButton`          | Downloads the open PDF with the session's changes written in (see [Saving](/docs/guides/saving/)). `filename` names the file |
+| `InkPrintButton`             | Prints the open PDF with the browser's print dialog                                                                          |
+| `InkApplyRedactions`         | Applies the redaction marks after a confirmation. See [Redaction](/docs/guides/redaction/)                                   |
+| `InkPrevPage`, `InkNextPage` | Previous and next page, disabled on the first and last page                                                                  |
+| `InkPageInput`               | The current page number, which the user can type into                                                                        |
+| `InkPageCount`               | "of N", the page count                                                                                                       |
+| `InkZoomIn`, `InkZoomOut`    | Zoom in or out a step                                                                                                        |
+| `InkZoomSelect`              | Fit width, fit page, and zoom levels from 50% to 400%                                                                        |
+| `InkSearchButton`            | Opens the find bar, pressed while it is open                                                                                 |
+| `InkFindBar`                 | The find bar itself. Place it inside `InkRoot`. See [Search](/docs/guides/search/)                                           |
+| `InkHighlightMenu`           | Turns on the `highlight` tool, and picks highlight, underline, strikethrough or squiggly and the markup colour               |
+| `InkShapeMenu`               | Turns on the `shape` tool, and picks the kind. See [Drawing](/docs/guides/drawing/)                                          |
+| `InkLineStyleMenu`           | Line weight, solid or dashed, and arrowheads for the active tool or the selection                                            |
+| `InkColorMenu`               | The `border`, `fill` or `textColor` colour, given as `property`                                                              |
+| `InkTextStyleMenu`           | A text box's font, size, colour, bold, italic, underline and alignment                                                       |
+| `InkSignatureMenu`           | Sign with the chosen signature, or pick or create one. See [Signatures](/docs/guides/signatures/)                            |
+| `InkCommand`                 | Runs a [plugin](/docs/guides/plugins/) command given as `id`                                                                 |
+| `InkIcon`                    | Draws an icon from `@inkbar/icons`, for your own buttons                                                                     |
 
 `tool` is `select-text`, `select`, or one of the creation tools you pass to the root (see [Choosing tools](#choosing-tools)). The first two are named Select text and Rectangle select. Pass `label` to change a tool button's name. It takes a string or a function, so the name can follow your language; see [Translations](/docs/guides/translations/#labels-you-supply). To rename any other button, pass `aria-label` and `title`.
 
@@ -41,7 +41,7 @@ Put the controls inside an `InkToolbar`, anywhere inside `InkRoot`. Each one rea
 
 Ctrl or Cmd with Z undoes, and Ctrl or Cmd with Shift and Z, or Ctrl with Y, redoes. Both work on every platform. The keys do what `InkUndo` and `InkRedo` do, from anywhere inside `InkRoot`, toolbars included. In a text field, a select or editable content, they act on that element instead.
 
-Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file's name, or the last part of its URL, or `document.pdf`. Printing opens the browser's print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. With `@inkbar/engine`, both give the file with this session's annotations and changed form values written into it: see [Saving](/docs/guides/saving/). Without it, both give the file as it was opened.
+Ctrl or Cmd with P prints the PDF, and Ctrl or Cmd with S downloads it, from anywhere inside `InkRoot` once the document is ready. Outside the viewer the browser keeps them. The download takes the opened file's name, or the last part of its URL, or `document.pdf`. Printing opens the browser's print dialog for the PDF itself, so text stays sharp; on iOS the PDF opens in a new tab, where its own print is. Both give the file with this session's annotations and changed form values written into it: see [Saving](/docs/guides/saving/).
 
 ## Choosing tools
 

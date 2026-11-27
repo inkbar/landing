@@ -10,7 +10,7 @@ React components and hooks for Inkbar. The components are unstyled primitives bu
 
 Install the packages as the [Quickstart](/docs/quickstart/) shows.
 
-React 19 and React DOM 19 are peer dependencies. Add the Vite plugin from `@inkbar/core/vite` so PDF.js can load its worker and fonts; [Loading assets](/docs/loading-assets/) covers it. The package is marked `'use client'`, so a React Server Components app can import it from a server component.
+React 19 and React DOM 19 are peer dependencies. Add the Vite plugin from `@inkbar/core/vite` so Inkbar can load its engine, fonts and form script sandbox; [Loading assets](/docs/loading-assets/) covers it. The package is marked `'use client'`, so a React Server Components app can import it from a server component.
 
 ## Usage
 

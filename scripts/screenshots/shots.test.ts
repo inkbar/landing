@@ -17,9 +17,8 @@ test('every shot names a sample document that exists', () => {
   }
 })
 
-test('the redaction shot loads the engine and the area tool, and the signing shot the signature tool', () => {
+test('the redaction shot offers the area tool, and the signing shot the signature tool', () => {
   const redact = shots.find(({ slug }) => slug === 'redact-pdfs')
-  assert.equal(redact?.engine, true)
   assert.ok(redact?.tools.includes('redact-area'))
   assert.ok(shots.find(({ slug }) => slug === 'sign-pdfs')?.tools.includes('signature'))
 })

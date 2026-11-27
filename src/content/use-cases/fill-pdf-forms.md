@@ -20,7 +20,7 @@ users:
 app:
   - Every change as it happens, with the full set of values, so your app can store them as people fill the form in.
   - Values set from your own code, such as a name your app already knows.
-  - With `@inkbar/engine`, Download, Print and `doc.save()` write the changed values into the PDF. Without it, keep the values in your own state, or export them as JSON and load them the next time the document opens.
+  - Download, Print and `doc.save()` write the changed values into the PDF. Or keep the values in your own state, or export them as JSON and load them the next time the document opens.
 notes:
   - heading: The limits
     text: Inkbar fills AcroForm fields. A pure XFA form shows as a static page, and a PDF with an AcroForm alongside its XFA fills through the AcroForm. File-select and barcode fields show their appearance but cannot be filled. The [Forms guide](/docs/guides/forms/#not-supported) has the details.

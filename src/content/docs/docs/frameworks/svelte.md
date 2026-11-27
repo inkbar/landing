@@ -10,7 +10,7 @@ Svelte 5 components and hooks for Inkbar. The components are unstyled primitives
 
 Install the packages as the [Quickstart](/docs/quickstart/) shows.
 
-Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/core/vite` so PDF.js can load its worker and fonts; [Loading assets](/docs/loading-assets/) covers it. The package ships `.svelte` sources, so your bundler compiles them for your target, including the server.
+Svelte 5.46.4 or later is a peer dependency. Add the Vite plugin from `@inkbar/core/vite` so Inkbar can load its engine, fonts and form script sandbox; [Loading assets](/docs/loading-assets/) covers it. The package ships `.svelte` sources, so your bundler compiles them for your target, including the server.
 
 ## Usage
 

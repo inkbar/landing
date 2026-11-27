@@ -10,7 +10,7 @@ import { TabItem, Tabs } from '@astrojs/starlight/components'
 
 Inkbar fills the AcroForm fields in a PDF: text, checkboxes, radio buttons, combo boxes, lists, push buttons and signature fields. The form's own scripts run too, so totals calculate and validation works as the author intended.
 
-Values live in memory until a save. With `@inkbar/engine`, Download, Print and `doc.save()` write the changed values into the PDF: see [Saving](/docs/guides/saving/). Without it, store the values yourself: hold them in your own state, or export them as [Gloss](#save-values-as-gloss) and import them the next time the document opens.
+Values live in memory until a save. Download, Print and `doc.save()` write the changed values into the PDF: see [Saving](/docs/guides/saving/). To keep them outside the file, hold them in your own state, or export them as [Gloss](#save-values-as-gloss) and import them the next time the document opens.
 
 ## Filling
 

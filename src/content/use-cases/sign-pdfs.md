@@ -21,7 +21,7 @@ users:
 app:
   - Saved signatures kept in the store you choose, from memory to the browser's local storage to your own server.
   - Signatures placed from your own code, at a point and width you set.
-  - With `@inkbar/engine`, Download, Print and `doc.save()` write the placed signatures into the PDF.
+  - Download, Print and `doc.save()` write the placed signatures into the PDF.
 notes:
   - heading: What kind of signature this is
     text: |-

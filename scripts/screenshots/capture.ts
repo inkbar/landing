@@ -44,7 +44,6 @@ const viewer = createViewer(document.getElementById('viewer')!, {
   // On a phone the page fills the screen's width, as a person would read it.
   zoom: query.get('device') === 'phone' ? 'fit-width' : 1.25,
   tools: shot.tools.map((tool) => factories[tool]()),
-  ...(shot.engine ? { engine: () => import('@inkbar/engine') } : {}),
 })
 
 const bar = createToolbar()

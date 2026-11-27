@@ -38,7 +38,6 @@ example: |
     source,
     assets,
     tools: [redactAreaTool()],
-    engine: () => import('@inkbar/engine'),
     onRedacted: ({ bytes }) => upload(bytes),
   })
 

@@ -48,7 +48,7 @@ In a framework app, `useAnnotations()` gives you the same `add`, `update` and `r
 
 ## Saving annotations
 
-There are two ways to keep annotations. [Saving](/docs/guides/saving/) writes them into the PDF with `@inkbar/engine`. Or store them as JSON in your own backend, and import them the next time the document opens:
+There are two ways to keep annotations. [Saving](/docs/guides/saving/) writes them into the PDF. Or store them as JSON in your own backend, and import them the next time the document opens:
 
 ```ts
 const data = doc.exportAnnotations('json')
@@ -68,7 +68,7 @@ In a framework app, `useDocument()` returns `exportAnnotations()` and `importAnn
 
 ## Annotations from the PDF
 
-Annotations already in the file are drawn by PDF.js on the page canvas. Inkbar adds them to the list with `source: 'pdf'` and `locked: true`, so people can select and read them, but cannot move, resize or delete them. `hasAppearance` says whether the file carries its own appearance for one. PDF.js draws a note only when it does, so Inkbar draws the icon of a note without one. Exports leave out `source`, `locked` and `hasAppearance`. `doc.embedded`, or `useEmbedded()`, counts them by subtype, including subtypes Inkbar does not model.
+Annotations already in the file are drawn on the page canvas. Inkbar adds them to the list with `source: 'pdf'` and `locked: true`, so people can select and read them, but cannot move, resize or delete them. `hasAppearance` says whether the file carries its own appearance for one, and Inkbar draws the icon of a note without one. Exports leave out `source`, `locked` and `hasAppearance`. `doc.embedded`, or `useEmbedded()`, counts them by subtype, including subtypes Inkbar does not model.
 
 Annotations that Inkbar itself saved into the file are the exception. They come back as session annotations with their original ids, ready to edit, and `doc.embedded` stops counting them. [Saving](/docs/guides/saving/#opening-a-saved-file) covers when they arrive and which ones stay locked.
 

@@ -20,7 +20,7 @@ users:
 app:
   - Annotations as plain typed objects, each with its author, its text and the comment it replies to.
   - A change event for every add, edit and delete, so your app can send each one to its backend and keep other people's copies up to date.
-  - An export and import as JSON with a published schema. Or, with `@inkbar/engine`, the comments written into the PDF itself.
+  - An export and import as JSON with a published schema. Or the comments written into the PDF itself.
 notes:
   - heading: Who sees what
     text: Inkbar does not sync comments between people on its own. Your app moves them through its own backend, which keeps who sees what in your hands.
