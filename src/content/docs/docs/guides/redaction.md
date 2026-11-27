@@ -300,7 +300,7 @@ An apply never overlaps a save, and a second call while an apply runs gets the s
 
 When the apply fails, nothing is handed over and the open document stays as it was. The viewer says why in its message box, and your error handler (`onError`, or the `error` event in Vue) hears one of these errors:
 
-- `EngineUnavailable`: the viewer has [stopped working](/docs/guides/saving/#when-the-viewer-stops-working).
+- `EngineUnavailable`: the viewer has [stopped working](/docs/guides/saving/#when-the-viewer-stops-working), and the engine started for the apply could not start or stopped too.
 - `NothingToRedact`: there is no mark, or the engine applied none because every mark has no area or lies wholly off its page.
 - `RedactionFailed`: the engine could not finish. `details.stage` says where:
   - `'apply'` when the engine refused the marks, or could not apply them or write the rest. `details.page` and `details.annotation` name the page and the annotation when one was the cause.
